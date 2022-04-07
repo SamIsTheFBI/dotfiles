@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#dependencies: pamixer libpulse boost-libs dunst
+
+pamixer --set-limit 255 
+
+if [ "$1" == "incr" ];then
+	pamixer -u
+	pamixer -i 5
+elif [ "$1" == "decr" ];then
+	pamixer -u
+	pamixer -d 5
+elif [ "$1" == "tmute" ];then
+	pamixer -t
+fi
+
+dunstify -a "volume" -r 25 -h int:value:$(pamixer --get-volume-human) 'Volume'

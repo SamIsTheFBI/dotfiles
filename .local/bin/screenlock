@@ -1,0 +1,2 @@
+maim | convert -scale 10% -blur 0x2.5 -resize 1000% /dev/stdin blurred_fast.png && i3lock --image=blurred_fast.png --clock
+rm -rf blurred_fast.png

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ -z "$1" ];then
+	maim --format png /dev/stdout | xclip -selection clipboard -t image/png -i
+	notify-send ' Screenshot copied to clipboard'
+elif [ "$1" == "fullsave" ];then
+	maim ~/Screenshots/Screenshot_$(date +%d%b%Y_%H%M%S).png
+	notify-send ' Screenshot saved'
+elif [ "$1" == "selectcopy" ];then
+	maim -s /dev/stdout | xclip -selection clipboard -t image/png -i
+	notify-send ' Screen selection copied to clipboard'
+elif [ "$1" == "selectsave" ];then
+	maim -s ~/Screenshots/ScreenSelect_$(date +%d%b%Y_%H%M%S).png
+	notify-send ' Screen selection saved'
+elif [ "$1" == "actwincopy" ];then
+	maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+	notify-send ' Focused window screenshot copied to clipboard'
+fi

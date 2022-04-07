@@ -1,0 +1,38 @@
+#!/bin/sh
+
+wall_dir=~/Wallpapers
+dwm_dir=~/Repos/dwm
+dmenu_dir=~/Repos/dmenu
+st_dir=~/Repos/st
+dunstrc_dir=~/.config/dunst
+
+if [ -z "$1" ];then
+	echo "Choosing a random wallpaper from your wallpaper directory..."
+	wall="$(find "$wall_dir" -type f -name "*.jpg" -o -name "*.png" | shuf -n1)"
+else
+	wall="$1"
+fi
+
+convert $wall ~/.local/share/wallpaper/bg.jpg
+wal -i $wall
+
+nitrogen --set-zoom-fill ~/.local/share/wallpaper/bg.jpg
+
+#sed -i '2d' ~/.config/nitrogen/bg-saved.cfg				#sed command to delete 2nd line
+#sed -i "/\[xin_-1\]/ a file=$wall" ~/.config/nitrogen/bg-saved.cfg	#sed command to find [xin_-1] & (a)ppend file=$wall
+#sed -i 's/mode=.*/mode=5/g' ~/.config/nitrogen/bg-saved.cfg
+sed -i '17d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg since I didn't get that patch
+
+dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
+dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
+
+sed -i '302d' $dunstrc_dir/dunstrc
+sed -i '302d' $dunstrc_dir/dunstrc
+sed -i "/\[urgency_normal\]/ a background = \"$dunst_bg\"\nforeground = \"$dunst_fg\"" $dunstrc_dir/dunstrc
+
+cd $dwm_dir && sudo make clean install
+cd $dmenu_dir && sudo make clean install
+cd $st_dir && sudo make clean install
+
+xdotool key F5
+

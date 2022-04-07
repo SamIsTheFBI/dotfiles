@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$1" == "incr" ];then
+	brightnessctl s 5%+
+elif [ "$1" == "decr" ];then
+	brightnessctl s 5%-
+fi
+
+dunstify -r 25 -h int:value:$(var=$(brightnessctl g) && echo $(($var*100/255))) 'Brightness'
