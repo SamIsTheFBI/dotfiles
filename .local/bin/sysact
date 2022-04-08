@@ -1,3 +1,5 @@
+#!/bin/sh
+
 case "$(readlink -f /sbin/init)" in
 	*systemd*) ctl='systemctl' ;;
 	*) ctl='loginctl' ;;
