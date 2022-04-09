@@ -1,0 +1,7 @@
+if [[ -z "$1" ]]; then 
+  query=$( echo | dmenu -p "Search:" )
+else
+  query="$1"
+fi
+
+mpv "$(find ~/Local\ Disk\ D/Media/ ~/Local\ Disk\ E/Shivam/Media/ -name "*$query*" -type f | sort -u | dmenu -i -p 'Select -' -l 24)"
