@@ -1,7 +1,65 @@
-if [[ -z "$1" ]]; then 
-  query=$( echo | dmenu -p "Search:" )
+#!/bin/sh
+
+dir1=~/Local\ Disk\ D/Media/Anime
+dir2=~/Local\ Disk\ D/Media/Movies
+dir3=~/Local\ Disk\ D/Media/TV\ Show
+dir4=~/Local\ Disk\ E/Shivam/Media/Anime
+dir5=~/Local\ Disk\ E/Shivam/Media/Movies
+dir6=~/Local\ Disk\ E/Shivam/Media/TV\ Shows
+
+
+#Get the root directory of given file/sub-directory by checking with above specified directories
+abs_dir(){
+  path=$(find "$dir1/$1" -maxdepth 0 || find "$dir2/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir4/$1" -maxdepth 0 || find "$dir5/$1" -maxdepth 0 || find "$dir6/$1" -maxdepth 0);
+  if [ -z "$path" ]; then
+    echo "This path does not exist!";
+  else
+    #echo "This path exists!";
+    show_dir="$path";
+  fi;
+  func_result="$show_dir"
+  echo "$func_result"
+}
+
+#Search query
+query=$( echo | dmenu -p "Search query: ")
+echo "Search Query: $query"
+
+
+#Choose show from search results
+if [ -z "$query" ]; then
+  show=$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" -maxdepth 1 | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
 else
-  query="$1"
+  show=$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" -maxdepth 1 -iname "*$query*" | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
+  #show=$(find "$media_dir" -maxdepth 1 -iname "*$query*" -type d | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
 fi
 
-mpv "$(find ~/Local\ Disk\ D/Media/ ~/Local\ Disk\ E/Shivam/Media/ -name "*$query*" -type f | sort -u | dmenu -i -p 'Select -' -l 24)"
+#If nothing is chosen from the list i.e. escape key is pressed, exit
+if [ -z "$show" ]; then
+  exit
+fi
+
+#If chosen option is a video file then, get its absolute path, play it & exit
+if [[ "$show" == *.mkv* || "$show" == *.mp4* ]]; then
+  #filepath=abs_dir "$show"
+  file_path="$(abs_dir "$show")"
+  mpv --fs "$file_path"
+  exit
+fi
+
+#Since the selected option is a directory, append it to correct root directory with abs_dir function
+show_dir="$(abs_dir "$show")"
+
+#Choose season of the show previously chosen
+season=$(find "$show_dir" -type d| awk -F"/" '{ print $NF; }' | sed -n '1!p' | dmenu -i -p 'Choose season' -l 12)
+season_dir="$show_dir/$season"
+echo "Season Dir: $season_dir"
+
+
+#Choose episode of the season previously chosen
+episode=$(find "$season_dir" -type f | awk -F"/" '{ print $NF; }'  | sort -u | dmenu -i -p 'Choose episode' -l 12)
+file_path="$season_dir/$episode"
+echo "File path: $file_path"
+echo
+
+mpv --fs "$file_path"
