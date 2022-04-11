@@ -7,7 +7,7 @@ esac
 
 case "$(printf " lock\n display off\n logout\n sleep\n reboot\n shutdown" | dmenu -i -p 'Action: ')" in
 	' lock') slock ;;
-	' display off') xset dpms force off ;;
+	'ﯥ display off') xset dpms force off ;;
 	'﫻logout') kill -TERM "$(pgrep -u "$USER" "\bdwm$")" ;;
 	' sleep') slock $ctl suspend ;;
 	' reboot') $ctl reboot ;;
