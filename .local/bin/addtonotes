@@ -7,6 +7,5 @@ if [[ -n "$var" ]]; then
   echo "$var" >> "$notes_dir"/"$note".txt
 else
   chosen_note=$(ls "$notes_dir" | dmenu -i -p "Choose a note: ")
-  #xclip -sel clip "$(cat "$notes_dir"/"$chosen_note" | dmenu -i -p "Select one to copy to clipboard")"
-  cat "$notes_dir"/"$chosen_note" | dmenu -i -p "Select one to copy" | xclip -sel clipboard -i
+  tac "$notes_dir"/"$chosen_note" | dmenu -i -p "Select one to copy" -l 12 | xclip -sel clipboard -i
 fi
