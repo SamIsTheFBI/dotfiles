@@ -9,6 +9,7 @@ nitrogen --restore
 picom --experimental-backend -b
 dunst &
 slstatus &
+rm ~/Documents/Notes/clipboard.txt
 
 exec dwm
 #sxhkd &
