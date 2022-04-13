@@ -31,5 +31,8 @@ cd $dwm_dir && sudo make clean install
 cd $dmenu_dir && sudo make clean install
 cd $st_dir && sudo make clean install
 
+pkill dunst
+dunst &
+
 xdotool key Control+F5
 

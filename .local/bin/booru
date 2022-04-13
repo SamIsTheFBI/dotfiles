@@ -1,0 +1,173 @@
+#!/bin/sh
+
+#dependencies: feh/sxiv wget
+
+#Directory vars
+pict_path=~/Pictures
+cache_path=~/.cache/booru
+
+#Creating directories if not available
+if [ ! -d "$cache_path" ]; then
+	mkdir -p "$cache_path"
+elif [ ! -d "$pict_path" ]; then
+	mkdir -p "$pict_path"
+fi
+
+#Delete temp files if available
+rm -rf $cache_path/tmp.json
+
+printf "Type in your choice:\n\nSafebooru search(ss), popular(sp), curated(sc)\nDanbooru search(ds), popular(dp), curated(dc)\nYande.re Search(ys), Popular(yp), Recent Uploads(yr)\nKonachan Search(ks), Popular(kp), Recent Uploads(kr)\n\n"
+read booru
+
+#Download json, check first $limit posts for image files, put URLs in $imgs
+
+#safebooru.donmai.us
+#Change regex for lower size images. (sample|original)
+
+if [ "$booru" == 'ss' ]
+then
+  echo "Enter Tags (Max 2, with + between them): "
+  read tags
+  echo "How many posts should I check for images?: "
+  read limit
+  if [ -z "$limit" ]
+  then
+  limit = 20
+  fi
+  curl -H "idk" "https://safebooru.donmai.us/posts.json?tags=$tags&limit=$limit" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep file_url | grep -Eo "https://cdn.donmai.us/original/.*(jpg|png|jpeg)\b")
+
+elif [ "$booru" == 'sp' ]
+then
+  curl -H "idk" "https://safebooru.donmai.us/explore/posts/popular.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep file_url | grep -Eo "https://cdn.donmai.us/original/.*(jpg|png|jpeg)\b")
+
+elif [ "$booru" == 'sc' ]
+then
+  curl -H "idk" "https://safebooru.donmai.us/explore/posts/curated.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep file_url | grep -Eo "https://cdn.donmai.us/original/.*(jpg|png|jpeg)\b")
+
+#danbooru.donmai.us
+#Change regex for lower size images. (sample|original)
+
+elif [ "$booru" == 'ds' ]
+then
+  echo "Enter Tags (Max 2, with + between them): "
+  read tags
+  echo "How many posts should I check for images?: "
+  read limit
+  if [ -z "$limit" ]
+  then
+  limit = 20
+  fi
+  curl -H "idk" "https://danbooru.donmai.us/posts.json?tags=$tags&limit=$limit" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep file_url | grep -Eo "https://cdn.donmai.us/original/.*(jpg|png|jpeg)\b")
+
+elif [ "$booru" == 'dp' ]
+then
+  curl -H "idk" "https://danbooru.donmai.us/explore/posts/popular.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep file_url | grep -Eo "https://cdn.donmai.us/original/.*(jpg|png|jpeg)\b")
+
+elif [ "$booru" == 'dc' ]
+then
+  curl -H "idk" "https://danbooru.donmai.us/explore/posts/curated.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep file_url | grep -Eo "https://cdn.donmai.us/original/.*(jpg|png|jpeg)\b")
+
+#Yande.re
+#Change jpeg_url to file_url(larger size), sample_url(smaller size), preview_url(smallest size)
+
+elif [ "$booru" == 'yp' ]
+then
+  curl -H "idk" "https://yande.re/post/popular_recent.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep jpeg_url | grep -Eo "http(s|)://.*(jpg|png)\b" | sort -u)
+
+elif [ "$booru" == 'yr' ]
+then
+  curl -H "idk" "https://yande.re/post.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep jpeg_url | grep -Eo "http(s|)://.*(jpg|png)\b" | sort -u)
+
+elif [ "$booru" == 'ys' ]
+then
+  echo "Enter Tags (separate with + between them): "
+  read tags
+  echo "How many posts should I check for images?: "
+  read limit
+  if [ -z "$limit" ]
+  then
+  limit = 1
+  fi
+  curl -H "idk" "https://yande.re/post.json?tags=$tags&limit=$limit" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep jpeg_url | grep -Eo "http(s|)://.*(jpg|png)\b" | sort -u)
+
+#Konachan.com
+#Change jpeg_url to file_url(larger size), sample_url(smaller size), preview_url(smallest size)
+
+elif [ "$booru" == 'ks' ]
+then
+  echo "Enter Tags (separate with + between them): "
+  read tags
+  echo "How many posts should I check for images?: "
+  read limit
+  if [ -z "$limit" ]
+  then
+  limit = 1
+  fi
+  curl -H "idk" "https://konachan.com/post.json?tags=$tags&limit=$limit" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep jpeg_url | grep -Eo "http(s|)://.*(jpg|png)\b" | sort -u)
+
+elif [ "$booru" == 'kr' ]
+then
+  curl -H "idk" "https://konachan.com/post.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep jpeg_url | grep -Eo "http(s|)://.*(jpg|png)\b" | sort -u)
+
+elif [ "$booru" == 'kp' ]
+then
+  curl -H "idk" "https://konachan.com/post/popular_recent.json" > $cache_path/tmp.json
+  imgs=$(jq '.' < "$cache_path/tmp.json" | grep jpeg_url | grep -Eo "http(s|)://.*(jpg|png)\b" | sort -u)
+
+fi
+
+#Check if URLs were fetched
+[ -z "$imgs" ] && echo "Downloads could not be completed due to an error" && exit 1
+
+#Make directory for current tag search
+
+tags=$(sed 's/\//_/g' <<< "$tags")
+tags=$(sed 's/\(/_/g' <<< "$tags")
+tags=$(sed 's/\)/_/g' <<< "$tags")
+dir=$booru-$tags-$(date +%d%b%Y_%H%M%S)
+mkdir -p $cache_path/$booru/$dir
+
+#Download the images to cache
+for img in $imgs; do
+	if [ ! -e "$cache_path/$booru/$dir/${img##*/}" ]; then
+		wget --no-check-certificate -P "$cache_path/$booru/$dir" $img
+	fi
+done
+
+rm -rf $cache_path/tmp.json
+
+notify-send "Your images have been downloaded!" &
+echo "Images have been downloaded. Display them now? [y/n]"
+read ans
+if [ "$ans" == 'y' ]
+then
+  sxiv $cache_path/$booru/$dir
+fi
+
+echo "Save the images? Choosing n will delete the images you just viewed. [y/n]"
+read ans
+
+if [ "$ans" == 'n' ]
+then
+  rm -rf $cache_path/$booru/$dir
+  echo "Cache for current search has been deleted"
+else
+  mkdir $pict_path/$dir
+  mv $cache_path/$booru/$dir/* $pict_path/$dir
+  echo "Your images have been saved in $pict_path/$dir"
+  rm -rf $cache_path/$booru/$dir
+fi
+
+sleep 2
+clear
