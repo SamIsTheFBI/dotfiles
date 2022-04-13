@@ -19,6 +19,9 @@ wal -i $wall
 nitrogen --set-zoom-fill ~/.local/share/wallpaper/bg.jpg
 
 sed -i '17d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
+cp ~/.cache/wal/colors-wal-dwm.h ~/.local/src/dwm/
+cp ~/.cache/wal/colors-wal-dmenu.h ~/.local/src/dmenu/
+cp ~/.cache/wal/colors-wal-st.h ~/.local/src/st/
 
 dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
 dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
