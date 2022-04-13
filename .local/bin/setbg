@@ -31,5 +31,5 @@ cd $dwm_dir && sudo make clean install
 cd $dmenu_dir && sudo make clean install
 cd $st_dir && sudo make clean install
 
-xdotool key F5
+xdotool key Control+F5
 
