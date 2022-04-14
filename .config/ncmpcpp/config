@@ -1,0 +1,31 @@
+
+#Connect to mpd
+mpd_host = localhost
+mpd_port = 6600
+
+#Directories
+mpd_music_dir = "~/Local\ Disk\ D/Media/Music"
+ncmpcpp_directory = "~/.config/ncmpcpp"
+lyrics_directory = "~/.local/share/lyrics"
+
+#Notification
+execute_on_song_change = dunstify -r 6600 " Now Playing" "$(mpc --format '%title% \n%artist% - %album%' current)"
+
+#Visualizer
+visualizer_data_source = "/tmp/mpd.fifo"
+visualizer_type = spectrum
+visualizer_fps = 60
+visualizer_look = ●●
+
+mpd_crossfade_time = 5
+
+#ncmpcpp look & feel
+playlist_display_mode = "columns"
+colors_enabled = "yes"
+volume_color = "white"
+user_interface = alternative
+progressbar_look = "▄▄ "
+song_columns_list_format = "(50)[white]{ar} (4)[green]{lr} (1)[blue]{t}"
+
+#playlist_display_mode = "classic"
+#song_list_format = "$6{%a »$4 %t$/r$R}|{%f}"
