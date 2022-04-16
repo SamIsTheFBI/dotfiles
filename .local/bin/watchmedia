@@ -6,11 +6,11 @@ dir3=~/Local\ Disk\ D/Media/TV\ Show
 dir4=~/Local\ Disk\ E/Shivam/Media/Anime
 dir5=~/Local\ Disk\ E/Shivam/Media/Movies
 dir6=~/Local\ Disk\ E/Shivam/Media/TV\ Shows
-
+dir7=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series/
 
 #Get the root directory of given file/sub-directory by checking with above specified directories
 abs_dir(){
-  path=$(find "$dir1/$1" -maxdepth 0 || find "$dir2/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir4/$1" -maxdepth 0 || find "$dir5/$1" -maxdepth 0 || find "$dir6/$1" -maxdepth 0);
+  path=$(find "$dir1/$1" -maxdepth 0 || find "$dir2/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir4/$1" -maxdepth 0 || find "$dir5/$1" -maxdepth 0 || find "$dir6/$1" -maxdepth 0 || find "$dir7/$1" -maxdepth 0);
   if [ -z "$path" ]; then
     echo "This path does not exist!";
   else
@@ -28,9 +28,9 @@ echo "Search Query: $query"
 
 #Choose show from search results
 if [ -z "$query" ]; then
-  show=$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" -maxdepth 1 | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
+  show=$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" -maxdepth 1 | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
 else
-  show=$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" -maxdepth 1 -iname "*$query*" | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
+  show=$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" -maxdepth 1 -iname "*$query*" | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
   #show=$(find "$media_dir" -maxdepth 1 -iname "*$query*" -type d | awk -F"/" '{ print $NF; }' | dmenu -i -p 'Choose show' -l 12)
 fi
 
