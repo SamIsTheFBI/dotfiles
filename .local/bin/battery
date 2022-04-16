@@ -21,7 +21,7 @@ then
 elif [ "$charge" -le 50 ]
 then
 	i=2
-elif [ "$charge" -le 75 ]
+elif [ "$charge" -le 80 ]
 then
 	i=3
 elif [ "$charge" -le 100 ]

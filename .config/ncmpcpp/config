@@ -25,7 +25,7 @@ colors_enabled = "yes"
 volume_color = "white"
 user_interface = alternative
 progressbar_look = "▄▄ "
-song_columns_list_format = "(50)[white]{ar} (4)[green]{lr} (1)[blue]{t}"
+song_columns_list_format = "(50)[white]{ar} (3)[green]{lr} (1)[blue]{t}"
 
 #playlist_display_mode = "classic"
 #song_list_format = "$6{%a »$4 %t$/r$R}|{%f}"
