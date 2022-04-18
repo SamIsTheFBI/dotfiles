@@ -14,6 +14,7 @@ else
 fi
 
 convert $wall ~/.local/share/wallpaper/bg.jpg
+convert -scale 10% -blur 0x2.5 -resize 1000% $wall ~/.local/share/wallpaper/blur.png
 wal -i $wall
 
 nitrogen --set-zoom-fill ~/.local/share/wallpaper/bg.jpg
