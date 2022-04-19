@@ -133,8 +133,8 @@ fi
 #Make directory for current tag search
 
 tags=$(sed 's/\//_/g' <<< "$tags")
-tags=$(sed 's/\(/_/g' <<< "$tags")
-tags=$(sed 's/\)/_/g' <<< "$tags")
+#tags=$(sed 's/\(/_/g' <<< "$tags")
+#tags=$(sed 's/\)/_/g' <<< "$tags")
 dir=$booru-$tags-$(date +%d%b%Y_%H%M%S)
 mkdir -p $cache_path/$booru/$dir
 

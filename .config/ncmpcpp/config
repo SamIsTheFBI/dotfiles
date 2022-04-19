@@ -9,7 +9,7 @@ ncmpcpp_directory = "~/.config/ncmpcpp"
 lyrics_directory = "~/.local/share/lyrics"
 
 #Notification
-execute_on_song_change = dunstify -r 6600 " Now Playing" "$(mpc --format '%title% \n%artist% - %album%' current)"
+execute_on_song_change = $HOME/.config/ncmpcpp/notif_cover && dunstify -I $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "$(mpc --format '%file%' current)"
 
 #Visualizer
 visualizer_data_source = "/tmp/mpd.fifo"

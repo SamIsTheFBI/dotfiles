@@ -1,5 +1,9 @@
 
 notes_dir=~/Documents/Notes
+if [ ! -d "$notes_dir" ]; then
+ mkdir -p "$notes_dir"
+fi
+
 var=$(echo | dmenu -i -p "Type out new entry: ")
 
 if [[ -n "$var" ]]; then
