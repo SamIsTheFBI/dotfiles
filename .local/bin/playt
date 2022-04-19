@@ -1,0 +1,7 @@
+
+
+if [ "$1" == "-F" ];then
+  yt-dlp -F $2
+else
+  yt-dlp -f $1 --write-sub --yes-playlist $2 --extractor-args youtube:player_client=android --throttled-rate 100K
+fi

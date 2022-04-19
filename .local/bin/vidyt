@@ -1,0 +1,3 @@
+
+
+yt-dlp -f 136+139 --write-sub $1 --extractor-args youtube:player_client=android --throttled-rate 100K 
