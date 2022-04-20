@@ -5,13 +5,10 @@ DATE_COLOR_DARK=#a86b54
 TIME_COLOR_DARK=#a9e3c4
 INSIDE_COLOR_DARK=#1a0e1525
 
-#maim | convert -scale 10% -blur 0x2.5 -resize 1000% /dev/stdin blurred_fast.png
-cp ~/.local/share/wallpaper/blur.png blurred_fast.png
-i3lock -F --image=blurred_fast.png --clock --radius=110 \
+cd ~/.local/share/wallpaper/
+i3lock -F --image=lockscreen.png --clock --radius=110 \
 --{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
 --date-color=$DATE_COLOR_DARK \
 --time-color=$TIME_COLOR_DARK \
 --inside-color=$INSIDE_COLOR_DARK \
 --ring-color=$DATE_COLOR_DARK
-
-rm -rf blurred_fast.png
