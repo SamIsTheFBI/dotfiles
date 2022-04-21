@@ -1,7 +1,0 @@
-#~/bin/sh
-
-music=$HOME/Local\ Disk\ D/Media/Music/"$(mpc --format %file% current)"
-rm -rf ~/.config/ncmpcpp/albumarts/tmp.jpg
-ffmpeg -hide_banner -loglevel error -i "$music" -an -vcodec copy $HOME/.config/ncmpcpp/albumarts/tmp.jpg
-
-#$HOME/.config/ncmpcpp/showcover

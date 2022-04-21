@@ -1,0 +1,21 @@
+#!/bin/sh
+
+music=$HOME/Local\ Disk\ D/Media/Music/"$(mpc --format %file% current)"
+rm $HOME/.config/ncmpcpp/albumarts/current.jpg
+
+ffmpeg -y -hide_banner -loglevel panic -i "$music" -an -vcodec copy $HOME/.config/ncmpcpp/albumarts/current.jpg
+
+cover=$(find $HOME/.config/ncmpcpp/albumarts/ -name current.jpg)
+
+if [[ -z $cover ]]; then
+	cp $HOME/.config/ncmpcpp/albumarts/default_cover.jpg $HOME/.config/ncmpcpp/albumarts/current.jpg
+fi
+
+title=no_title
+title=$title$(mpc --format '%title%' current)
+
+if [[ $title == "no_title" ]]; then
+  dunstify -I $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "$(mpc --format '%file%' current)"
+else
+  dunstify -I $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "$(mpc --format '%title% - %artist%' current)"
+fi
