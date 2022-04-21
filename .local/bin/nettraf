@@ -1,0 +1,18 @@
+network_interface=$(ip route get 8.8.8.8 | awk -- '{print $5; exit}')
+
+update() {
+    sum=0
+    for arg; do
+        read -r i < "$arg"
+        sum=$(( sum + i ))
+    done
+    cache=${XDG_CACHE_HOME:-$HOME/.cache}/${1##*/}
+    [ -f "$cache" ] && read -r old < "$cache" || old=0
+    printf %d\\n "$sum" > "$cache"
+    printf %d\\n $(( sum - old ))
+}
+
+rx=$(update /sys/class/net/$network_interface/statistics/rx_bytes)
+tx=$(update /sys/class/net/$network_interface/statistics/tx_bytes)
+
+printf "%4sB/s | %4sB/s\\n" $(numfmt --to=iec $rx $tx)
