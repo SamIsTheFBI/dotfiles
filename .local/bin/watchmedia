@@ -63,4 +63,4 @@ file_path="$season_dir/$episode"
 echo "File path: $file_path"
 echo
 
-mpv --fs "$file_path"
+mpv --fs --save-position-on-quit "$file_path"
