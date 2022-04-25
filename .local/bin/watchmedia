@@ -54,7 +54,7 @@ fi
 if [[ "$show" == *.mkv* || "$show" == *.mp4* ]]; then
   #filepath=abs_dir "$show"
   file_path="$(abs_dir "$show")"
-  mpv --fs "$file_path"
+  mpv --fs --save-position-on-quit "$file_path"
   exit
 fi
 
