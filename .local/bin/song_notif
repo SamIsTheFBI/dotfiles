@@ -1,7 +1,7 @@
 #!/bin/sh
 
 music=$HOME/Local\ Disk\ D/Media/Music/"$(mpc --format %file% current)"
-rm $HOME/.config/ncmpcpp/albumarts/current.jpg
+rm -f $HOME/.config/ncmpcpp/albumarts/current.jpg
 
 ffmpeg -y -hide_banner -loglevel panic -i "$music" -an -vcodec copy $HOME/.config/ncmpcpp/albumarts/current.jpg
 
