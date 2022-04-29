@@ -1,14 +1,25 @@
 #!/bin/sh
 
 #Colors from pywal
-DATE_COLOR_DARK=#a86b54
-TIME_COLOR_DARK=#a9e3c4
-INSIDE_COLOR_DARK=#1a0e1525
+DATE_COLOR_DARK=#ffffff
+TIME_COLOR_DARK=#ffffff
+INSIDE_COLOR_DARK=#00000000
 
 cd ~/.local/share/wallpaper/
-i3lock -F --image=lockscreen.png --clock --radius=110 \
---{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
---date-color=$DATE_COLOR_DARK \
---time-color=$TIME_COLOR_DARK \
---inside-color=$INSIDE_COLOR_DARK \
---ring-color=$DATE_COLOR_DARK
+#cd ~
+i3lock -F --image=lockscreen.png --clock --radius=15 \
+	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
+	--ind-pos="x+675:y+457" \
+	--time-pos="ix+5:iy-70" \
+	--verif-pos="ix+5:iy-70" \
+	--wrong-pos="ix+5:iy-70" \
+	--noinput-text="" \
+	--date-color=$DATE_COLOR_DARK \
+	--time-color=$TIME_COLOR_DARK \
+	--inside-color=$INSIDE_COLOR_DARK \
+	--ring-color=$DATE_COLOR_DARK \
+	--ring-width=4 \
+	--pass-media-keys \
+	--pass-screen-keys \
+	--pass-volume-keys \
+	--pass-power-keys \
