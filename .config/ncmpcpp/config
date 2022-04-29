@@ -9,23 +9,28 @@ ncmpcpp_directory = "~/.config/ncmpcpp"
 lyrics_directory = "~/.local/share/lyrics"
 
 #Notification
-execute_on_song_change = song_notif  #$HOME/.config/ncmpcpp/notif_cover && dunstify -I $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "$(mpc --format '%file%' current)"
+#execute_on_song_change = "~/.config/ncmpcpp/cover_obs.sh"
+execute_on_song_change = song_notif #$HOME/.config/ncmpcpp/notif_cover && dunstify -I $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "$(mpc --format '%file%' current)"
 
 #Visualizer
-visualizer_data_source = "/tmp/mpd.fifo"
-visualizer_type = spectrum
+visualizer_type = wave_filled
+visualizer_spectrum_smooth_look = yes
 visualizer_fps = 60
-visualizer_look = ●●
-
-mpd_crossfade_time = 5
+visualizer_autoscale = no
+visualizer_data_source = "/tmp/mpd.fifo"
+visualizer_output_name = "my_fifo"
+visualizer_in_stereo = "yes"
+visualizer_look = "▮▮"
 
 #ncmpcpp look & feel
 playlist_display_mode = "columns"
-colors_enabled = "yes"
 volume_color = "white"
 user_interface = alternative
 progressbar_look = "▄▄ "
-song_columns_list_format = "(50)[white]{ar} (3)[green]{lr} (1)[blue]{t}"
+song_columns_list_format = "(50)[white]{ar} (1)[blue]{t}"
 
-#playlist_display_mode = "classic"
-#song_list_format = "$6{%a »$4 %t$/r$R}|{%f}"
+#Misc
+cyclic_scrolling = "yes"
+system_encoding = "UTF-8"
+jump_to_now_playing_song_at_start = "yes"
+
