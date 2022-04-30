@@ -1,0 +1,11 @@
+#!/bin/sh
+
+current=str
+while true; do
+  if [[ "$current" == "$(mpc current)" ]]; then
+	  continue;
+  else
+	  current=$(mpc current)
+	  song_notif
+  fi
+done
