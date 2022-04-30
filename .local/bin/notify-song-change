@@ -2,7 +2,7 @@
 
 current=str
 while true; do
-  if [[ "$current" == "$(mpc current)" ]]; then
+	if [[ "$current" == "$(mpc current)" || "$(mpc current)" == '' ]]; then
 	  continue;
   else
 	  current=$(mpc current)
