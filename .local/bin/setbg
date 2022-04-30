@@ -15,9 +15,10 @@ fi
 
 convert $wall ~/.local/share/wallpaper/bg.jpg
 convert -scale 10% -blur 0x2.5 -resize 1000% $wall ~/.local/share/wallpaper/lockscreen.png
+convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
 wal -i $wall
 
-nitrogen --set-zoom-fill ~/.local/share/wallpaper/bg.jpg
+nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
 sed -i '17d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
 cp ~/.cache/wal/colors-wal-dwm.h ~/.local/src/dwm/
@@ -39,4 +40,3 @@ pkill dunst
 dunst &
 
 xdotool key Control+F5
-
