@@ -1,7 +1,17 @@
+#!/bin/sh
 
+# dependencies: fzf awk yt-dlp
 
+rm -rf ~/.cache/format
 if [ "$1" == "-F" ];then
-  yt-dlp -F $2
+  yt-dlp -F $2 
 else
-  yt-dlp -f $1 --write-sub --yes-playlist $2 --extractor-args youtube:player_client=android --throttled-rate 100K
+  #yt-dlp -f $1 --write-sub --yes-playlist $2 --extractor-args youtube:player_client=android --throttled-rate 100K
+  video_url=$1
+  echo "Fetching available qualities..."
+  yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
+  audio=$(cat ~/.cache/format | grep audio | fzf | awk '{print $1}')
+  video=$(cat ~/.cache/format | grep video | fzf | awk '{print $1}')
+  echo "Trying to download the video..." 
+  yt-dlp -f $audio+$video --write-sub --yes-playlist $video_url --throttled-rate 100K
 fi
