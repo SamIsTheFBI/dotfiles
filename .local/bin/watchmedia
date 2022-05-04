@@ -15,8 +15,8 @@ if [ $var == '8.8.8.8' ]; then
 	dir8=~/Cloud\ Storage/Hikari\ Drive/Movies
 else
 	echo "Not connected to internet!!"
-	dir7=~
-	dir8=~
+	#dir7=~
+	#dir8=~
 fi
 
 #Get the root directory of given file/sub-directory by checking with above specified directories

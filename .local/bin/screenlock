@@ -8,16 +8,18 @@ INSIDE_COLOR_DARK=#00000000
 cd ~/.local/share/wallpaper/
 #cd ~
 i3lock -F --image=lockscreen.png --clock --radius=15 \
+	--date-str="%a, %d %b %Y" \
 	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
-	--ind-pos="x+675:y+457" \
-	--time-pos="ix+5:iy-70" \
-	--verif-pos="ix+5:iy-70" \
-	--wrong-pos="ix+5:iy-70" \
+	--ind-pos="x+679:y+457" \
+	--time-pos="ix+1:iy-70" \
+	--verif-pos="ix+1:iy-70" \
+	--wrong-pos="ix+1:iy-70" \
 	--noinput-text="" \
-	--date-color=$DATE_COLOR_DARK \
-	--time-color=$TIME_COLOR_DARK \
-	--inside-color=$INSIDE_COLOR_DARK \
-	--ring-color=$DATE_COLOR_DARK \
+	--date-color=#ffffff \
+	--time-color=#ffffff \
+	--inside-color=#00000000 \
+	--line-color=#ffffff \
+	--ring-color=#ffffff \
 	--ring-width=4 \
 	--pass-media-keys \
 	--pass-screen-keys \

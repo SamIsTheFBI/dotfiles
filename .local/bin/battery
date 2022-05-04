@@ -4,35 +4,12 @@ get_charge() {
 	cat "/sys/class/power_supply/BAT1/capacity"
 }
 
-get_charging_status() {
-	cat "/sys/class/power_supply/BAT1/status"
-}
 
 icon=("" "" "" "" "")
-charge=$( get_charge )
-bat_stat="$( get_charging_status )"
+charge=$(cat "/sys/class/power_supply/BAT1/capacity")
+bat_stat=$(cat "/sys/class/power_supply/BAT1/status")
 
-if [ "$charge" -eq 0 ]
-then
-	i=0
-elif [ "$charge" -le 25 ]
-then
-	i=1
-elif [ "$charge" -le 50 ]
-then
-	i=2
-elif [ "$charge" -le 80 ]
-then
-	i=3
-elif [ "$charge" -le 100 ]
-then
-	i=4
-fi
+[ "$bat_stat" == "Charging" ] && ci="" || ci=""
 
-if [ "$bat_stat" == "Charging" ]
-then
-	ci=""
-fi
-
-echo ${icon["$i"]}\ \ $(cat "/sys/class/power_supply/BAT1/capacity")%"$ci"
+echo "$ci"\ \ $charge%
 #echo "$bat_stat"

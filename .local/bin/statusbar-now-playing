@@ -4,8 +4,8 @@ var=$(mpc | awk 'NR==2{print $1;}')
 
 emoji()
 {
-	[[ "$var" == *playing* ]] && EMOJI="" || EMOJI=""
+	[[ "$var" == *playing* ]] && EMOJI="" || EMOJI=""
 }
 
 emoji
-[[ $(mpc current) == '' ]] && echo "Playlist is empty!" || echo "$EMOJI $(mpc current)" 
+[[ $(mpc current) == '' ]] && echo " " || echo "$EMOJI $(mpc current)" 

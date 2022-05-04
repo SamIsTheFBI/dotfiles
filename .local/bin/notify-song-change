@@ -1,11 +1,5 @@
 #!/bin/sh
 
-current=str
 while true; do
-	if [[ "$current" == "$(mpc current)" || "$(mpc current)" == '' ]]; then
-	  continue;
-  else
-	  current=$(mpc current)
-	  song_notif
-  fi
+[[ "$current" == "$(mpc current)" || "$(mpc current)" == '' ]] && continue || current=$(mpc current) && song_notif
 done
