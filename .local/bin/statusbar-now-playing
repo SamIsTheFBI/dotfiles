@@ -1,11 +1,13 @@
 #!/bin/sh
 
-var=$(mpc | awk 'NR==2{print $1;}')
+#var=$(mpc | awk 'NR==2{print $1;}')
+var=$(playerctl -p spotify status)
 
-emoji()
+glyph()
 {
-	[[ "$var" == *playing* ]] && EMOJI="" || EMOJI=""
+	[[ "$var" == *laying* ]] && GLYPH="" || GLYPH=""
 }
 
-emoji
-[[ $(mpc current) == '' ]] && echo " " || echo "$EMOJI $(mpc current)" 
+glyph
+#[[ $(mpc current) == '' ]] && echo " " || echo "$GLYPH $(mpc current)" 
+[[ $(playerctl -p spotify metadata) == '' ]] && echo " " || echo "$GLYPH $(playerctl -p spotify metadata | awk '/.*albumArtist/ {print $0}' | sed 's/^spotify\ xesam:albumArtist.........//g') - $(playerctl -p spotify metadata title)"

@@ -99,6 +99,9 @@ alias tree='tree -a -I .git'
 
 # Add flags to existing aliases.
 alias dotfiles='/usr/sbin/git --git-dir=/home/samisthefbi/.dotfiles/ --work-tree=/home/samisthefbi'
+alias nv='/usr/bin/nvim'
+alias ls='/usr/bin/exa --color=always --group-directories-first --icons'
+alias spotify='LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify -no-zygote'
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot
