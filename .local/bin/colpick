@@ -1,0 +1,5 @@
+#!/bin/sh
+
+col=$(colorpicker --short --one-shot --preview)
+echo "$col"
+echo "$col" |tr -d '\n' | xclip -selection clipboard; notify-send  " " "<span foreground='$col'><b>$col</b></span> Copied to clipboard";
