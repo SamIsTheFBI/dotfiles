@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# dependencies: dmenu awk yt-dlp
+
+# OG command: yt-dlp -f $1 --write-sub --yes-playlist $2 --extractor-args youtube:player_client=android --throttled-rate 100K
+
+
+rm -rf ~/.cache/format
+if [ "$1" == "-F" ];then
+  yt-dlp -F $2 
+else
+  video_url=$(echo | dmenu -i -p "Enter YouTube video URL: ")
+  [[ -z $video_url ]] && exit || notify-send "Fetching available qualities..."
+  yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
+  audio=$(cat ~/.cache/format | grep audio | dmenu -i -p "Choose audio quality" -l 10 | awk '{print $1}')
+  video=$(cat ~/.cache/format | grep video | dmenu -i -p "Choose video quality" -l 10 | awk '{print $1}')
+  notify-send "Trying to download the video..." 
+  output=$(yt-dlp -f $audio+$video --write-sub --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
+  [[ $output == *merged\ into\ mkv* ]] && notify-send "Requested formats are incompatible. Merging into MKV..." || continue
+  [[ $output == *has\ already\ been\ downloaded* ]] && notify-send "This video is already present in your videos directory" || [[ -z $output ]] && notify-send "Download unsuccessful" || notify-send "Download finished"
+fi

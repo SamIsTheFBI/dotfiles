@@ -1,20 +1,12 @@
 #!/bin/sh
-#ctl="nothing"
-#if [[ $(playerctl -p spotify) == *not\ found* ]]; then
-#  [[ $(where mpc) == *not\ found* ]] && exit || var=$(mpc | awk 'NR==2{print $1;}') && ctl="mpc"
-#else
-#fi
 
-[[ -z $(playerctl -p spotify status) ]] && continue || var=$(playerctl -p spotify status) && ctl="playerctl"
-
+var=$(mpc | awk 'NR==2{print $1;}') && ctl="mpc"
+title=no_title
+title=$title$(mpc --format '%title%' current)
 glyph()
 {
 	[[ "$var" == *laying* ]] && GLYPH="" || GLYPH=""
 }
 
 glyph
-if [[ $ctl == 'mpc' ]]; then
-  [[ $(mpc current) == '' ]] && echo " " || echo "$GLYPH $(mpc current)" 
-elif [[ $ctl == 'playerctl' ]]; then
-  [[ $(playerctl -p spotify metadata) == '' ]] && echo " " || echo "$GLYPH $(playerctl -p spotify metadata | awk '/.*albumArtist/ {print $0}' | sed 's/^spotify\ xesam:albumArtist.........//g') - $(playerctl -p spotify metadata title)"
-fi
+[[ $(mpc current) == '' ]] && echo " " || echo "$GLYPH $(mpc current)"

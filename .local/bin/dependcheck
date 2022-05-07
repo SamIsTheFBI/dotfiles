@@ -1,0 +1,8 @@
+#!/bin/sh
+
+while true; do
+   var=$(echo | dmenu -i -p "Enter name of a package: ")
+   [[ "$var" == ':quit' ]] && break ||  var2=$(pacman -Qi $var | sed -n '1p')
+   [[ -z "$var2" ]] && sudo pacman -Sy --noconfirm $var || echo "The package $var is available"
+done
+

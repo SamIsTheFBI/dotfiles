@@ -24,4 +24,4 @@ i3lock -F --image=lockscreen.png --clock --radius=15 \
 	--pass-media-keys \
 	--pass-screen-keys \
 	--pass-volume-keys \
-	--pass-power-keys \
+	--pass-power-keys

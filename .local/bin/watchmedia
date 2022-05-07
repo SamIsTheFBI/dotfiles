@@ -11,8 +11,8 @@ var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
 
 if [ $var == '8.8.8.8' ]; then
 	echo "Connected to internet!!"
-	dir7=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series
-	dir8=~/Cloud\ Storage/Hikari\ Drive/Movies
+#	dir7=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series
+#	dir8=~/Cloud\ Storage/Hikari\ Drive/Movies
 else
 	echo "Not connected to internet!!"
 	#dir7=~

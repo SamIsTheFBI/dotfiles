@@ -58,6 +58,7 @@ z4h init || return
 # Extend PATH.
 path=(~/bin $path)
 path+=(/home/samisthefbi/.local/bin)
+path+=(/home/samisthefbi/eww/target/release)
 export PATH
 
 # Export environment variables.
@@ -101,6 +102,7 @@ alias tree='tree -a -I .git'
 alias dotfiles='/usr/sbin/git --git-dir=/home/samisthefbi/.dotfiles/ --work-tree=/home/samisthefbi'
 alias nv='/usr/bin/nvim'
 alias ls='/usr/bin/exa --color=always --group-directories-first --icons'
+alias ll='/usr/bin/exa --color=always --group-directories-first --icons -l'
 alias spotify='LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify -no-zygote'
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
