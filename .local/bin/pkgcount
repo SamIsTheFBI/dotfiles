@@ -1,0 +1,55 @@
+#!/bin/zsh
+
+progress="1"
+spin='-\|/'
+i=0
+
+if [ -z $1 ]; then
+	printf "Usage:\npkgcount --installed : Count total size of packages installed on this device\npkgcount pkglist.pkg : Count total size of packages from pkglist.txt\n"
+	exit
+elif [[ "$1" == '--installed' ]]; then
+	count=`pacman -Q | wc -l`
+	echo "Total no. of packages: $count"
+	for pkg in $(pacman -Qi | grep "Name            :" | awk '{print $3}')
+	do
+        #printf "\rProcessing "$pkg"..."
+#				printf "\r${spin:$i:1}"
+				s=$(pacman -Qi $pkg | awk -F ' ' '/^Installed Size/ {print $4}')
+				u=$(pacman -Qi $pkg | awk -F ' ' '/^Installed Size/ {print $5}')
+				if [[ "$u" == 'KiB' ]]; then
+					s=$(( $s/1024 ))
+				elif [[ "$u" == 'B' ]]; then
+					s=$(( $s/126976 ))
+				elif [[ "$u" == 'GiB' ]]; then
+					s=$(( $s*1024 ))
+				fi
+        if [ "$s" != "" ];  then
+					total=$(( $total + $s ))
+        fi 
+				i=$(( (i+1) %4 ))
+	done
+else
+
+	count=$(wc -l $1 | awk '{print $1}')
+	echo "Total no. of packages: $count"
+	for pkg in $(cat $(realpath $1))
+	do
+        #printf "\rProcessing "$pkg"..."
+				printf "\r${spin:$i:1}"
+				s=$(pacman -Qi $pkg | awk -F ' ' '/^Installed Size/ {print $4}')
+				u=$(pacman -Qi $pkg | awk -F ' ' '/^Installed Size/ {print $5}')
+				if [[ "$u" == 'KiB' ]]; then
+					s=$(( $s/1024 ))
+				elif [[ "$u" == 'B' ]]; then
+					s=$(( $s/126976 ))
+				elif [[ "$u" == 'GiB' ]]; then
+					s=$(( $s*1024 ))
+				fi
+        if [ "$s" != "" ];  then
+					total=$(( $total + $s ))
+        fi 
+				i=$(( (i+1) %4 ))
+	done
+fi
+gb=$(( $total/1024 ))
+echo "\nTotal Installed Size: $total MiB [$gb GiB]"
