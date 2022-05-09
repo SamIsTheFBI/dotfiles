@@ -1,27 +1,26 @@
 #!/bin/sh
 
-#Colors from pywal
-DATE_COLOR_DARK=#ffffff
-TIME_COLOR_DARK=#ffffff
-INSIDE_COLOR_DARK=#00000000
+#slowfade function from dark-dryu/i3lock-widgets-config
 
-cd ~/.local/share/wallpaper/
-#cd ~
-i3lock -F --image=lockscreen.png --clock --radius=15 \
-	--date-str="%a, %d %b %Y" \
-	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
-	--ind-pos="x+679:y+457" \
-	--time-pos="ix+1:iy-70" \
-	--verif-pos="ix+1:iy-70" \
-	--wrong-pos="ix+1:iy-70" \
-	--noinput-text="" \
-	--date-color=#ffffff \
-	--time-color=#ffffff \
-	--inside-color=#00000000 \
-	--line-color=#ffffff \
-	--ring-color=#ffffff \
-	--ring-width=4 \
-	--pass-media-keys \
-	--pass-screen-keys \
-	--pass-volume-keys \
-	--pass-power-keys
+slowfade () {
+    dis=$(echo -n "$DISPLAY" | tr -c '[:alnum:]' _)
+    ifc='com.github.chjj.compton'
+    obj='/com/github/chjj/compton'
+    if [[ "$1" == "start" ]]; then
+        dbus-send --print-reply --dest=$ifc.$dis \
+            $obj $ifc.opts_set string:fade_in_step double:0.02
+        dbus-send --print-reply --dest=$ifc.$dis \
+            $obj $ifc.opts_set string:fade_out_step double:0.02
+    else
+        dbus-send --print-reply --dest=$ifc.$dis \
+            $obj $ifc.opts_set string:fade_in_step double:0.1
+        dbus-send --print-reply --dest=$ifc.$dis \
+            $obj $ifc.opts_set string:fade_out_step double:0.1
+    fi
+}
+
+sleep 1 && eww -c ~/.local/bin/lockscreen/ open-many battery song &
+slowfade start 
+i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --date-str="%a, %d %b %Y" --{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" --ind-pos="x+679:y+457" --time-pos="ix+1:iy-70" --verif-pos="ix+1:iy-70" --wrong-pos="ix+1:iy-70" --noinput-text="" --date-color=#ffffff --time-color=#ffffff --inside-color=#00000000 --line-color=#ffffff --ring-color=#ffffff --ring-width=4 --pass-media-keys --pass-screen-keys --pass-volume-keys --pass-power-keys
+slowfade end
+eww -c ~/.local/bin/lockscreen/ close-all

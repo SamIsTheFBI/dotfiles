@@ -1,0 +1,62 @@
+;; battery capacity
+(defpoll BATTERY :interval "5s" `cat /sys/class/power_supply/BAT1/capacity`)
+
+;; current song
+(defpoll SONG :interval "1s" `statusbar-now-playing`)
+
+
+;; My widgets
+;; batteryIndicator
+(defwidget battery []
+		(box :class "bat_bar" :orientation "h" :space-evenly "true" 
+				(scale	:min 0 
+								:max 100
+								:value BATTERY
+								:orientation "vertical"
+								:flipped "true")
+				))
+
+
+(defwidget lock_info1 []
+	(box :class "lock_info" :orientation "h" :space-evenly "false"
+		'        Battery: ${BATTERY}%
+
+${SONG}')
+)
+
+(defwidget lock_info []
+		(box :class "bat_capacity" :orientation "h" :space-evenly "true" :halign "center"
+			'Battery: ${BATTERY}%')
+	)
+
+(defwidget song []
+	(box :class "song" :orientation "h" :space-evenly "false" :halign "center"
+			'${SONG}')
+)
+
+;; system
+(defwindow battery
+					:monitor 0
+	    		:geometry (geometry ;x "420"
+															:y "-9%" 
+															:width 3 
+															:height 3
+															:anchor "center bottom"
+															)
+					:stacking "bg" 
+					:focusable "false"
+					:screen 1
+           (lock_info))
+(defwindow song
+					:monitor 0
+	    		:geometry (geometry ;x "3%"
+															:y "-5%" 
+															:width 3 
+															:height 3
+															:anchor "center bottom"
+															)
+					:stacking "bg" 
+					:focusable "false"
+					:screen 1
+           (song))
+
