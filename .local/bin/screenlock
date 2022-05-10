@@ -21,6 +21,25 @@ slowfade () {
 
 sleep 1 && eww -c ~/.local/bin/lockscreen/ open-many battery song &
 slowfade start 
-i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --date-str="%a, %d %b %Y" --{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" --ind-pos="x+679:y+457" --time-pos="ix+1:iy-70" --verif-pos="ix+1:iy-70" --wrong-pos="ix+1:iy-70" --noinput-text="" --date-color=#ffffff --time-color=#ffffff --inside-color=#00000000 --line-color=#ffffff --ring-color=#ffffff --ring-width=4 --pass-media-keys --pass-screen-keys --pass-volume-keys --pass-power-keys
+i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --date-str="%a, %d %b %Y" \
+	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
+	--ind-pos="x+679:y+457" \
+	--time-pos="ix+1:iy-70" \
+	--{verif,wrong}-color="#ffffff" \
+	--verif-pos="ix+1:iy-70" \
+	--verif-text="Verifying..." \
+	--wrong-pos="ix+1:iy-70" \
+	--wrong-text="Incorrect password" \
+	--noinput-text="No input was given" \
+	--date-color=#ffffff \
+	--time-color=#ffffff \
+	--inside-color=#00000000 \
+	--line-color=#ffffff \
+	--ring-color=#ffffff \
+	--ring-width=4 \
+	--pass-media-keys \
+	--pass-screen-keys \
+	--pass-volume-keys \
+	--pass-power-keys
 slowfade end
 eww -c ~/.local/bin/lockscreen/ close-all
