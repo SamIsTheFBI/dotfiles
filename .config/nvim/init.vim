@@ -1,13 +1,13 @@
 set number
-set tabstop=2
+set tabstop=4
 set softtabstop=0 noexpandtab
-set shiftwidth=2
+set shiftwidth=4
 set termguicolors
 
 "---Get Vim-Plug if not present----
 :function! SomeCheck()
 if empty(glob("~/.config/nvim/autoload/plug.vim"))
-	execute '!mkdir -p ~/.config/nvim/autoload && wget -O ~/.config/nvim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	execute '!echo ""mkdir -p ~/.config/nvim/autoload && wget -O ~/.config/nvim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 	autocmd VimEnter * PlugInstall
 endif
 :endfunction
@@ -18,6 +18,7 @@ call SomeCheck()
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -43,6 +44,10 @@ lua require('bufferline').setup()
 
 "Nvim-Tree
 lua require('nvim-tree').setup() 
+
+"Indent-Blankline
+lua require("indent_blankline").setup()
+
 "Mapping
 map <C-q> :NvimTreeClose<CR>:q<CR>
 map <C-n> :NvimTreeToggle<CR>
