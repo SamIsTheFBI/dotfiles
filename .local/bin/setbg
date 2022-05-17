@@ -37,6 +37,6 @@ cd $dmenu_dir && sudo make clean install
 cd $st_dir && sudo make clean install
 
 pkill dunst
-dunst &
+dunst >/dev/null 2>&1 < /dev/null & 
 
 xdotool key Control+F5
