@@ -1,24 +1,22 @@
 #!/bin/sh
 
 #Define local directories
-dir1=~/Local\ Disk\ D/Media/Anime
-dir2=~/Local\ Disk\ D/Media/Movies
-dir3=~/Local\ Disk\ D/Media/TV\ Show
-dir4=~/Local\ Disk\ E/Shivam/Media/Anime
-dir5=~/Local\ Disk\ E/Shivam/Media/TV\ Shows
-dir6=~/Local\ Disk\ E/Shivam/Media/Movies
-dir7=~/Scripts/animepahe-dl
+dir1=~/Media/Anime
+dir2=~/Media/Movies
+dir3=~/Media/TV\ Shows
 
 #Define cloud (rclone, nextcloud, etc.) directories
 #Uncomment lines 10 to 19 filling in respective paths and then put those dir vars in abs_dir() & search_results() 
-var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
-if [ $var == '8.8.8.8' ]; then
-	dir8=~/Cloud\ Storage/Hikari\ Drive/Movies
-	dir9=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series
-else
-	dir8=~
-	dir9=~
-fi
+#var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
+#if [ $var == '8.8.8.8' ]; then
+#		dir4=~/Cloud/Media/Anime
+#		dir5=~/Cloud/Media/Movies
+#		dir6=~/Cloud/Media/TV\ Shows
+#else
+#		dir4=~
+#		dir5=~
+#		dir6=~
+#fi
 
 help(){
 	tmp=$(printf 'USAGE:\nSearch for media you have in your device\nIf unsure, just press enter in search screen\nCOMMANDS:\n:q - Quit\n:s - Go to search screen\n:b - Go back to previous screen' | dmenu -i -p 'Help: ' -l 12)
