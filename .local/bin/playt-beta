@@ -26,7 +26,7 @@ else
 		[[ -z $video ]] && format=$audio || [[ -z $audio ]] && format="$video" || format="$audio+$video"
 		echo "User requested format: $format"
 		notify-send "Trying to download..." 
-		output=$(yt-dlp -f $format --embed-thumbnail --convert-subs srt --embed-sub --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
+		output=$(yt-dlp -f $format --embed-thumbnail --convert-subs srt --embed-sub --sub-langs "en.*,ja" --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
 		[[ $output == *merged\ into\ mkv* ]] && notify-send "Requested formats are incompatible. Merging into MKV..." || continue
 		[[ $output == *has\ already\ been\ downloaded* ]] && notify-send "Requested audio/video is already present in your videos directory" || [[ -z $output ]] && notify-send "Download unsuccessful" || notify-send "Download finished"
 	fi
