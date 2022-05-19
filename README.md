@@ -1,6 +1,14 @@
 ## My Arch Setup
 ![Screenshots of my setup without eww widget](https://0x0.st/omWx.png)
 
+## Things to do:
+
+- [] Make a better status bar (change active tag style, add colors, clickable)
+- [] Add xrdb patch and figure how to use it 
+- [] Create different themes ig (gruvbox, onedark and stuff how hard can it be?)
+- [] Write explanations for stuff (keymappings, scripts)
+- [] Find a good enough reason to use Firefox and then pywalfox
+
 ## A few programs I use
 
 - Terminal: [st](https://st.suckless.org/)
