@@ -1,0 +1,147 @@
+configuration {
+	font:						"JetBrainsMono Nerd Font 10";
+	show-icons:					true;
+	icon-theme:					"Papirus";
+	drun-display-format:		"{name}\n[<span weight='light' size='small'><i>{generic}</i></span>]";
+	disable-history:			true;
+	fullscreen:					false;
+	hide-scrollbar:				true;
+	fixed-num-lines:			true;
+	click-to-exit:				true;
+	sidebar-mode:				true;
+	combi-hide-mode-prefix:		false;
+	display-drun:				"";
+	display-window: 			"";
+    display-run: 				"";
+    display-ssh: 				"";
+    display-combi: 				"";
+}
+
+@import "themes/cafe-theme.rasi"
+
+window {
+	background-color:			@background;
+	border:						2px;
+	border-color:				@foreground;
+	text-color:					@foreground;
+	width:						30%;
+	location:					center;
+	x-offset:					0;
+	y-offset:					0;
+}
+
+prompt {
+	enabled: 					true;
+	padding: 					0.30% 1% 0% -0.5%;
+	background-color: 			@searchbarbg;
+	text-color: 				@foreground;
+	font:						"JetBrainsMono Nerd Font 12";
+}
+
+entry {
+  background-color:  			@searchbarbg;
+  text-color:					@foreground;
+  placeholder-color:			@foreground;
+  expand:						true;
+  horizontal-align:				0;
+  placeholder:					"Search";
+  padding:						0% 1.9% 0% 0%;
+}
+
+inputbar {
+	children:					[ prompt, entry ];
+	background-color:			@searchbarbg;
+	text-color:					@foreground;
+	expand:						false;
+	border-color:				@foreground;
+	padding:					1.9%;
+}
+
+listview{
+	background-color:			@background;
+	columns:					1;
+	lines:						6;
+	spacing:					0%;
+	cycle:						false;
+	layout:						vertical;
+}
+
+mainbox {
+	background-color:			@background;
+	border:						0% 0% 0% 0%;
+	children:					[ inputbar, listview ];
+	spacing:					2% 0% 2% 0%;
+	padding:					0% 0% 0% 0%;
+}
+
+element {
+	background-color:			@background;
+	text-color:					@foreground;
+	orientation:				horizontal;
+	border-radius:				0%;
+	padding:					2%;
+}
+
+element-icon {
+	background-color:			@background;
+	size:						35px;
+}
+
+element-text {
+	background-color:			@background;
+	text-color:					@foreground;
+	margin:						0.5%;
+}
+
+element selected {
+	text-color:					@background;
+	border-color:				@foreground;
+	background-color:			@foreground;
+}
+
+element-text selected {
+	background-color:			@foreground;
+	text-color:					@background;
+}
+
+element-icon selected {
+	background-color:			@foreground;
+	size:						35px;
+}
+
+button {
+    background-color:             	@foreground;
+    margin: 						5px;
+    padding: 						5px;
+    text-color: 					@background;
+    border: 						0px;
+    border-radius: 					4px;
+    border-color: 					@foreground;
+}
+
+button selected {
+    background-color:             	@foreground;
+    margin: 						5px;
+    padding: 						5px;
+    text-color: 					@background;
+    border: 						0px;
+    border-radius: 					4px;
+    border-color: 					@foreground;
+}
+
+sidebar {
+    border:       					0px;
+    border-color: 					@ac;
+    border-radius: 					0px;
+}
+
+message {
+    border: 						0px;
+    border-color: 					@ac;
+    padding: 						1px;
+}
+
+textbox {
+    text-color: 					@fg;
+}
+

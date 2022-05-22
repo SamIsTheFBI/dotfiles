@@ -1,0 +1,11 @@
+/*
+
+Colors for Gruvbox Theme
+
+*/
+
+* {
+	background:					#1E1E1E;
+	foreground:					#F4B46D;
+	searchbarbg:				#4B3B2E;
+}
