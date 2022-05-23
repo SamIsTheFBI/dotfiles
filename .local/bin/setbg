@@ -1,11 +1,6 @@
 #!/bin/sh
 
 wall_dir=~/Wallpapers
-dwm_dir=~/.local/src/dwm
-dmenu_dir=~/.local/src/dmenu
-st_dir=~/.local/src/st
-dunstrc_dir=~/.config/dunst
-
 if [ -z "$1" ];then
 	echo "Choosing a random wallpaper from your wallpaper directory..."
 	wall="$(find "$wall_dir" -type f -name "*.jpg" -o -name "*.png" | shuf -n1)"
@@ -16,27 +11,6 @@ fi
 convert $wall ~/.local/share/wallpaper/bg.jpg
 convert -scale 10% -blur 0x2.5 -resize 1000% $wall ~/.local/share/wallpaper/lockscreen.png
 convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
-wal -i $wall
-
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
-
-sed -i '17d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
-cp ~/.cache/wal/colors-wal-dwm.h ~/.local/src/dwm/
-cp ~/.cache/wal/colors-wal-dmenu.h ~/.local/src/dmenu/
-cp ~/.cache/wal/colors-wal-st.h ~/.local/src/st/
-
-dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
-dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
-
-sed -i '302d' $dunstrc_dir/dunstrc
-sed -i '302d' $dunstrc_dir/dunstrc
-sed -i "/\[urgency_normal\]/ a background = \"$dunst_bg\"\nforeground = \"$dunst_fg\"" $dunstrc_dir/dunstrc
-
-cd $dwm_dir && sudo make clean install
-cd $dmenu_dir && sudo make clean install
-cd $st_dir && sudo make clean install
-
-pkill dunst
-dunst >/dev/null 2>&1 < /dev/null & 
 
 xdotool key Control+F5
