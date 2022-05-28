@@ -20,7 +20,7 @@ wal -i $wall
 
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
-sed -i '17d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
+sed -i -re '13,18d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
 cp ~/.cache/wal/colors-wal-dwm.h ~/.local/src/dwm/
 cp ~/.cache/wal/colors-wal-dmenu.h ~/.local/src/dmenu/
 cp ~/.cache/wal/colors-wal-st.h ~/.local/src/st/
@@ -32,9 +32,16 @@ sed -i '302d' $dunstrc_dir/dunstrc
 sed -i '302d' $dunstrc_dir/dunstrc
 sed -i "/\[urgency_normal\]/ a background = \"$dunst_bg\"\nforeground = \"$dunst_fg\"" $dunstrc_dir/dunstrc
 
-cd $dwm_dir && sudo make clean install
-cd $dmenu_dir && sudo make clean install
-cd $st_dir && sudo make clean install
+rofi_bg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
+rofi_searchbarbg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
+rofi_fg=$(cat ~/.cache/wal/colors.hs | grep 'color1=' | grep -o '#......')
+
+sed -i '8,10d' ~/.config/rofi/theme.rasi
+sed -i "/{/ a background: $rofi_bg;\nforeground: $rofi_fg;\nsearchbarbg: $rofi_searchbarbg;" ~/.config/rofi/theme.rasi
+
+sudo make clean -C $dwm_dir install
+sudo make clean -C $dmenu_dir install
+sudo make clean -C $st_dir install
 
 pkill dunst
 dunst >/dev/null 2>&1 < /dev/null & 
