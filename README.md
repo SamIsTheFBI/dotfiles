@@ -1,8 +1,9 @@
 ## My Arch Setup
 ![Screenshot](https://0x0.st/oaVw.png)
 
-## A few programs I use
+## A few programs that I use
 
+- Window Manager: [dwm](https://dwm.suckless.org/)
 - Terminal: [st](https://st.suckless.org/)
 - Shell: [zsh](https://www.zsh.org/)
 - Text Editor: [Neovim](https://github.com/neovim/neovim)
@@ -28,25 +29,10 @@ The wallpaper used is drawn by [Muji](https://www.pixiv.net/artworks/91389488).
 
 ## Troubleshooting
 
-- No WiFi after closing laptop lid
+<details>
+<summary><b>No WiFi after opening a closed laptop lid</b></summary>
 
-For laptop users, add the following to `/etc/systemd/logind.conf` if you face wifi turning off after closing laptop lid:
+This happens because closing lid somehow triggers an event to softblock wifi. Weird thing with the kernel apparently.
 
-```
-HandleLidSwitch=ignore
-HandleLidSwitchExternalPower=ignore
-HandleLidSwitchDocked=ignore
-```
-and make a file `/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf` with these lines in it:
-```
-[connection]
-wifi.powersave = 2
-```
-After this, restart NetworkManager with `sudo systemctl restart NetworkManager.service`. Once that is done, lose every open terminal and then press `Win+F5` which will bring us back to TTY. Not closing terminals would corrupt `.zsh_history` file, which kinda sucks because then you can't run DWM.
-
-Now for the final step, type this:
-```
-sudo systemctl restart network-manager.service
-```
-
-Now `startx` to go back to dwm.
+A simple workaround for this is to edit `/etc/systemd/logind.conf`, uncomment every `HandleLidSwitch` line and put `ignore` as their value (doing this so that system doesn't suspend/sleep). Then, install `acpid` package and head over to `/etc/acpi/`. Open `handler.sh` (may need to use sudo/doas) and find the line containing `button/lid`. In the `open` case add a new line `/usr/bin/rfkill unblock wifi`. Now enable and start acpid with `sudo systemctl enable --now acpid.service && sudo systemctl start --now acpid.service`
+</details>
