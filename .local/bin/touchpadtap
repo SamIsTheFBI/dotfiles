@@ -5,6 +5,8 @@ id=$(xinput list | grep Touchpad | awk '{ print $6}' | cut -d '=' -f 2)
 
 state=$(xinput list-props $id | grep "Device Enabled" | awk ' {print $4} ')
 
+paplay ~/.config/dunst/notif.wav &
+
 if [ $state = 1 ]; then
 	dunstify -r 5 -a top-center -u normal " Mouse:" "Touchpad disabled"
 	xinput set-prop $id "Device Enabled" 0

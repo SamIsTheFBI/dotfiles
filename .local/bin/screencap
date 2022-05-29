@@ -1,20 +1,30 @@
 #!/bin/sh
 
 if [ -z "$1" ];then
-	maim --format png /dev/stdout | xclip -selection clipboard -t image/png -i
-	notify-send '  Screenshot copied to clipboard'
+	maim ~/.cache/cache.png
+	xclip -selection clipboard -t image/png ~/.cache/cache.png
+	notify-send -i "~/.cache/cache.png" ' Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 elif [ "$1" == "fullsave" ];then
 	var=~/Screenshots/Screenshot_$(date +%Y%m%d_%H%M%S).png
 	maim $var 
-	notify-send -i "$var" '  Screenshot saved'
+	xclip -selection clipboard -t image/png $var
+	notify-send -i "$var" ' Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "selectcopy" ];then
-	maim -s /dev/stdout | xclip -selection clipboard -t image/png -i
-	notify-send '  Screen selection copied to clipboard'
+	maim -s ~/.cache/cache.png
+	xclip -selection clipboard -t image/png ~/.cache/cache.png
+	notify-send -i "~/.cache/cache.png" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 elif [ "$1" == "selectsave" ];then
 	var=~/Screenshots/ScreenSelect_$(date +%Y%m%d_%H%M%S).png
 	maim -s $var
-	notify-send -i "$var" '  Screen selection saved'
+	xclip -selection clipboard -t image/png $var
+	notify-send -i "$var" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "actwincopy" ];then
-	maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
-	notify-send '  Focused window screenshot copied to clipboard'
+	maim -i $(xdotool getactivewindow) ~/.cache/cache.png
+	xclip -selection clipboard -t image/png ~/.cache/cache.png
+	notify-send -i "~/.cache/cache.png" ' Active Window Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
+elif [ "$1" == "actwinsave" ];then
+	var=~/Screenshots/$(xdotool getactivewindow getwindowclassname)_$(date +%Y%m%d_%H%M%S).png
+	maim -i $(xdotool getactivewindow) $var
+	xclip -selection clipboard -t image/png $var
+	notify-send -i "$var" ' Active Window Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 fi
