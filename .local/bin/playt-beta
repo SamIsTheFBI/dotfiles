@@ -9,25 +9,31 @@ rm -rf ~/.cache/format
 if [ "$1" == "-F" ];then
   yt-dlp -F $2 
 else
-  video_url=$(echo | dmenu -i -p "Enter YouTube video URL: ")
-	type=$(printf "Video+Audio\nAudio Only" | dmenu -i -p "What are you trying to download?")
+	video_url=$(echo | dmenu -i -p "Enter YouTube video URL: ")
+	
+	[[ -z $video_url ]] && exit 
 
-  yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
+	type=$(printf "Video+Audio\nAudio Only" | dmenu -i -p "What are you trying to download?")
+	
+	[[ -z $type ]] && exit 
+	
+	notify-send -t 2000 " " "Fetching available qualities..."
+	yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
   
 	if [[ $type == 'Audio Only' ]]; then
 		cd ~/Music
-		notify-send "Trying to download..." 
+		notify-send -t 2000 " " "Trying to download..." 
 		yt-dlp -f 'ba' -x --audio-format mp3 --embed-thumbnail $video_url --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --parse-metadata "%(uploader|)s:%(meta_artist)s" --add-metadata --output "%(title)s.%(ext)s"
-		notify-send "Download finished"
+		paplay $HOME/.config/dunst/notif.wav &
+		notify-send -t 2000 " " "Download finished"
 	else
-  	[[ -z $video_url ]] && exit || notify-send "Fetching available qualities..."
+		[[ -z $video_url ]] && exit 
 		audio=$(cat ~/.cache/format | grep audio | dmenu -i -p "Choose audio quality" -l 10 | awk '{print $1}')
 		video=$(cat ~/.cache/format | grep video | dmenu -i -p "Choose video quality" -l 10 | awk '{print $1}')
 		[[ -z $video ]] && format=$audio || [[ -z $audio ]] && format="$video" || format="$audio+$video"
 		echo "User requested format: $format"
-		notify-send "Trying to download..." 
+		notify-send -t 2000 " " "Trying to download..." 
 		output=$(yt-dlp -f $format --embed-thumbnail --convert-subs srt --embed-sub --sub-langs "en.*,ja" --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
-		[[ $output == *merged\ into\ mkv* ]] && notify-send "Requested formats are incompatible. Merging into MKV..." || continue
-		[[ $output == *has\ already\ been\ downloaded* ]] && notify-send "Requested audio/video is already present in your videos directory" || [[ -z $output ]] && notify-send "Download unsuccessful" || notify-send "Download finished"
+		[[ $output == '*has already been downloaded*' ]] && notify-send -t 3000 " " "Requested audio/video is already present in $HOME/Videos" || [[ -z $output ]] && notify-send -t 2000 " " "Download unsuccessful" || notify-send -t 2000 " " "Download finished"
 	fi
 fi
