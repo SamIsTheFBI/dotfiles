@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sel=$(printf "Save current colorscheme\nChoose a colorscheme" | dmenu -l 12)
+sel=$(printf "Save current colorscheme\nChoose a colorscheme\nDelete a colorscheme" | dmenu -l 12)
 
 if [[ $sel == *Save* ]]; then
 	theme_name="$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | dmenu -p "Give your colorscheme a name: " -l 12)" 
