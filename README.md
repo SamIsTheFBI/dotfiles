@@ -18,7 +18,7 @@ I also make use of [eww widgets](https://github.com/elkowar/eww) to display batt
 
 ## Setup (Arch)
 
-If you don't have Arch installed and want to use my setup, then try my install script. Installing Arch yourself, installing dependencies and then cloning my dotfiles is always an alternative.
+If you don't have Arch installed and want to use my setup, then try [my install script](https://github.com/SamIsTheFBI/sami). Installing Arch yourself, getting the dependencies and then cloning my dotfiles is always an alternative that I would suggest.
 
 If you already have Arch installed, figure out dependencies from below, install them & run the following:
 
@@ -94,6 +94,13 @@ All my scripts should work fine. Changing/saving themes should be a breeze. This
 - redshift
 
 </details>
+
+## To-do
+
+- [ ] Add colors to status bar elements
+- [ ] Make some themes
+- [ ] Customize the tags side of the vanilla dwm status bar
+- [ ] Clickable dwmblocks
 
 ## Wallpaper Credits
 
