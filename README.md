@@ -9,7 +9,6 @@
 - Text Editor: [Neovim](https://github.com/neovim/neovim)
 - Status Bar: [slstatus](https://tools.suckless.org/slstatus/)
 - AUR Helper: [Pikaur](https://github.com/actionless/pikaur)
-- Font: [Nerd Fonts JetBrains Mono](https://www.nerdfonts.com/)
 - Image Viewer: [sxiv](https://github.com/muennich/sxiv)
 - Screenshot: [maim](https://github.com/naelstrof/maim)
 - Display Server: [Xorg](https://www.x.org/wiki)
@@ -19,9 +18,82 @@ I also make use of [eww widgets](https://github.com/elkowar/eww) to display batt
 
 ## Setup (Arch)
 
-If you already have Arch installed, figure out requirements & run Part 3 from [my Arch install script](https://github.com/samisthefbi/sami). It clones my dotfiles, dwm, slstatus and st configs. 
+If you don't have Arch installed and want to use my setup, then try my install script. Installing Arch yourself, installing dependencies and then cloning my dotfiles is always an alternative.
 
-If you don't have Arch installed, well, use my install script completely.
+If you already have Arch installed, figure out dependencies from below, install them & run the following:
+
+```
+git clone --separate-git-dir=$HOME/.dotfiles https://github.com/SamIsTheFBI/dotfiles.git tmpdotfiles
+rsync --recursive --verbose --exclude '.git' tmpdotfiles/ $HOME/
+rm -r tmpdotfiles
+```
+
+<details>
+<summary><b>Minimal</b></summary><br>
+  
+With just these, a few not-so-important scripts won't work. Lockscreen won't show battery percentage. You will have to set up keybindings yourself. You'd have to live with the same theme forever (unless you try to change codes which is tedious). But on the bright side, you get a minimal Arch setup & you configure most things so it's more your setup and less mine.
+  
+- rsync
+- xorg
+- i3lock-color
+- nitrogen
+- pamixer
+- maim
+- dunst
+- libnotify
+- brightnessctl
+- nerd-fonts-jetbrains-mono
+- slstatus
+- dwm
+- dmenu
+- rofi
+</details>
+
+<details>
+<summary><b>Recommended</b></summary><br>
+
+All my scripts should work fine. Changing/saving themes should be a breeze. This will give my complete setup minus the apps.
+   
+- rsync
+- xorg
+- xrdb
+- i3lock-color
+- nitrogen
+- pamixer
+- maim
+- dunst
+- libnotify
+- brightnessctl
+- noto-fonts-cjk
+- nerd-fonts-jetbrains-mono
+- rofi
+- [My dwm build](https://github.com/samisthefbi/dwm)
+- [My dmenu build](https://github.com/samisthefbi/dmenu)
+- [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs)
+- [My slstatus configs](https://github.com/samisthefbi/slstatus) (using a single script to display status bar elements sometimes doesn't update on my ultra poor laptop)
+- picom
+- awk
+- [eww](https://github.com/elkowar/eww)
+- ffmpeg
+- xdotool
+- yt-dlp
+- paplay
+- mpv
+- xclip
+- colorpicker
+- mpc
+- mpd
+- ncmpcpp
+- python-pywal
+- imagemagick
+- jq
+- curl
+- wget
+- sed
+- nvim
+- redshift
+
+</details>
 
 ## Wallpaper Credits
 
@@ -30,9 +102,9 @@ The wallpaper used is drawn by [Muji](https://www.pixiv.net/artworks/91389488).
 ## Troubleshooting
 
 <details>
-<summary><b>No WiFi after opening a closed laptop lid</b></summary>
+<summary><b>No WiFi after opening a closed laptop lid</b></summary><br>
 
-This happens because closing lid somehow triggers an event to softblock wifi. Weird thing with the kernel apparently.
+This happens because opening a closed laptop lid somehow triggers an event to softblock wifi. Weird thing with the kernel apparently.
 
 A simple workaround for this is to edit `/etc/systemd/logind.conf`, uncomment every `HandleLidSwitch` line and put `ignore` as their value (doing this so that system doesn't suspend/sleep). Then, install `acpid` package and head over to `/etc/acpi/`. Open `handler.sh` (may need to use sudo/doas) and find the line containing `button/lid`. In the `open` case add a new line `/usr/bin/rfkill unblock wifi`. Now enable and start acpid with `sudo systemctl enable --now acpid.service && sudo systemctl start --now acpid.service`
 </details>
