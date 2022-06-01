@@ -26,23 +26,21 @@ cp ~/.cache/wal/colors-wal-dmenu.h $dmenu_dir/dmenu-colors.h
 cp ~/.cache/wal/colors-wal-st.h $st_dir/st-colors.h
 
 rofi_bg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
-rofi_searchbarbg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
 rofi_fg=$(cat ~/.cache/wal/colors.hs | grep 'color1=' | grep -o '#......')
 
 dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
 dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
 
-sed -i '303d' $dunstrc_dir/dunstrc
-sed -i '303d' $dunstrc_dir/dunstrc
-sed -i '93d' $dunstrc_dir/dunstrc
-sed -i "s/frame_color*/frame_color=\"$rofi_fg\"/g" $dunstrc_dir/dunstrc
-sed -i "/frame_color*/ a highlight=\"$rofi_fg\"" $dunstrc_dir/dunstrc
-sed -i "/\[urgency_normal\]/ a background = \"$dunst_bg\"\nforeground = \"$dunst_fg\"" $dunstrc_dir/dunstrc
+sed -ir "s/frame_color = .*/frame_color = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
+sed -ir "s/highlight = .*/highlight = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
+sed -ir "s/background = .*/background = \"$dunst_bg\"/g" $dunstrc_dir/dunstrc
+sed -ir "s/foreground = .*/foreground = \"$dunst_fg\"/g" $dunstrc_dir/dunstrc
 
-sed -i '8,10d' ~/.config/rofi/theme.rasi
-sed -i "/{/ a background: $rofi_bg;\nforeground: $rofi_fg;\nsearchbarbg: $rofi_searchbarbg;" ~/.config/rofi/theme.rasi
+sed -ir "s/background.*/background: $rofi_bg/g" ~/.config/rofi/theme.rasi
+sed -ir "s/foreground.*/foreground: $rofi_fg/g" ~/.config/rofi/theme.rasi
+sed -ir "s/searchbarbg.*/searchbarbg: $rofi_bg/g" ~/.config/rofi/theme.rasi
 
-sed -i "s/Sxiv.foreground*/Sxiv.foreground: \"$rofi_fg\"/g" ~/.Xresources
+sed -ir "s/Sxiv.foreground.*/Sxiv.foreground: $rofi_fg/g" ~/.Xresources
 
 sudo make clean -C $dwm_dir install
 sudo make clean -C $dmenu_dir install
@@ -54,3 +52,5 @@ dunst >/dev/null 2>&1 < /dev/null &
 xrdb -load ~/.Xresources
 
 xdotool key Control+F5
+notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Deleted "$theme_name" color scheme</span>"
+
