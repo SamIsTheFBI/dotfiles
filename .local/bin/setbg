@@ -1,6 +1,7 @@
 #!/bin/sh
 
 wall_dir=~/Wallpapers
+
 if [ -z "$1" ];then
 	echo "Choosing a random wallpaper from your wallpaper directory..."
 	wall="$(find "$wall_dir" -type f -name "*.jpg" -o -name "*.png" | shuf -n1)"

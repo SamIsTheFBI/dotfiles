@@ -21,23 +21,28 @@ wal -i $wall
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
 sed -i -re '13,18d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
-cp ~/.cache/wal/colors-wal-dwm.h ~/.local/src/dwm/
-cp ~/.cache/wal/colors-wal-dmenu.h ~/.local/src/dmenu/
-cp ~/.cache/wal/colors-wal-st.h ~/.local/src/st/
-
-dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
-dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
-
-sed -i '302d' $dunstrc_dir/dunstrc
-sed -i '302d' $dunstrc_dir/dunstrc
-sed -i "/\[urgency_normal\]/ a background = \"$dunst_bg\"\nforeground = \"$dunst_fg\"" $dunstrc_dir/dunstrc
+cp ~/.cache/wal/colors-wal-dwm.h $dwm_dir/dwm-colors.h
+cp ~/.cache/wal/colors-wal-dmenu.h $dmenu_dir/dmenu-colors.h
+cp ~/.cache/wal/colors-wal-st.h $st_dir/st-colors.h
 
 rofi_bg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
 rofi_searchbarbg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
 rofi_fg=$(cat ~/.cache/wal/colors.hs | grep 'color1=' | grep -o '#......')
 
+dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
+dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
+
+sed -i '303d' $dunstrc_dir/dunstrc
+sed -i '303d' $dunstrc_dir/dunstrc
+sed -i '93d' $dunstrc_dir/dunstrc
+sed -i "s/frame_color*/frame_color=\"$rofi_fg\"/g" $dunstrc_dir/dunstrc
+sed -i "/frame_color*/ a highlight=\"$rofi_fg\"" $dunstrc_dir/dunstrc
+sed -i "/\[urgency_normal\]/ a background = \"$dunst_bg\"\nforeground = \"$dunst_fg\"" $dunstrc_dir/dunstrc
+
 sed -i '8,10d' ~/.config/rofi/theme.rasi
 sed -i "/{/ a background: $rofi_bg;\nforeground: $rofi_fg;\nsearchbarbg: $rofi_searchbarbg;" ~/.config/rofi/theme.rasi
+
+sed -i "s/Sxiv.foreground*/Sxiv.foreground: \"$rofi_fg\"/g" ~/.Xresources
 
 sudo make clean -C $dwm_dir install
 sudo make clean -C $dmenu_dir install
@@ -45,5 +50,7 @@ sudo make clean -C $st_dir install
 
 pkill dunst
 dunst >/dev/null 2>&1 < /dev/null & 
+
+xrdb -load ~/.Xresources
 
 xdotool key Control+F5

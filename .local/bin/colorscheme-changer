@@ -1,0 +1,50 @@
+#!/bin/sh
+
+sel=$(printf "Save current colorscheme\nChoose a colorscheme" | dmenu -l 12)
+
+if [[ $sel == *Save* ]]; then
+	theme_name="$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | dmenu -p "Give your colorscheme a name: " -l 12)" 
+	[[ -z $theme_name ]] && exit
+
+	mkdir -vp $HOME/.theme/"$theme_name"/ > /dev/null 2>&1 
+
+	cp $HOME/.local/src/dwm/dwm-colors.h $HOME/.theme/"$theme_name"/
+	cp $HOME/.local/src/st/st-colors.h $HOME/.theme/"$theme_name"/
+	cp $HOME/.local/src/dmenu/dmenu-colors.h $HOME/.theme/"$theme_name"/
+	cp $HOME/.config/dunst/dunstrc $HOME/.theme/"$theme_name"/
+	cp $HOME/.config/rofi/theme.rasi $HOME/.theme/"$theme_name"/
+	cp $HOME/.local/share/wallpaper/bg.jpg $HOME/.theme/"$theme_name"/
+	cp $HOME/.Xresources $HOME/.theme/"$theme_name"/
+
+	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Current color scheme was saved as $theme_name</span>"
+elif [[ $sel == *Choose* ]]; then
+	theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | dmenu -p "Choose a colorscheme: " -l 12)
+	[[ -z $theme_name ]] && exit
+
+	setbg $HOME/.theme/"$theme_name"/bg.jpg
+	cp $HOME/.theme/"$theme_name"/dunstrc $HOME/.config/dunst/dunstrc
+	cp $HOME/.theme/"$theme_name"/theme.rasi $HOME/.config/rofi/theme.rasi
+	cp $HOME/.theme/"$theme_name"/.Xresources $HOME/.Xresources
+	cp $HOME/.theme/"$theme_name"/st-colors.h $HOME/.local/src/st/st-colors.h && sudo make clean -C $HOME/.local/src/st/ install
+	cp $HOME/.theme/"$theme_name"/dmenu-colors.h $HOME/.local/src/dmenu/dmenu-colors.h && sudo make clean -C $HOME/.local/src/dmenu/ install
+	cp $HOME/.theme/"$theme_name"/dwm-colors.h $HOME/.local/src/dwm/dwm-colors.h && sudo make clean -C $HOME/.local/src/dwm/ install
+
+	# Reloading dunst notification daemon to apply changes
+	pkill dunst
+	dunst >/dev/null 2>&1 < /dev/null & 
+
+	xrdb -load ~/.Xresources
+
+	xdotool key Control+F5
+
+	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Color scheme set to "$theme_name"</span>"
+elif [[ $sel == *Delete* ]]; then
+	theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | dmenu -p "Choose a colorscheme: " -l 12)
+	[[ -z $theme_name ]] && exit
+
+	rm -rf $HOME/.theme/"$theme_name"
+
+	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Deleted "$theme_name" color scheme</span>"
+else
+	exit
+fi

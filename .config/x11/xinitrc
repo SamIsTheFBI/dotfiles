@@ -1,18 +1,26 @@
 #pkill notify-song-cha
 pkill picom
-pkill dunst 
 pkill slstatus
-#sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
-#sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
-#sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
-#rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
+pkill mpd
+pkill rclone
+pkill ntfs-3g
+killall dunst
+
+# Mount Storage
+# sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
+# sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
+# sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
+# rclone mount mydrive: ~/Cloud\ Storage/My\ Drive & 
+
 brightnessctl s 0
 redshift -O 4500
 redshift -O 4500
 nitrogen --restore
 picom --experimental-backend -b
-dunst &
 slstatus &
-#mpd &
+dunst &
+mpd &
+xrdb -load ~/.Xresources
 #setsid notify-song-change >/dev/null 2>&1 < /dev/null &
+
 exec dwm

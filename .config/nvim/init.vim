@@ -28,8 +28,9 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 Plug 'numToStr/Comment.nvim'
-Plug 'windwp/nvim-autopairs'
 Plug 'Pocco81/AutoSave.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'neoclide/coc.nvim'
 
 call plug#end()
 
@@ -39,7 +40,7 @@ call plug#end()
 let g:tokyonight_style = "night"
 "colorscheme tokyonight
 colorscheme gruvbox
-"hi Normal guibg=NONE ctermbg=NONE
+hi Normal guibg=NONE ctermbg=NONE
 
 lua require('colorizer').setup()
 lua require('lualine').setup()
@@ -47,7 +48,7 @@ lua require('bufferline').setup()
 lua require('nvim-tree').setup() 
 lua require("indent_blankline").setup()
 lua require('Comment').setup()
-lua require('nvim-autopairs').setup()
+" lua require('nvim-autopairs').setup()
 
 " lua << EOF
 " local autosave = require("autosave")
@@ -187,11 +188,15 @@ require("nvim-web-devicons").set_icon {
 }
 EOF
 
+"coc config
+let g:coc_global_extensions = [ 'coc-pairs']
+
 "---Mapping----
 
-map <C-q> :NvimTreeClose<CR>:q<CR>
+map <C-q> :NvimTreeClose<CR>:BufferLineCyclePrev<CR>:q<CR>
 map <C-n> :NvimTreeToggle<CR>
 map <C-c> :ColorizerToggle<CR>
 map <M-Left> :BufferLineCyclePrev<CR>
 map <M-Right> :BufferLineCycleNext<CR>
-map <C-x><C-x> :bd<CR>:NvimTreeToggle<CR>:NvimTreeToggle<CR><C-w><C-w> 
+map <C-x><C-w> :bd<CR>:NvimTreeToggle<CR>:NvimTreeToggle<CR><C-w><C-w> 
+map <C-x><C-d> :set wrap!<CR>

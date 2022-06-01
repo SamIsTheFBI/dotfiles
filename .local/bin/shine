@@ -6,4 +6,4 @@ elif [ "$1" == "decr" ];then
 	brightnessctl s 5%-
 fi
 
-dunstify -r 25 -h int:value:$(var=$(brightnessctl g) && echo $(($var*100/255))) 'Brightness'
+dunstify -t 1000 -r 25 -h int:value:$(var=$(brightnessctl g) && echo $(($var*100/255))) 'Brightness'

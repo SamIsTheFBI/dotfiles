@@ -14,4 +14,4 @@ elif [ "$1" == "tmute" ];then
 	pamixer -t
 fi
 
-dunstify -a "volume" -r 25 -h int:value:$(pamixer --get-volume-human) 'Volume'
+dunstify -t 1000 -a "volume" -r 25 -h int:value:$(pamixer --get-volume-human) " Volume: $(pamixer --get-volume-human)"

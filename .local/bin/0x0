@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ $1 == 'history' ]]; then
+if [[ $1 == '-history' ]]; then
 	sel="$(tac $HOME/Documents/0x0_log.txt | dmenu -l 12 | awk -F ' - ' '{print $NF}')"
 	[[ -z $sel ]] && exit || echo $sel | xclip -selection clipboard && notify-send -t 3000 "0x0" "URL copied to clipboard"
 else

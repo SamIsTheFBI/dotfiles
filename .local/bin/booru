@@ -144,10 +144,11 @@ for img in $imgs; do
 		wget --no-check-certificate -P "$cache_path/$booru/$dir" $img
 	fi
 done
-
+rename -v -a ' ' '_' $cache_path/$booru/$dir/*
 rm -rf $cache_path/tmp.json
 
-notify-send "Your images have been downloaded!" &
+paplay ~/.config/dunst/notif.wav &
+notify-send -t 3000 "Your images have been downloaded!" &
 echo "Images have been downloaded. Display them now? [y/n]"
 read ans
 if [ "$ans" == 'y' ]
