@@ -52,5 +52,5 @@ dunst >/dev/null 2>&1 < /dev/null &
 xrdb -load ~/.Xresources
 
 xdotool key Control+F5
-notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Deleted "$theme_name" color scheme</span>"
+notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Changed color scheme</span>"
 
