@@ -36,9 +36,9 @@ sed -ir "s/highlight = .*/highlight = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/background = .*/background = \"$dunst_bg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/foreground = .*/foreground = \"$dunst_fg\"/g" $dunstrc_dir/dunstrc
 
-sed -ir "s/background.*/background: $rofi_bg/g" ~/.config/rofi/theme.rasi
-sed -ir "s/foreground.*/foreground: $rofi_fg/g" ~/.config/rofi/theme.rasi
-sed -ir "s/searchbarbg.*/searchbarbg: $rofi_bg/g" ~/.config/rofi/theme.rasi
+sed -ir "s/background.*/background: $rofi_bg;/g" ~/.config/rofi/theme.rasi
+sed -ir "s/foreground.*/foreground: $rofi_fg;/g" ~/.config/rofi/theme.rasi
+sed -ir "s/searchbarbg.*/searchbarbg: $rofi_bg;/g" ~/.config/rofi/theme.rasi
 
 sed -ir "s/Sxiv.foreground.*/Sxiv.foreground: $rofi_fg/g" ~/.Xresources
 
