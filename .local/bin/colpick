@@ -2,4 +2,4 @@
 
 col=$(colorpicker --short --one-shot --preview)
 echo "$col"
-echo "$col" |tr -d '\n' | xclip -selection clipboard; dunstify -r 177013 -t 3000 " Color Picker" "<span foreground='$col'><b>$col</b></span> Copied to clipboard";
+echo "$col" |tr -d '\n' | xclip -selection clipboard; dunstify -r 177013 -t 3000 " Color Picker" "<span font='JetBrainsMono Nerd Font 12'><span foreground='$col'><b>$col</b></span> Copied to clipboard</span>";

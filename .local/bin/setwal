@@ -20,10 +20,39 @@ wal -i $wall
 
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
-sed -i -re '13,18d' ~/.cache/wal/colors-wal-dwm.h                              #to remove SchemeUrg color since I didn't get that patch
-cp ~/.cache/wal/colors-wal-dwm.h $dwm_dir/dwm-colors.h
-cp ~/.cache/wal/colors-wal-dmenu.h $dmenu_dir/dmenu-colors.h
-cp ~/.cache/wal/colors-wal-st.h $st_dir/st-colors.h
+cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p
+
+color0=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p)
+color1=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 2p)
+color2=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 3p)
+color3=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 4p)
+color4=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 5p)
+color5=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 6p)
+color6=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 7p)
+color7=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 8p)
+color8=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 9p)
+color9=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 10p)
+color10=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 11p)
+color11=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 12p)
+color12=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 13p)
+color13=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 14p)
+color14=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 15p)
+color15=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 16p)
+background=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 17p)
+foreground=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 18p)
+cursorColor=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 19p)
+
+dmenufg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 1p)
+dmenubg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 2p)
+dmenuselfg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 3p)
+dmenuselbg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 4p)
+
+norm_fg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 1p)
+norm_bg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 2p)
+norm_border=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 3p)
+sel_fg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 4p)
+sel_bg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 5p)
+sel_border=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 6p)
 
 rofi_bg=$(cat ~/.cache/wal/colors.hs | grep 'background' | grep -o '#......')
 rofi_fg=$(cat ~/.cache/wal/colors.hs | grep 'color1=' | grep -o '#......')
@@ -42,15 +71,44 @@ sed -ir "s/searchbarbg.*/searchbarbg: $rofi_bg;/g" ~/.config/rofi/theme.rasi
 
 sed -ir "s/Sxiv.foreground.*/Sxiv.foreground: $rofi_fg/g" ~/.Xresources
 
-sudo make clean -C $dwm_dir install
-sudo make clean -C $dmenu_dir install
-sudo make clean -C $st_dir install
+sed -ir "s/dwm.norm_fg.*/dwm.norm_fg: $norm_fg/g" ~/.Xresources
+sed -ir "s/dwm.norm_bg.*/dwm.norm_bg: $norm_bg/g" ~/.Xresources
+sed -ir "s/dwm.norm_border.*/dwm.norm_border: $norm_border/g" ~/.Xresources
+sed -ir "s/dwm.sel_fg.*/dwm.sel_fg: $sel_fg/g" ~/.Xresources
+sed -ir "s/dwm.sel_bg.*/dwm.sel_bg: $sel_bg/g" ~/.Xresources
+sed -ir "s/dwm.sel_border.*/dwm.sel_border: $sel_border/g" ~/.Xresources
 
+sed -ir "s/*.color0:.*/*.color0: $color0/g" ~/.Xresources
+sed -ir "s/*.color1:.*/*.color1: $color1/g" ~/.Xresources
+sed -ir "s/*.color2:.*/*.color2: $color2/g" ~/.Xresources
+sed -ir "s/*.color3:.*/*.color3: $color3/g" ~/.Xresources
+sed -ir "s/*.color4:.*/*.color4: $color4/g" ~/.Xresources
+sed -ir "s/*.color5:.*/*.color5: $color5/g" ~/.Xresources
+sed -ir "s/*.color6:.*/*.color6: $color6/g" ~/.Xresources
+sed -ir "s/*.color7:.*/*.color7: $color7/g" ~/.Xresources
+sed -ir "s/*.color8:.*/*.color8: $color8/g" ~/.Xresources
+sed -ir "s/*.color9:.*/*.color9: $color9/g" ~/.Xresources
+sed -ir "s/*.color10:.*/*.color10: $color10/g" ~/.Xresources
+sed -ir "s/*.color11:.*/*.color11: $color11/g" ~/.Xresources
+sed -ir "s/*.color12:.*/*.color12: $color12/g" ~/.Xresources
+sed -ir "s/*.color13:.*/*.color13: $color13/g" ~/.Xresources
+sed -ir "s/*.color14:.*/*.color14: $color14/g" ~/.Xresources
+sed -ir "s/*.color15:.*/*.color15: $color15/g" ~/.Xresources
+sed -ir "s/*.background:.*/*.background: $background/g" ~/.Xresources
+sed -ir "s/*.foreground:.*/*.foreground: $foreground/g" ~/.Xresources
+sed -ir "s/*.cursorColor:.*/*.cursorColor: $cursorColor/g" ~/.Xresources
+
+sed -ir "s/dmenu.background:.*/dmenu.background: $dmenubg/g" ~/.Xresources
+sed -ir "s/dmenu.foreground:.*/dmenu.foreground: $dmenufg/g" ~/.Xresources
+sed -ir "s/dmenu.selbackground:.*/dmenu.selbackground: $dmenuselbg/g" ~/.Xresources
+sed -ir "s/dmenu.selforeground:.*/dmenu.selforeground: $dmenuselfg/g" ~/.Xresources
+
+xrdb -load ~/.Xresources
+xdotool key super+control+F5
+
+pidof st | xargs kill -s USR1
 pkill dunst
 dunst >/dev/null 2>&1 < /dev/null & 
 
-xrdb -load ~/.Xresources
-
-xdotool key Control+F5
 notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Changed color scheme</span>"
 

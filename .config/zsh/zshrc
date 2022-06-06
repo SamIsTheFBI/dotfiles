@@ -99,11 +99,15 @@ compdef _directories md
 alias tree='tree -a -I .git'
 
 # Add flags to existing aliases.
-alias dotfiles='/usr/sbin/git --git-dir=/home/samisthefbi/.dotfiles/ --work-tree=/home/samisthefbi'
-alias nv='/usr/bin/nvim'
+alias dots='/usr/sbin/git --git-dir=/home/samisthefbi/.dotfiles/ --work-tree=/home/samisthefbi'
+alias vi='/usr/bin/nvim'
 alias ls='/usr/bin/exa --color=always --group-directories-first --icons'
 alias ll='/usr/bin/exa --color=always --group-directories-first --icons -l'
 alias spotify='LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify -no-zygote'
+alias rempd='pkill mpd && rm ~/.config/mpd/database && mpd'
+alias clearcache='echo 3 | sudo tee /proc/sys/vm/drop_caches'
+alias availspace="echo $(df -h | grep /dev/sda7 | awk '{print $4}')"
+alias s='sxiv -ia <<< "$(find . -mindepth 1 -maxdepth 1 -type f | sort -V)"'
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot

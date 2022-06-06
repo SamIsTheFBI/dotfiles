@@ -115,3 +115,14 @@ This happens because opening a closed laptop lid somehow triggers an event to so
 
 A simple workaround for this is to edit `/etc/systemd/logind.conf`, uncomment every `HandleLidSwitch` line and put `ignore` as their value (doing this so that system doesn't suspend/sleep). Then, install `acpid` package and head over to `/etc/acpi/`. Open `handler.sh` (may need to use sudo/doas) and find the line containing `button/lid`. In the `open` case add a new line `/usr/bin/rfkill unblock wifi`. Now enable and start acpid with `sudo systemctl enable --now acpid.service && sudo systemctl start --now acpid.service`
 </details>
+
+<details>
+<summary><b>Brightness set to maximum when plugging/unplugging charger</b></summary>
+
+To fix this, 
+
+```
+sudo systemctl stop systemd-backlight@backlight:acpi_video1.service
+sudo systemctl disable systemd-backlight@backlight:acpi_video1.service
+```
+</details>

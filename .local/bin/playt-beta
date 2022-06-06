@@ -23,9 +23,7 @@ else
 	if [[ $type == 'Audio Only' ]]; then
 		cd ~/Music
 		notify-send -t 2000 " " "Trying to download..." 
-		yt-dlp -f 'ba' -x --audio-format mp3 --embed-thumbnail $video_url --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --parse-metadata "%(uploader|)s:%(meta_artist)s" --add-metadata --output "%(title)s.%(ext)s"
-		paplay $HOME/.config/dunst/notif.wav &
-		notify-send -t 2000 " " "Download finished"
+		output=$(yt-dlp -f 'ba' -x --audio-format mp3 --embed-thumbnail $video_url --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --parse-metadata "%(uploader|)s:%(meta_artist)s" --add-metadata --output "%(title)s.%(ext)s")
 	else
 		[[ -z $video_url ]] && exit 
 		audio=$(cat ~/.cache/format | grep audio | dmenu -i -p "Choose audio quality" -l 10 | awk '{print $1}')
@@ -34,6 +32,7 @@ else
 		echo "User requested format: $format"
 		notify-send -t 2000 " " "Trying to download..." 
 		output=$(yt-dlp -f $format --embed-thumbnail --convert-subs srt --embed-sub --sub-langs "en.*,ja" --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
-		[[ $output == '*has already been downloaded*' ]] && notify-send -t 3000 " " "Requested audio/video is already present in $HOME/Videos" || [[ -z $output ]] && notify-send -t 2000 " " "Download unsuccessful" || notify-send -t 2000 " " "Download finished"
 	fi
+	paplay ~/.config/dunst/notif.wav &
+	[[ -z $output ]] && notify-send -t 2000 " " "Download unsuccessful" || notify-send -t 2000 " " "Download finished"
 fi

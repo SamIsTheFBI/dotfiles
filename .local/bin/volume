@@ -1,8 +1,6 @@
 #!/bin/sh
 
-#dependencies: pamixer libpulse boost-libs dunst
-
-pamixer --set-limit 255 
+pamixer --set-limit 254 
 
 if [ "$1" == "incr" ];then
 	pamixer -u
