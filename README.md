@@ -1,4 +1,5 @@
-## My Arch Setup
+<h1 align="center"><i>~/.dotfiles</i></h1>
+
 ![Screenshot](https://0x0.st/oaVw.png)
 
 ## A few programs that I use
@@ -97,6 +98,9 @@ All my scripts should work fine. Changing/saving themes should be a breeze. This
 
 ## To-do
 
+- [x] ~~Apply Xresources/xrdb+live reloading patch to st, dwm and dmenu~~
+	- [x] ~~Make setwal script that uses pywal+Xresources to save colors~~
+	- [x] ~~Make theme changer script that uses Xresources to save/restore colors~~
 - [ ] Add colors to status bar elements
 - [ ] Make some themes
 - [ ] Customize the tags side of the vanilla dwm status bar
