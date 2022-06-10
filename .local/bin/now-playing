@@ -7,6 +7,5 @@ glyph()
 {
 	[[ "$var" == *laying* ]] && GLYPH="" || GLYPH=""
 }
-
 glyph
-[[ $(mpc current) == '' ]] && echo " " || echo "$GLYPH $(mpc current)"
+[[ $(mpc current) == '' ]] && echo " " || [[ $1 == 'sbar' ]] && echo "^B1^^c#1d2225^ $GLYPH $(mpc current) ^b#1d2225^^c#1d2225^" || echo " $GLYPH $(mpc current)"

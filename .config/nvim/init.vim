@@ -31,6 +31,7 @@ Plug 'numToStr/Comment.nvim'
 Plug 'Pocco81/AutoSave.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'neoclide/coc.nvim'
+Plug 'arcticicestudio/nord-vim'
 
 call plug#end()
 
@@ -39,7 +40,9 @@ call plug#end()
 "color scheme
 let g:tokyonight_style = "night"
 "colorscheme tokyonight
-colorscheme gruvbox
+" colorscheme gruvbox
+colorscheme nord
+
 hi Normal guibg=NONE ctermbg=NONE
 
 lua require('colorizer').setup()
@@ -194,7 +197,7 @@ let g:coc_global_extensions = [ 'coc-pairs']
 "---Mapping----
 
 map <C-q> :NvimTreeClose<CR>:BufferLineCyclePrev<CR>:q<CR>
-map <C-n> :NvimTreeToggle<CR>
+map <C-n> :NvimTreeFindFileToggle<CR>
 map <C-c> :ColorizerToggle<CR>
 map <M-Left> :BufferLineCyclePrev<CR>
 map <M-Right> :BufferLineCycleNext<CR>

@@ -2,4 +2,5 @@
 
 while true; do
 [[ "$current" == "$(mpc current)" || "$(mpc current)" == '' ]] && continue || current=$(mpc current) && song_notif
+echo ""
 done

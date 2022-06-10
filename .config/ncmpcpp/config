@@ -4,7 +4,7 @@ mpd_host = localhost
 mpd_port = 6600
 
 #Directories
-mpd_music_dir = "~/Local\ Disk\ D/Media/Music"
+mpd_music_dir = "~/Music"
 ncmpcpp_directory = "~/.config/ncmpcpp"
 lyrics_directory = "~/.local/share/lyrics"
 
@@ -20,7 +20,8 @@ visualizer_autoscale = no
 visualizer_data_source = "/tmp/mpd.fifo"
 visualizer_output_name = "my_fifo"
 visualizer_in_stereo = "yes"
-visualizer_look = "▮▮"
+visualizer_look = "●●"
+# visualizer_look = "▮▮"
 
 #ncmpcpp look & feel
 playlist_display_mode = "columns"

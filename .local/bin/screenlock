@@ -2,6 +2,10 @@
 
 #slowfade function from dark-dryu/i3lock-widgets-config
 
+RED=$(cat ~/.Xresources | grep 'color1:' | awk '{print $NF}')
+GREEN=$(cat ~/.Xresources | grep 'color2:' | awk '{print $NF}')
+BLUE=$(cat ~/.Xresources | grep 'color4:' | awk '{print $NF}')
+
 slowfade () {
     dis=$(echo -n "$DISPLAY" | tr -c '[:alnum:]' _)
     ifc='com.github.chjj.compton'
@@ -36,6 +40,12 @@ i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --da
 	--inside-color=#00000000 \
 	--line-color=#ffffff \
 	--ring-color=#ffffff \
+	--ringwrong-color="$RED" \
+	--ringver-color="$BLUE" \
+	--insidewrong-color="$RED" \
+	--insidever-color="$BLUE" \
+	--keyhl-color="$GREEN" \
+	--bshl-color="$RED" \
 	--ring-width=4 \
 	--pass-media-keys \
 	--pass-screen-keys \

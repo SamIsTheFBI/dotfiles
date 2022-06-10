@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ -z "$(echo $DISPLAY)" ] && exit || continue
+
 music=$HOME/Music/"$(mpc --format %file% current)"
 rm -f $HOME/.config/ncmpcpp/albumarts/current.jpg
 

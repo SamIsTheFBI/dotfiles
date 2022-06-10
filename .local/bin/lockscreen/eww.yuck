@@ -2,7 +2,7 @@
 (defpoll BATTERY :interval "5s" `cat /sys/class/power_supply/BAT1/capacity`)
 
 ;; current song
-(defpoll SONG :interval "1s" `statusbar-now-playing`)
+(defpoll SONG :interval "1s" `now-playing`)
 
 (defwidget lock_info []
 	(box 	:class "bat_capacity" 

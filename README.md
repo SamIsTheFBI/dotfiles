@@ -1,6 +1,6 @@
 <h1 align="center"><i>~/.dotfiles</i></h1>
 
-![Screenshot](https://0x0.st/oaVw.png)
+![Screenshot](https://0x0.st/oMDJ.png)
 
 ## A few programs that I use
 
@@ -100,9 +100,13 @@ All my scripts should work fine. Changing/saving themes should be a breeze. This
 
 - [x] ~~Apply Xresources/xrdb+live reloading patch to st, dwm and dmenu~~
 	- [x] ~~Make setwal script that uses pywal+Xresources to save colors~~
-	- [x] ~~Make theme changer script that uses Xresources to save/restore colors~~
-- [ ] Add colors to status bar elements
-- [ ] Make some themes
+	- [x] ~~Make theme changer script that uses Xresources to save/restore colorscheme & wallpaper~~
+- [X] ~~Add colors to status bar elements~~
+	- [X] ~~Use Status2d+xrdb instead of statuscolors~~
+- [ ] Make some themes (atleast 2)
+	- [X] ~~Nord Theme~~
+	- [ ] Gruvbox Theme
+	- [ ] Evangelion theme?
 - [ ] Customize the tags side of the vanilla dwm status bar
 - [ ] Clickable dwmblocks
 

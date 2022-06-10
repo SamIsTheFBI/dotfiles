@@ -97,17 +97,18 @@ compdef _directories md
 
 # Define aliases.
 alias tree='tree -a -I .git'
-
-# Add flags to existing aliases.
 alias dots='/usr/sbin/git --git-dir=/home/samisthefbi/.dotfiles/ --work-tree=/home/samisthefbi'
 alias vi='/usr/bin/nvim'
 alias ls='/usr/bin/exa --color=always --group-directories-first --icons'
 alias ll='/usr/bin/exa --color=always --group-directories-first --icons -l'
+alias lt='/usr/bin/exa --color=always --group-directories-first --icons -T'
 alias spotify='LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify -no-zygote'
-alias rempd='pkill mpd && rm ~/.config/mpd/database && mpd'
-alias clearcache='echo 3 | sudo tee /proc/sys/vm/drop_caches'
-alias availspace="echo $(df -h | grep /dev/sda7 | awk '{print $4}')"
-alias s='sxiv -ia <<< "$(find . -mindepth 1 -maxdepth 1 -type f | sort -V)"'
+alias rempd='pkill mpd && rm ~/.config/mpd/database && mpd &'
+alias cc='echo 3 | sudo tee /proc/sys/vm/drop_caches'
+alias d='echo "Space left: $(df -h | grep "/dev/sda7" | cut -d " " -f14)"'
+alias s='sxiv -iaq <<< "$(find . -mindepth 1 -maxdepth 1 -type f | sort -V)"'
+alias m='var=$(find . -mindepth 1 -maxdepth 1 -type f -exec file -N -i -- {} + | grep "video" | cut -d "/" -f2 | cut -d ":" -f1 | fzf) && [ -n "$var" ] && mpv --no-keepaspect-window --save-position-on-quit -- $var'
+alias h='tac ~/.zsh_history | cut -d ";" -f2- | sed 1d | fzf | xclip -r -sel c'
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot

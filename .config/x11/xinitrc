@@ -3,14 +3,13 @@ pkill picom
 pkill slstatus
 pkill mpd
 pkill rclone
-pkill ntfs-3g
+sudo pkill ntfs-3g
 killall dunst
 
-# Mount Storage
-# sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
-# sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
-# sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
-# rclone mount mydrive: ~/Cloud\ Storage/My\ Drive & 
+sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
+sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
+sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
+rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
 
 brightnessctl s 0
 redshift -O 4500
