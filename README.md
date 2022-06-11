@@ -1,6 +1,6 @@
 <h1 align="center"><i>~/.dotfiles</i></h1>
 
-![Screenshot](https://0x0.st/oMDJ.png)
+![Screenshot](https://user-images.githubusercontent.com/70562711/173168308-aa33e90d-bf1a-4031-b462-553ca70d3d10.png)
 
 ## A few programs that I use
 
@@ -28,71 +28,47 @@ git clone --separate-git-dir=$HOME/.dotfiles https://github.com/SamIsTheFBI/dotf
 rsync --recursive --verbose --exclude '.git' tmpdotfiles/ $HOME/
 rm -r tmpdotfiles
 ```
-
 <details>
-<summary><b>Minimal</b></summary><br>
-  
-With just these, a few not-so-important scripts won't work. Lockscreen won't show battery percentage. You will have to set up keybindings yourself. You'd have to live with the same theme forever (unless you try to change codes which is tedious). But on the bright side, you get a minimal Arch setup & you configure most things so it's more your setup and less mine.
-  
-- rsync
-- xorg
-- i3lock-color
-- nitrogen
-- pamixer
-- maim
-- dunst
-- libnotify
-- brightnessctl
-- nerd-fonts-jetbrains-mono
-- slstatus
-- dwm
-- dmenu
-- rofi
-</details>
+<summary><b>Dependencies</b></summary><br>
 
-<details>
-<summary><b>Recommended</b></summary><br>
-
-All my scripts should work fine. Changing/saving themes should be a breeze. This will give my complete setup minus the apps.
-   
-- rsync
-- xorg
-- xrdb
-- i3lock-color
-- nitrogen
-- pamixer
-- maim
-- dunst
-- libnotify
-- brightnessctl
-- noto-fonts-cjk
-- nerd-fonts-jetbrains-mono
-- rofi
-- [My dwm build](https://github.com/samisthefbi/dwm)
-- [My dmenu build](https://github.com/samisthefbi/dmenu)
-- [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs)
-- [My slstatus configs](https://github.com/samisthefbi/slstatus) (using a single script to display status bar elements sometimes doesn't update on my ultra poor laptop)
-- picom
-- awk
-- [eww](https://github.com/elkowar/eww)
-- ffmpeg
-- xdotool
-- yt-dlp
-- paplay
-- mpv
-- xclip
+- rsync (for the above command ig)
+- xorg (Display server)
+- xrdb (for themes)
+- i3lock-color (lockscreen)
+- nitrogen (setting wallpaper)
+- pamixer (I use this to control volume)
+- maim (screenshot tool)
+- dunst (notification daemon)
+- libnotify (for dunstify command?)
+- brightnessctl (control screen brightness)
+- noto-fonts-cjk (For CJK font)
+- nerd-fonts-jetbrains-mono (The main font that is everywhere in my build)
+- rofi (app launcher)
+- [My dwm build](https://github.com/samisthefbi/dwm) (window manager)
+- [My dmenu build](https://github.com/samisthefbi/dmenu) (dynamic menu)
+- [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs & idk how to fix that)
+- [My slstatus configs](https://github.com/samisthefbi/slstatus) (using a single script to display status bar elements sometimes doesn't update on my ultra poor laptop so)
+- picom (Compositor for those fancy transparency) (I used the one I found on pacman)
+- awk (utility to extract and present information) (I use this for scripts)
+- [eww](https://github.com/elkowar/eww) (for battery percentage and currently playing song in lockscreen)
+- ffmpeg (audio/video converter) (used to extract album art in a script)
+- xdotool (X11 automation tool) (used in theme changer script)
+- yt-dlp (YouTube downloader) (used in YouTube downloader script)
+- paplay (for notification sound)
+- mpv (for watchmedia script)
+- xclip (for copying/pasting)
 - colorpicker
-- mpc
-- mpd
-- ncmpcpp
-- python-pywal
-- imagemagick
-- jq
-- curl
-- wget
-- sed
-- nvim
-- redshift
+- mpc (for managing mpd)
+- mpd (music daemon)
+- ncmpcpp (mpd client)
+- python-pywal (for automated themes using setwal script)
+- imagemagick (for making lockscreen background)
+- jq (for booru script)
+- curl (same as above)
+- wget (same as above)
+- sed (same usage as awk)
+- nvim (my preferred text editor)
+- redshift (change color temperature of display)
 
 </details>
 
@@ -112,7 +88,7 @@ All my scripts should work fine. Changing/saving themes should be a breeze. This
 
 ## Wallpaper Credits
 
-The wallpaper used is drawn by [Muji](https://www.pixiv.net/artworks/91389488).
+[Link to the wallpaper in the screenshot above.](https://nordthemewallpapers.com/Backgrounds/16-9/All/img/3mcg97oyotu61.jpg)
 
 ## Troubleshooting
 
@@ -125,7 +101,7 @@ A simple workaround for this is to edit `/etc/systemd/logind.conf`, uncomment ev
 </details>
 
 <details>
-<summary><b>Brightness set to maximum when plugging/unplugging charger</b></summary>
+<summary><b>Brightness set to maximum when plugging/unplugging charger</b></summary><br>
 
 To fix this, 
 
