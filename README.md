@@ -83,8 +83,6 @@ rm -r tmpdotfiles
 	- [X] ~~Nord Theme~~
 	- [ ] Gruvbox Theme
 	- [ ] Evangelion theme?
-- [ ] Customize the tags side of the vanilla dwm status bar
-- [ ] Clickable dwmblocks
 
 ## Wallpaper Credits
 
