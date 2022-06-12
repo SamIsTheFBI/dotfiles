@@ -5,3 +5,9 @@ In my opinion these images give a nice colorscheme with pywal. If using my dotfi
 ## A quick demo of my theme changer script
 
 https://user-images.githubusercontent.com/70562711/173168281-f6843783-977b-4178-af7f-a6e03276b733.mp4
+
+## Using sxiv as "theme changer"
+
+Running setwal script using key handler in sxiv can make it a nice "theme changer" as well.
+
+https://user-images.githubusercontent.com/70562711/173233182-564934a9-ca76-4fc7-8702-eb8bb580011d.mp4

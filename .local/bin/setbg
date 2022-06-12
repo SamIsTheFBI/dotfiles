@@ -14,4 +14,4 @@ convert -scale 10% -blur 0x2.5 -resize 1000% $wall ~/.local/share/wallpaper/lock
 convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
-xdotool key Control+F5
+# xdotool key control+F5
