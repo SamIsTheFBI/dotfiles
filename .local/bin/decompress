@@ -2,7 +2,7 @@
 
 # For listing files in selected archive
 if [ "$1" == '-l' ]; then 
-	for file in "$@"; do
+	for file in "${@:2}"; do
 		[[ -f "$file" ]] && case "$file" in
 			*.zip)		unzip -l ./"$file" && echo ;;
 			*.rar)  	unrar l ./"$file" && echo ;;
@@ -16,7 +16,7 @@ if [ "$1" == '-l' ]; then
 
 # For extracting in current directory
 elif [ "$1" == '-c' ]; then
-	for file in "$@"; do
+	for file in "${@:2}"; do
 		[[ -f "$file" ]] && case "$file" in
 			*.zip)		unzip ./"$file" && echo ;;
 			*.rar)  	unrar x ./"$file" && echo ;;
