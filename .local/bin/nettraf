@@ -18,4 +18,5 @@ update() {
 rx=$(update /sys/class/net/$network_interface/statistics/rx_bytes)
 tx=$(update /sys/class/net/$network_interface/statistics/tx_bytes)
 
+[[ $1 == 'sbar' && $var == '8.8.8.8' ]] && printf "^B2^^C0^ %4sB/s %4sB/s ^b#1d2225^^c#1d2225^\\n" $(numfmt --to=iec $rx $tx) || [[ $1 == 'sbar' && $var != '8.8.8.8' ]] && printf "^B2^^C0^ 睊 Disconnected ^b#1d2225^^c#1d2225^"
 [[ $var == '8.8.8.8' ]] && printf " %4sB/s %4sB/s\\n" $(numfmt --to=iec $rx $tx) || printf " 睊 Disconnected"

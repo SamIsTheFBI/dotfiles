@@ -23,7 +23,7 @@ slowfade () {
     fi
 }
 
-sleep 1 && eww -c ~/.local/bin/lockscreen/ open-many battery song &
+sleep 1 && eww -c ~/.local/bin/lockscreen/ open-many battery song uptime &
 slowfade start 
 i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --date-str="%a, %d %b %Y" \
 	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \

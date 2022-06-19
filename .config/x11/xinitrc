@@ -1,10 +1,11 @@
 #pkill notify-song-cha
+killall dunst
 pkill picom
 pkill slstatus
 pkill mpd
 pkill rclone
 sudo pkill ntfs-3g
-killall dunst
+# killall dunst
 
 sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
 sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &

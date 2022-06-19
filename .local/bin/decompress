@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# For listing files in selected archive
+if [ "$1" == '-l' ]; then 
+	for file in "$@"; do
+		[[ -f "$file" ]] && case "$file" in
+			*.zip)		unzip -l ./"$file" && echo ;;
+			*.rar)  	unrar l ./"$file" && echo ;;
+			*.tar.gz)	tar -tf ./"$file" && echo ;;
+			*.tar.xz)	tar -tf ./"$file" && echo ;;
+			*.tar.bz2)	tar -tf ./"$file" && echo ;;
+			*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+		esac
+	done
+	exit
+
+# For extracting in current directory
+elif [ "$1" == '-c' ]; then
+	for file in "$@"; do
+		[[ -f "$file" ]] && case "$file" in
+			*.zip)		unzip ./"$file" && echo ;;
+			*.rar)  	unrar x ./"$file" && echo ;;
+			*.tar.gz)	tar -xvf ./"$file" && echo ;;
+			*.tar.xz)	tar -xvf ./"$file" && echo ;;
+			*.tar.bz2)	tar -xvf ./"$file" && echo ;;
+			*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+		esac
+	done
+	exit
+fi
+
+# For extracting files in separated directory of same name as archive file 
+for file in "$@"; do
+	[[ -f "$file" ]] && case "$file" in
+		*.zip)		var="$(echo "${file%.*}")" && mkdir -p -- "$var" && unzip ./"$file" -d ./"$var" && echo ;;
+		*.rar)  	var="$(echo "${file%.*}")" && mkdir -p -- "$var" && unrar x ./"$file" ./"$var" && echo ;;
+		*.tar.gz)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf ./"$file" --directory ./"$var" && echo ;;
+		*.tar.xz)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf ./"$file" -C ./"$var" && echo ;;
+		*.tar.bz2)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf ./"$file" -C ./"$var" && echo ;;
+		*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+	esac
+done

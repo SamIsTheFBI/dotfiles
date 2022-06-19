@@ -4,6 +4,8 @@
 ;; current song
 (defpoll SONG :interval "1s" `now-playing`)
 
+(defpoll UPTIME :interval "1s" `uptime -p | sed 's/up//'`)
+
 (defwidget lock_info []
 	(box 	:class "bat_capacity" 
 			:orientation "h" 
@@ -19,6 +21,28 @@
 			:halign "center"
 			'${SONG}')
 )
+
+(defwidget uptime []
+	(box	:class "uptime" 
+			:orientation "h" 
+			:space-evenly "false" 
+			:halign "left"
+			'Uptime: ${UPTIME}')
+)
+
+(defwindow uptime
+				:monitor 0
+	    		:geometry 
+					(geometry 	:x "1%"
+								:y "3%" 
+								:width 3 
+								:height 3
+								:anchor "center top"
+							)
+				:stacking "bg" 
+				:focusable "false"
+				:screen 1
+           		(uptime))
 
 (defwindow battery
 				:monitor 0

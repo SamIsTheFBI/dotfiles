@@ -13,10 +13,10 @@ else
 	wall="$1"
 fi
 
-convert $wall ~/.local/share/wallpaper/bg.jpg
-convert -scale 10% -blur 0x2.5 -resize 1000% $wall ~/.local/share/wallpaper/lockscreen.png
+convert "$wall" ~/.local/share/wallpaper/bg.jpg
+convert -scale 10% -blur 0x2.5 -resize 1000% "$wall" ~/.local/share/wallpaper/lockscreen.png
 convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
-wal -i $wall
+wal -i "$wall"
 
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
