@@ -79,6 +79,9 @@ rm -r tmpdotfiles
 	- [x] ~~Make theme changer script that uses Xresources to save/restore colorscheme & wallpaper~~
 - [X] ~~Add colors to status bar elements~~
 	- [X] ~~Use Status2d+xrdb instead of statuscolors~~
+- [ ] Remove unnecessary stuff
+- [ ] Clickable dwmblocks 
+    - [ ] Rewrite status bar scripts & probably others as well
 - [ ] Make some themes (atleast 2)
 	- [X] ~~Nord Theme~~
 	- [ ] Gruvbox Theme
