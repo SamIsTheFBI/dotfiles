@@ -5,6 +5,7 @@ dwm_dir=~/.local/src/dwm
 dmenu_dir=~/.local/src/dmenu
 st_dir=~/.local/src/st
 dunstrc_dir=~/.config/dunst
+jgmenurc_dir=~/.config/jgmenu
 
 if [ -z "$1" ];then
 	echo "Choosing a random wallpaper from your wallpaper directory..."
@@ -19,8 +20,6 @@ convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.l
 wal -i "$wall"
 
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
-
-cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p
 
 color0=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p)
 color1=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 2p)
@@ -59,6 +58,16 @@ rofi_fg=$(cat ~/.cache/wal/colors.hs | grep 'color1=' | grep -o '#......')
 
 dunst_bg=$(cat ~/.cache/wal/colors.sh | sed -n '6p' | grep -Po "\#......")
 dunst_fg=$(cat ~/.cache/wal/colors.sh | sed -n '7p' | grep -Po "\#......")
+
+jgmenu_menu_bg=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p)
+jgmenu_norm_fg=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 18p)
+jgmenu_sel_fg=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p)
+jgmenu_sel_bg=$(cat ~/.cache/wal/colors.hs | grep 'color1=' | grep -o '#......')
+
+sed -ir "s/color_menu_bg.*/color_menu_bg = $jgmenu_menu_bg/g" $jgmenurc_dir/jgmenurc
+sed -ir "s/color_norm_fg.*/color_norm_fg = $jgmenu_norm_fg/g" $jgmenurc_dir/jgmenurc
+sed -ir "s/color_sel_bg.*/color_sel_bg = $jgmenu_sel_bg/g" $jgmenurc_dir/jgmenurc
+sed -ir "s/color_sel_fg.*/color_sel_fg = $jgmenu_sel_fg/g" $jgmenurc_dir/jgmenurc
 
 sed -ir "s/frame_color = .*/frame_color = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/highlight = .*/highlight = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
@@ -106,8 +115,8 @@ sed -ir "s/dmenu.selforeground:.*/dmenu.selforeground: $dmenuselfg/g" ~/.Xresour
 xrdb -load ~/.Xresources
 xdotool key super+control+F5
 
-pkill dunst
-dunst >/dev/null 2>&1 < /dev/null & 
+killall dunst
+setsid dunst &
 
 pidof st | xargs kill -s USR1
 notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Changed color scheme</span>"

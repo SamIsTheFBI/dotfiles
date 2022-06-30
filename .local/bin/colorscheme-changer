@@ -10,6 +10,7 @@ if [[ $sel == *Save* ]]; then
 
 	cp $HOME/.Xresources $HOME/.theme/"$theme_name"/Xresources
 	cp $HOME/.config/dunst/dunstrc $HOME/.theme/"$theme_name"/
+	cp $HOME/.config/jgmenu/jgmenurc $HOME/.theme/"$theme_name"/
 	cp $HOME/.config/rofi/theme.rasi $HOME/.theme/"$theme_name"/
 	cp $HOME/.local/share/wallpaper/bg.jpg $HOME/.theme/"$theme_name"/
 
@@ -20,6 +21,7 @@ elif [[ $sel == *Choose* ]]; then
 	[[ -z $theme_name ]] && exit
 
 	cp $HOME/.theme/"$theme_name"/dunstrc $HOME/.config/dunst/dunstrc
+	cp $HOME/.theme/"$theme_name"/jgmenurc $HOME/.config/jgmenu/jgmenurc
 	cp $HOME/.theme/"$theme_name"/theme.rasi $HOME/.config/rofi/theme.rasi
 	cp $HOME/.theme/"$theme_name"/Xresources $HOME/.Xresources
 	
