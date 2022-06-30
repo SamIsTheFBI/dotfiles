@@ -1,0 +1,19 @@
+@icon,,18,17,16,16,0,left,top,#7AA2F7,#7AA2F7,/usr/share/icons/Papirus/64x64/apps/system-search.svg
+@search,,42,15,150,20,2,left,top,#c0caf5,#7aa2f7,Search
+
+^sep()
+Power,^checkout(power),/usr/share/icons/Papirus/64x64/apps/system-shutdown.svg
+DWM,^checkout(dwm),/home/samisthefbi/.local/src/dwm/icon.png
+
+^tag(power)
+Shutdown, systemctl poweroff,/usr/share/icons/Papirus/64x64/apps/gshutdown.svg
+Reboot, systemctl reboot,/usr/share/icons/Papirus/64x64/apps/system-restart.svg
+Lock, screenlock,/usr/share/icons/Papirus/64x64/apps/xfce-system-lock.svg
+
+^tag(dwm)
+Website, chromium https://dwm.suckless.org/, /usr/share/icons/Papirus/64x64/apps/web-browser.svg
+Edit Config, st nvim ~/.local/src/dwm/config.def.h, /usr/share/icons/Papirus/64x64/apps/org.gnome.TextEditor.svg
+Change Colorscheme, /bin/sh -c colorscheme-changer, /usr/share/icons/Papirus/64x64/apps/colors.svg
+Reload DWM, kill -HUP "$(pidof dwm)", /usr/share/icons/Papirus/64x64/apps/system-restart.svg
+Reload DWM Colors, xrdb -load ~/.Xresources && xdotool key super+control+F5, /usr/share/icons/Papirus/64x64/apps/cs-color.svg
+Exit DWM, killall dwm, /usr/share/icons/Papirus/24x24/actions/exit.svg
