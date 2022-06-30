@@ -44,6 +44,7 @@ rm -r tmpdotfiles
 - noto-fonts-cjk (For CJK font)
 - nerd-fonts-jetbrains-mono (The main font that is everywhere in my build)
 - rofi (app launcher)
+- jgmenu (X11 menu to launch apps)
 - [My dwm build](https://github.com/samisthefbi/dwm) (window manager)
 - [My dmenu build](https://github.com/samisthefbi/dmenu) (dynamic menu)
 - [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs & idk how to fix that)
