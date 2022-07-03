@@ -1,12 +1,47 @@
 #!/bin/sh
 
-var=$(mpc | awk 'NR==2{print $1;}') && ctl="mpc"
-title=no_title
-title=$title$(mpc --format '%title%' current)
-glyph()
-{
-	[[ "$var" == *laying* ]] && GLYPH="" || GLYPH=""
+# Dependencies: mpc or playerctl
+
+ctl="playerctl"
+
+glyph(){
+    if [ $ctl == 'playerctl' ]; then
+        case "$(playerctl status)" in
+            'Playing') GLYPH="" ;;
+            'Paused') GLYPH="" ;;
+            'Stopped') GLYPH="" ;;
+        esac
+    elif [ $ctl == 'mpc' ]; then
+        case "$(mpc status %state%)" in
+            'playing') GLYPH="" ;;
+            'paused') GLYPH="" ;;
+        esac
+    fi
+}
+
+player_glyph(){
+    player="$(echo $(playerctl -l | sed -n 1p))"
+    case $player in 
+        mpd*) PLAYER_GLYPH="" ;;
+        chromium.*) PLAYER_GLYPH="" ;;
+        spotify*) PLAYER_GLYPH="" ;;
+        mpv*) PLAYER_GLYPH="" ;;
+        tdesktop*) PLAYER_GLYPH="" ;;
+    esac
 }
 glyph
-[[ $1 == 'sbar' && $(mpc current) != '' ]] && echo "^B1^^c#1d2225^ $GLYPH $(mpc current) ^b#1d2225^^c#1d2225^" 
-[[ $(mpc current) == '' ]] && echo " " || echo " $GLYPH $(mpc current)"
+[ $ctl == 'playerctl' ] && player_glyph
+
+if [ "$ctl" == 'playerctl' ]; then
+    case "$1" in 
+        'sbar') [ "$(playerctl -p playerctld metadata)" == '' ] && echo ' ' || echo "^B1^^c#1d2225^ $PLAYER_GLYPH | $GLYPH $(playerctl -p playerctld metadata artist) - $(playerctl -p playerctld metadata title) ^b#1d2225^^c#1d2225^" ;;
+        *) [ "$(playerctl -p playerctld metadata)" == '' ] && echo ' ' || echo " $PLAYER_GLYPH | $GLYPH $(playerctl -p playerctld metadata artist) - $(playerctl -p playerctld metadata title)" ;;
+    esac
+elif [ "$ctl" == 'mpc' ]; then
+    case "$1" in
+        'sbar') [ "$(mpc current)" == '' ] && echo ' ' || echo "^B1^^c#1d2225^ $GLYPH $(mpc current) ^b#1d2225^^c#1d2225^" ;;
+        *) [ "$(mpc current)" == '' ] && echo ' ' || echo " $GLYPH $(mpc current)" ;;
+    esac
+else
+    echo ' '
+fi

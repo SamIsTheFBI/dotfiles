@@ -1,5 +1,19 @@
 #!/bin/sh
 
-col=$(colorpicker --short --one-shot --preview)
-echo "$col"
-echo "$col" |tr -d '\n' | xclip -selection clipboard; dunstify -r 177013 -t 3000 " Color Picker" "<span font='JetBrainsMono Nerd Font 12'><span foreground='$col'><b>$col</b></span> Copied to clipboard</span>";
+# Dependencies: gpick/colorpicker, dunstify, imagemagick (optional), xclip
+
+if [ -x '/usr/bin/gpick' ]; then
+    tool="gpick"
+    col=$(gpick -pso --no-newline)
+    break
+elif [ -x '/usr/bin/colorpicker' ]; then
+    col=$(colorpicker --short --one-shot --preview)
+    tool="colorpicker"
+    break
+fi
+
+image=/tmp/hexcol.png
+echo "$col" | tr -d '\n' | xclip -sel clip
+convert -size 48x48 canvas:"$col" $image
+killall $tool
+dunstify -r 177013 -t 3000 -i $image " Color Picker" "<span font='JetBrainsMono Nerd Font 12'><span foreground='$col'><b>$col</b></span> Copied to clipboard</span>"

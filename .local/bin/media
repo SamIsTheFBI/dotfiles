@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Dependencies: mpc or playerctl
+
+ctl='playerctl'
+
+if [ $ctl == 'playerctl' ]; then
+    case "$1" in
+        'next') playerctl -p playerctld next ;;
+        'prev') playerctl -p playerctld previous ;;
+        'toggle') playerctl -p playerctld play-pause ;;
+    esac
+elif [ $ctl == 'mpc' ]; then
+    case "$1" in
+        'next') mpc next ;;
+        'prev') mpc prev ;;
+        'toggle') mpc toggle ;;
+    esac
+fi

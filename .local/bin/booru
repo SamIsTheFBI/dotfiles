@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#dependencies: feh/sxiv wget
+#dependencies: feh/sxiv, wget, jq, sed, curl, paplay (optional) 
 
 #Directory vars
 pict_path=~/Pictures

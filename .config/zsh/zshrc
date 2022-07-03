@@ -57,8 +57,7 @@ z4h init || return
 
 # Extend PATH.
 path=(~/bin $path)
-path+=(/home/samisthefbi/.local/bin)
-path+=(/home/samisthefbi/eww/target/release)
+path+=($HOME/.local/bin)
 export PATH
 
 # Export environment variables.
@@ -105,12 +104,13 @@ alias lt='/usr/bin/exa --color=always --group-directories-first --icons -T'
 alias spotify='LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify -no-zygote'
 alias rempd='pkill mpd && rm ~/.config/mpd/database && mpd &'
 alias cc='echo 3 | sudo tee /proc/sys/vm/drop_caches'
-alias d='echo "Space left: $(df -h | grep "/dev/sda7" | cut -d " " -f14)"'
+alias d='echo "Space left: $(df -h /dev/sda7 --output=avail | sed -n 2p)"'
 alias s='sxiv -iaq <<< "$(find . -mindepth 1 -maxdepth 1 -type f | sort -V)"'
 alias ss='sxiv -iaq <<< "$(find . -mindepth 1 -maxdepth 1 -type f | shuf)"'
 alias m='var=$(find . -mindepth 1 -maxdepth 1 -type f -exec file -N -i -- {} + | grep "video" | cut -d "/" -f2 | cut -d ":" -f1 | sort -V | fzf) && [ -n "$var" ] && mpv --no-keepaspect-window --save-position-on-quit -- $var'
 alias mpv='mpv --no-keepaspect-window --save-position-on-quit'
 alias h='tac ~/.zsh_history | cut -d ";" -f2- | sed 1d | fzf | xclip -r -sel c'
+alias n='setsid nemo .'
 
 sf() {
 	sxiv -iaq <<< "$(find . -mindepth 1 -maxdepth 1 -type f -iname "*$1*" )"

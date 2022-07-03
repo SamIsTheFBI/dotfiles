@@ -1,7 +1,6 @@
 #!/bin/sh
 
 #slowfade function from dark-dryu/i3lock-widgets-config
-
 RED=$(cat ~/.Xresources | grep 'color1:' | awk '{print $NF}')
 GREEN=$(cat ~/.Xresources | grep 'color2:' | awk '{print $NF}')
 BLUE=$(cat ~/.Xresources | grep 'color4:' | awk '{print $NF}')
@@ -22,7 +21,6 @@ slowfade () {
             $obj $ifc.opts_set string:fade_out_step double:0.1
     fi
 }
-
 sleep 1 && eww -c ~/.local/bin/lockscreen/ open-many battery song uptime &
 slowfade start 
 i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --date-str="%a, %d %b %Y" \

@@ -1,5 +1,5 @@
 @icon,,18,17,16,16,0,left,top,#7AA2F7,#7AA2F7,/usr/share/icons/Papirus/64x64/apps/system-search.svg
-@search,,42,15,150,20,2,left,top,#c0caf5,#7aa2f7,Search
+@search,,42,15,230,20,2,left,top,#c0caf5,#7aa2f7,Type to search
 
 ^sep()
 Power,^checkout(power),/usr/share/icons/Papirus/64x64/apps/system-shutdown.svg

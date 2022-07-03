@@ -1,6 +1,8 @@
 #!/bin/sh
 
-if [[ $1 == '-history' ]]; then
+# Dependencies: dmenu, xclip, paplay (optional)
+
+if [[ $1 == '--log' || $1 == '-l' ]]; then
 	sel="$(tac $HOME/Documents/0x0_log.txt | dmenu -l 12 | awk -F ' - ' '{print $NF}')"
 	[[ -z $sel ]] && exit || echo $sel | xclip -selection clipboard && notify-send -t 3000 "0x0" "URL copied to clipboard"
 else
@@ -8,7 +10,7 @@ else
 	var=$(curl -F "file=@$file" https://0x0.st)
 	[[ -z $var ]] && notify-send -t 3000 "0x0" "Error occurred" && exit || continue
 	echo $var | xclip -selection clipboard
-	paplay $HOME/.config/dunst/notif.wav &
 	notify-send -t 3000 "0x0" "Your file was uploaded and URL copied to clipboard"
+    [ -x /usr/bin/paplay ] && paplay $HOME/.config/dunst/notif.wav &
 	echo $(date '+ %a %x') - $file - $var >> $HOME/Documents/0x0_log.txt
 fi

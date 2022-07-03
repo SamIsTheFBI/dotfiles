@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Dependencies: a laptop running on Linux
+
 capacity=$(cat "/sys/class/power_supply/BAT1/capacity")
 bat_stat=$(cat "/sys/class/power_supply/BAT1/status")
 

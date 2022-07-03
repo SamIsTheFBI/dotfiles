@@ -1,0 +1,1 @@
+/home/samisthefbi/.config/zsh/p10k-ascii-8color.zsh
