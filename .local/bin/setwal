@@ -113,10 +113,10 @@ sed -ir "s/dmenu.selbackground:.*/dmenu.selbackground: $dmenuselbg/g" ~/.Xresour
 sed -ir "s/dmenu.selforeground:.*/dmenu.selforeground: $dmenuselfg/g" ~/.Xresources
 
 xrdb -load ~/.Xresources
-xdotool key super+control+F5
+xsetroot -name "fsignal:1"
 
 killall dunst
-setsid dunst &
+dunst >/dev/null 2>&1 < /dev/null & 
 
 pidof st | xargs kill -s USR1
 notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Changed color scheme</span>"

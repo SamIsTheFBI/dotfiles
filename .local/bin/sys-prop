@@ -1,0 +1,12 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+    1) st htop;;
+    3) st -e nvim $0;;
+esac
+
+ram_usage="$(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"
+cpu_usage="$(awk '{u=$2+$4; t=$2+$4+$5; if (NR==1){u1=u; t1=t;} else print ($2+$4-u1) * 100 / (t-t1); }' <(grep 'cpu ' /proc/stat) <(sleep 1;grep 'cpu ' /proc/stat) | awk -F '.' '{print $1 "%"}')"
+battery_perc="$(~/.local/bin/battery)"
+
+printf "^B3^^C0^  %5s   %4s  %5s ^b#1d2225^^c#1d2225^" "$ram_usage" "$cpu_usage" "$battery_perc"

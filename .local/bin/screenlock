@@ -23,15 +23,18 @@ slowfade () {
 }
 sleep 1 && eww -c ~/.local/bin/lockscreen/ open-many battery song uptime &
 slowfade start 
-i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --clock --radius=15 --date-str="%a, %d %b %Y" \
+i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=15 --date-str="%a, %d %b %Y" \
 	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
 	--ind-pos="w/2:1.2*h/2" \
 	--time-pos="ix+1:iy-70" \
-	--{verif,wrong}-color="#ffffff" \
-	--verif-pos="ix+1:iy-70" \
-	--verif-text="Verifying..." \
-	--wrong-pos="ix+1:iy-70" \
+	--{verif,wrong,greeter}-color="#ffffff" \
+	--verif-pos="ix+1:iy+70" \
+	--verif-text="Verifying" \
+	--wrong-pos="ix+1:iy+70" \
 	--wrong-text="Incorrect password" \
+	--greeter-pos="ix+1:iy+140" \
+	--greeter-text="Type the password to unlock" \
+	--{verif,wrong,greeter}-size=18 \
 	--noinput-text="" \
 	--date-color=#ffffff \
 	--time-color=#ffffff \

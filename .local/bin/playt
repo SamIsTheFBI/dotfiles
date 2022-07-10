@@ -17,7 +17,8 @@ else
 	
 	[[ -z $type ]] && exit 
 	
-	notify-send -t 2000 " " "Fetching available qualities..."
+	[ $type == 'Video+Audio' ] && notify-send -t 2000 " " "Fetching available qualities..."
+
 	yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
   
 	if [[ $type == 'Audio Only' ]]; then

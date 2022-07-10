@@ -1,0 +1,18 @@
+#!/bin/sh
+
+[ -z "$(ip route get 8.8.8.8 | awk '{print $1; exit}')" ] && notify-send -t 2000 "韛" "No internet connection. Exiting.."
+
+SOURCE="$(echo "$(xclip -sel primary -o)"| dmenu -p 'Source Text: ')"
+TARGET="$(printf ":en\n:ja\n:hi" | dmenu -p 'Target Lang: ')"
+
+OUTPUT="$(trans -b "$TARGET" "$SOURCE")"
+echo $OUTPUT
+if [ -z "$OUTPUT" ]; then
+    notify-send -t 2000 "韛" "An Error Occurred"
+    exit
+elif [ -n "$OUTPUT" ]; then    
+    var="$(echo "$OUTPUT" | dmenu -p 'Press Enter to copy: ')"
+    echo "$var" | xclip -selection clipboard
+    echo "$var" | xclip -selection primary
+    [ -z "$var" ] && exit || notify-send -t 2000 "韛" "Translated text copied to clipboard"
+fi

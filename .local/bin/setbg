@@ -12,4 +12,5 @@ fi
 convert "$wall" ~/.local/share/wallpaper/bg.jpg
 nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
 
+dunstify -r 234638 -t 2000 -i ~/.local/share/wallpaper/bg.jpg "  Wallpaper" "<span font = 'JetBrainsMono Nerd Font 11'>Background wallpaper has been changed</span>"
 # xdotool key control+F5

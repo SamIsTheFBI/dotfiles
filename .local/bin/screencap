@@ -26,5 +26,5 @@ elif [ "$1" == "actwinsave" ];then
 	var=~/Screenshots/$(xdotool getactivewindow getwindowclassname)_$(date +%Y%m%d_%H%M%S).png
 	maim -i $(xdotool getactivewindow) $var
 	xclip -selection clipboard -t image/png $var
-	notify-send -i "$var" ' Active Window Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
+	notify-send -i "$var" ' Active Window Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 fi

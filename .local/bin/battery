@@ -26,5 +26,10 @@ if [ "$bat_stat" != "Charging" ]; then
 	# 	$(( $capacity <= 100 ))) status="" ;;
 	esac
 fi
-[ $capacity -lt 30 ] && [ "$bat_stat" != "Charging" ] && echo "^B1^ $status $capacity%"
-echo "$status" $capacity%
+
+case "$1" in
+    'sbar') [ $capacity -lt 30 ] && [ "$bat_stat" != "Charging" ] && echo "^B1^^C0^ $status $capacity% ^d^" || echo "^B3^^C0^ $status $capacity% ^d^" ;;
+    *) echo "$status" $capacity% ;;
+esac
+
+# [ $capacity -lt 30 ] && [ "$bat_stat" != "Charging" ] && echo "^B1^ $status $capacity%"

@@ -1,26 +1,24 @@
-#pkill notify-song-cha
-killall dunst
-pkill picom
-pkill slstatus
-pkill mpd
-pkill rclone
-sudo pkill ntfs-3g
-# killall dunst
+if [ "$(pgrep -x ntfs-3g)" == '' ]; then
+    sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
+    sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
+    sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
+fi
 
-sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
-sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
-sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
-rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
+var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
+if [ $var == '8.8.8.8' ]; then
+    [ "$(pgrep -x rclone)" == '' ] && rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
+fi
 
 brightnessctl s 0
+redshift -x
 redshift -O 4500
 redshift -O 4500
 nitrogen --restore
-picom --experimental-backend -b
-slstatus &
-dunst &
-mpd &
+[ "$(pgrep -x picom)" == '' ] && picom --experimental-backend -b
+[ "$(pgrep -x dwmblocks)" == '' ] && setsid dwmblocks &
+[ "$(pgrep -x dunst)" == '' ] && dunst &
+[ "$(pgrep -x parcellite)" == '' ] && parcellite &
+[ "$(pgrep -x playerctld)" == '' ] && playerctld daemon &
 xrdb -load ~/.Xresources
-#setsid notify-song-change >/dev/null 2>&1 < /dev/null &
 
 exec dwm

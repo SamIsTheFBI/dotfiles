@@ -4,11 +4,19 @@
 
 ctl='playerctl'
 
+id='playerctld'
+
+# If current player is stopped, take control of previously active player. Can replace second statement to set ctl='mpc' to straightup fall back to using mpc.
+[ "$(playerctl status)" == 'Stopped' ] && id="$(playerctl -l | sed -n 2p)"
+
+# When using mpris
+[ $id == '' ] && ctl='mpc'
+
 if [ $ctl == 'playerctl' ]; then
     case "$1" in
-        'next') playerctl -p playerctld next ;;
-        'prev') playerctl -p playerctld previous ;;
-        'toggle') playerctl -p playerctld play-pause ;;
+        'next') playerctl -p "$id" next ;;
+        'prev') playerctl -p "$id" previous ;;
+        'toggle') playerctl -p "$id" play-pause ;;
     esac
 elif [ $ctl == 'mpc' ]; then
     case "$1" in

@@ -1,6 +1,8 @@
 #!/bin/sh
 
-sel=$(printf "Save current colorscheme\nChoose a colorscheme\nDelete a colorscheme" | dmenu -l 12)
+[ "$1" != '' ] && theme_name="$1" || continue 
+
+[ -z $theme_name ] && sel=$(printf "Save current colorscheme\nChoose a colorscheme\nDelete a colorscheme" | dmenu -p " " -l 12)
 
 if [[ $sel == *Save* ]]; then
 	theme_name="$( echo | dmenu -p "Give your colorscheme a name: ")" 
@@ -16,22 +18,25 @@ if [[ $sel == *Save* ]]; then
 
 	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Current color scheme was saved as $theme_name</span>"
 
-elif [[ $sel == *Choose* ]]; then
-	theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | dmenu -p "Choose a colorscheme: " -l 12)
-	[[ -z $theme_name ]] && exit
-
+elif [[ $sel == *Choose* || "$theme_name" != '' ]]; then
+	[ -z $theme_name ] && theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | dmenu -p "Choose a colorscheme: " -l 12)
+	[ -z $theme_name ] && exit
+    [ ! -d ~/.theme/"$theme_name" ] && notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>No such color scheme with the name $theme_name present!</span>" && exit
+    
 	cp $HOME/.theme/"$theme_name"/dunstrc $HOME/.config/dunst/dunstrc
 	cp $HOME/.theme/"$theme_name"/jgmenurc $HOME/.config/jgmenu/jgmenurc
 	cp $HOME/.theme/"$theme_name"/theme.rasi $HOME/.config/rofi/theme.rasi
 	cp $HOME/.theme/"$theme_name"/Xresources $HOME/.Xresources
 	
-	setbg $HOME/.theme/"$theme_name"/bg.jpg
+	~/.local/bin/setbg $HOME/.theme/"$theme_name"/bg.jpg
+	~/.local/bin/setlockbg $HOME/.theme/"$theme_name"/bg.jpg
 	
 	xrdb -load $HOME/.Xresources
 	
 	# Reloading dwm to apply changes
 	sleep 0.2
-	xdotool key super+control+F5 #xrdb reload
+	# xdotool key super+control+F5 #xrdb reload
+    xsetroot -name "fsignal:1"
 
 	# Reloading dunst notification daemon to apply changes
 	pkill dunst

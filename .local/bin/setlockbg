@@ -5,10 +5,18 @@ wall_dir=~/Wallpapers
 if [ -z "$1" ];then
 	echo "Choosing a random wallpaper from your wallpaper directory..."
 	wall="$(find "$wall_dir" -type f -name "*.jpg" -o -name "*.png" | shuf -n1)"
+    echo "Blurring the wallpaper..."
+elif [ "$1" == '--no-blur' ]; then
+	wall="$2"
 else
-	wall="$1"
+    wall="$1"
 fi
 
-convert -scale 10% -blur 0x2.5 -resize 1000% "$wall" ~/.local/share/wallpaper/lockscreen.png
-convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
+if [ "$1" == '--no-blur' ]; then
+    convert "$wall" ~/.local/share/wallpaper/lockscreen.png
+else
+    convert -scale 10% -blur 0x2.5 -resize 1000% "$wall" ~/.local/share/wallpaper/lockscreen.png
+    convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
+fi
 
+dunstify -r 270582 -t 2000 -i ~/.local/share/wallpaper/lockscreen.png "  Wallpaper" "<span font = 'JetBrainsMono Nerd Font 11'>Lockscreen wallpaper has been changed</span>"

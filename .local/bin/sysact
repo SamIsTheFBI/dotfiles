@@ -6,7 +6,7 @@ case "$(readlink -f /sbin/init)" in
 esac
 
 case "$(printf " lock\n reboot\n shutdown" | dmenu -i -p 'Action: ')" in
-	' lock') screenlock ;;
+	' lock') ~/.local/bin/screenlock ;;
 	' reboot') $ctl reboot ;;
 	' shutdown') $ctl poweroff ;;
 	*) exit 1 ;;

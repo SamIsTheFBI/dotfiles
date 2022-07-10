@@ -2,45 +2,74 @@
 
 # Dependencies: mpc or playerctl
 
-ctl="playerctl"
+ctl='playerctl'
+
+id='playerctld'
+[ "$(playerctl status)" == 'Stopped' ] && id="$(playerctl -l | sed -n 2p)"
 
 glyph(){
     if [ $ctl == 'playerctl' ]; then
         case "$(playerctl status)" in
-            'Playing') GLYPH="" ;;
-            'Paused') GLYPH="" ;;
+            'Paused') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
+            'Playing') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
             'Stopped') GLYPH="" ;;
         esac
     elif [ $ctl == 'mpc' ]; then
         case "$(mpc status %state%)" in
-            'playing') GLYPH="" ;;
-            'paused') GLYPH="" ;;
+            'paused') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
+            'playing') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
         esac
     fi
 }
 
 player_glyph(){
-    player="$(echo $(playerctl -l | sed -n 1p))"
+    player="$(playerctl metadata --format '{{ playerName }}')"
+    # playerpid="$(playerctl -l | awk -F 'instance' 'NR==1{print $NF}')"
+    # player="$(ps -p "$playerpid" -o comm=)"
     case $player in 
         mpd*) PLAYER_GLYPH="" ;;
-        chromium.*) PLAYER_GLYPH="" ;;
+        chromium*) PLAYER_GLYPH="" ;;
+        firefox*) PLAYER_GLYPH="" ;;
         spotify*) PLAYER_GLYPH="" ;;
         mpv*) PLAYER_GLYPH="" ;;
         tdesktop*) PLAYER_GLYPH="" ;;
+        vlc*) PLAYER_GLYPH="嗢" ;;
+        *) PLAYER_GLYPH="" ;;
     esac
 }
 glyph
 [ $ctl == 'playerctl' ] && player_glyph
 
 if [ "$ctl" == 'playerctl' ]; then
-    case "$1" in 
-        'sbar') [ "$(playerctl -p playerctld metadata)" == '' ] && echo ' ' || echo "^B1^^c#1d2225^ $PLAYER_GLYPH | $GLYPH $(playerctl -p playerctld metadata artist) - $(playerctl -p playerctld metadata title) ^b#1d2225^^c#1d2225^" ;;
-        *) [ "$(playerctl -p playerctld metadata)" == '' ] && echo ' ' || echo " $PLAYER_GLYPH | $GLYPH $(playerctl -p playerctld metadata artist) - $(playerctl -p playerctld metadata title)" ;;
+    case $BLOCK_BUTTON in
+        1) playerctl -p "$id" play-pause ;;
+        3) st -e nvim $0;;
     esac
+
+    if [ "$player" == 'mpv' ]; then
+        OUTPUT="$PLAYER_GLYPH | $GLYPH $(playerctl metadata | sed -n 1p | awk -F '/' '{print $NF}' | sed -r 's/%20/ /g' | sed -r 's/%5B/[/g' | sed -r 's/%5D/]/g')" && break
+    elif [[ "$id" == 'mpd' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' ]]; then
+        OUTPUT="$PLAYER_GLYPH | $GLYPH $(mpc current)" && break
+    elif [[ "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == '' ]]; then
+        OUTPUT="$PLAYER_GLYPH | $GLYPH $(playerctl -p "$id" metadata --format '{{ title }}')" 
+    else
+        OUTPUT="$PLAYER_GLYPH | $GLYPH $(playerctl -p "$id" metadata --format '{{ artist }} - {{ title }}')"
+    fi
+
+    case "$1" in 
+        'sbar') [ "$(playerctl -p "$id" metadata)" == '' ] && echo ' '|| echo "^B1^^c#1d2225^ $OUTPUT ^d^";;
+        *) printf "%s\n" "$OUTPUT";;
+    esac
+
 elif [ "$ctl" == 'mpc' ]; then
+    case $BLOCK_BUTTON in
+        1) mpc toggle ;;
+        3) st -e nvim $0;;
+    esac
+
     case "$1" in
-        'sbar') [ "$(mpc current)" == '' ] && echo ' ' || echo "^B1^^c#1d2225^ $GLYPH $(mpc current) ^b#1d2225^^c#1d2225^" ;;
-        *) [ "$(mpc current)" == '' ] && echo ' ' || echo " $GLYPH $(mpc current)" ;;
+        'sbar') [ "$(mpc current)" == '' ] && echo ' ' || echo "^B1^^c#1d2225^  | $GLYPH $(mpc current) ^d^" ;;
+        *) [ "$(mpc current)" == '' ] && echo ' ' || echo "  | $GLYPH $(mpc current)" ;;
     esac
 else
     echo ' '

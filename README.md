@@ -82,11 +82,14 @@ rm -r tmpdotfiles
 	- [X] ~~Use Status2d+xrdb instead of statuscolors~~
 - [ ] Remove unnecessary stuff
 - [ ] Clickable dwmblocks 
-    - [ ] Rewrite status bar scripts & probably others as well
-- [ ] Make some themes (atleast 2)
+    - [X] Rewrite status bar scripts & probably others as well
+    - [ ] Merge dwmblocks, dmenu and dwm into dotfiles repository
+- [ ] Make some themes
 	- [X] ~~Nord Theme~~
-	- [ ] Gruvbox Theme
+	- [X] ~~Gruvbox Theme~~
+    - [ ] Catpuccin Theme
 	- [ ] Evangelion theme?
+    - [ ] Get GTK themes for respective colorscheme
 
 ## Wallpaper Credits
 

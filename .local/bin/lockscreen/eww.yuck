@@ -1,8 +1,8 @@
 ;; battery capacity
-(defpoll BATTERY :interval "5s" `cat /sys/class/power_supply/BAT1/capacity`)
+(defpoll BATTERY :interval "1s" `~/.local/bin/battery`)
 
 ;; current song
-(defpoll SONG :interval "1s" `now-playing`)
+(defpoll SONG :interval "0.1s" `now-playing`)
 
 (defpoll UPTIME :interval "1s" `uptime -p | sed 's/up//'`)
 
@@ -11,7 +11,7 @@
 			:orientation "h" 
 			:space-evenly "true" 
 			:halign "center"
-			'Battery: ${BATTERY}%')
+			'Battery: ${BATTERY}')
 )
 
 (defwidget song []

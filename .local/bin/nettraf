@@ -1,5 +1,10 @@
 #!/bin/sh
 
+case $BLOCK_BUTTON in
+    1) notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)</span>";;
+	3) st nvim "$0" ;;
+esac
+
 network_interface=$(ip route get 8.8.8.8 | awk -- '{print $5; exit}')
 var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
 
@@ -18,5 +23,8 @@ update() {
 rx=$(update /sys/class/net/$network_interface/statistics/rx_bytes)
 tx=$(update /sys/class/net/$network_interface/statistics/tx_bytes)
 
-[[ $1 == 'sbar' && $var == '8.8.8.8' ]] && printf "^B2^^C0^ %4sB/s %4sB/s ^b#1d2225^^c#1d2225^\\n" $(numfmt --to=iec $rx $tx) || [[ $1 == 'sbar' && $var != '8.8.8.8' ]] && printf "^B2^^C0^ 睊 Disconnected ^b#1d2225^^c#1d2225^"
-[[ $var == '8.8.8.8' ]] && printf " %4sB/s %4sB/s\\n" $(numfmt --to=iec $rx $tx) || printf " 睊 Disconnected"
+case "$1" in
+    'sbar') [ "$var" == '8.8.8.8' ] && printf "^B2^^C0^ %4sB/s %4sB/s ^d^\\n" $(numfmt --to=iec $rx $tx) || printf "^B2^^C0^ 睊 Disconnected ^d^" ;;
+    *) [ "$var" == '8.8.8.8' ] && printf "%4sB/s %4sB/s\\n" $(numfmt --to=iec $rx $tx) || printf "睊 Disconnected" ;;
+esac
+
