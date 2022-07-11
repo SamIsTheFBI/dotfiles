@@ -1,6 +1,0 @@
-#!/bin/sh
-
-xclip -out -selection primary | xclip -in -selection clipboard
-var=$(xclip -o)
-echo $var >> ~/Documents/Notes/clipboard.txt
-echo "$var"

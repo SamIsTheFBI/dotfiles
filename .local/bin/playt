@@ -1,6 +1,14 @@
 #!/bin/sh
 
-# dependencies: dmenu awk yt-dlp
+# Dependencies: dmenu awk yt-dlp
+
+#Check if script is already running 
+if [ "$(pgrep -f $0)" != "$$" ]; then
+    SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
+    echo "Another instance of $SCRIPTNAME already exists! Exiting"
+    [ "$(command -v notify-send)" != '' ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of $SCRIPTNAME already exists! Exiting</span>"
+    exit
+fi
 
 format='none'
 
@@ -17,23 +25,25 @@ else
 	
 	[[ -z $type ]] && exit 
 	
-	[ $type == 'Video+Audio' ] && notify-send -t 2000 " " "Fetching available qualities..."
+	[ $type == 'Video+Audio' ] && notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Fetching available qualities...</span>"
 
 	yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
   
 	if [[ $type == 'Audio Only' ]]; then
 		cd ~/Music
-		notify-send -t 2000 " " "Trying to download..." 
+		notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Trying to download...</span>" 
 		output=$(yt-dlp -f 'ba' -x --audio-format mp3 --embed-thumbnail $video_url --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --parse-metadata "%(uploader|)s:%(meta_artist)s" --add-metadata --output "%(title)s.%(ext)s")
 	else
 		[[ -z $video_url ]] && exit 
 		audio=$(cat ~/.cache/format | grep audio | dmenu -i -p "Choose audio quality" -l 10 | awk '{print $1}')
 		video=$(cat ~/.cache/format | grep video | dmenu -i -p "Choose video quality" -l 10 | awk '{print $1}')
+
 		[[ -z $video ]] && format=$audio || [[ -z $audio ]] && format="$video" || format="$audio+$video"
+
 		echo "User requested format: $format"
-		notify-send -t 2000 " " "Trying to download..." 
+		notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Trying to download...</span>" 
 		output=$(yt-dlp -f $format --embed-thumbnail --convert-subs srt --embed-sub --sub-langs "en.*,ja" --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
 	fi
 	paplay ~/.config/dunst/notif.wav &
-	[[ -z $output ]] && notify-send -t 2000 " " "Download unsuccessful" || notify-send -t 2000 " " "Download finished"
+	[[ -z $output ]] && notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Download unsuccessful</span>" || notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Download finished</span>"
 fi

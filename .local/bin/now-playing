@@ -10,14 +10,14 @@ id='playerctld'
 glyph(){
     if [ $ctl == 'playerctl' ]; then
         case "$(playerctl status)" in
-            'Paused') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
-            'Playing') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
-            'Stopped') GLYPH="" ;;
+            'Paused') GLYPH="";;
+            'Playing') GLYPH="";;
+            'Stopped') GLYPH="" ;;
         esac
     elif [ $ctl == 'mpc' ]; then
         case "$(mpc status %state%)" in
-            'paused') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
-            'playing') [ "$(pgrep -x dwmblocks)" == '' ] && GLYPH="" || GLYPH="";;
+            'paused') GLYPH="";;
+            'playing') GLYPH="";;
         esac
     fi
 }
@@ -43,13 +43,21 @@ glyph
 if [ "$ctl" == 'playerctl' ]; then
     case $BLOCK_BUTTON in
         1) playerctl -p "$id" play-pause ;;
-        3) st -e nvim $0;;
+        3)  if [ "$(playerctl loop)" != 'Track' ]; then
+                playerctl -p "$id" loop Track
+                notify-send -t 2000 "Looping track"
+            else
+                notify-send -t 2000 "Looping playlist"
+                playerctl -p "$id" loop Playlist
+            fi;;
     esac
 
-    if [ "$player" == 'mpv' ]; then
-        OUTPUT="$PLAYER_GLYPH | $GLYPH $(playerctl metadata | sed -n 1p | awk -F '/' '{print $NF}' | sed -r 's/%20/ /g' | sed -r 's/%5B/[/g' | sed -r 's/%5D/]/g')" && break
-    elif [[ "$id" == 'mpd' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' ]]; then
+    # if [ "$player" == 'mpv' ]; then
+    #     OUTPUT="$PLAYER_GLYPH | $GLYPH $(playerctl metadata | sed -n 1p | awk -F '/' '{print $NF}' | sed -r 's/%20/ /g' | sed -r 's/%5B/[/g' | sed -r 's/%5D/]/g')" && break
+    if [[ "$id" == 'mpd' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' ]]; then
         OUTPUT="$PLAYER_GLYPH | $GLYPH $(mpc current)" && break
+    elif [[ "$(playerctl metadata --format '{{xesam:url}}')" == *watch?v=* ]]; then
+        OUTPUT=" | $GLYPH $(playerctl -p "$id" metadata --format '{{ artist }} - {{ title }}')" && break
     elif [[ "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == '' ]]; then
         OUTPUT="$PLAYER_GLYPH | $GLYPH $(playerctl -p "$id" metadata --format '{{ title }}')" 
     else

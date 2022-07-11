@@ -69,6 +69,11 @@ sed -ir "s/color_norm_fg.*/color_norm_fg = $jgmenu_norm_fg/g" $jgmenurc_dir/jgme
 sed -ir "s/color_sel_bg.*/color_sel_bg = $jgmenu_sel_bg/g" $jgmenurc_dir/jgmenurc
 sed -ir "s/color_sel_fg.*/color_sel_fg = $jgmenu_sel_fg/g" $jgmenurc_dir/jgmenurc
 
+sed -ir "s/color_menu_bg.*/color_menu_bg = $jgmenu_menu_bg/g" $jgmenurc_dir/jgmenu_layoutmenu
+sed -ir "s/color_norm_fg.*/color_norm_fg = $jgmenu_norm_fg/g" $jgmenurc_dir/jgmenu_layoutmenu
+sed -ir "s/color_sel_bg.*/color_sel_bg = $jgmenu_sel_bg/g" $jgmenurc_dir/jgmenu_layoutmenu
+sed -ir "s/color_sel_fg.*/color_sel_fg = $jgmenu_sel_fg/g" $jgmenurc_dir/jgmenu_layoutmenu
+
 sed -ir "s/frame_color = .*/frame_color = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/highlight = .*/highlight = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/background = .*/background = \"$dunst_bg\"/g" $dunstrc_dir/dunstrc

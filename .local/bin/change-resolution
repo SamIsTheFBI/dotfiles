@@ -1,0 +1,9 @@
+#!/bin/sh
+
+MONITOR="$(xrandr --listactivemonitors | sed -n '1!p' | awk '{print $NF}' | dmenu -p 'Choose output display')"
+[ -z "$MONITOR" ] && exit
+
+RESOLUTION="$(printf "1366x768\n1280x720\n1024x768\n800x600\n640x480" | dmenu -l 5 -p 'Choose resolution')"
+[ -z "$RESOLUTION" ] && exit
+
+xrandr --output "$MONITOR" --mode "$RESOLUTION"
