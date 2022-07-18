@@ -1,18 +1,21 @@
 #!/bin/sh
 
-[ -z "$(ip route get 8.8.8.8 | awk '{print $1; exit}')" ] && notify-send -t 2000 "韛" "No internet connection. Exiting.."
+[ -z "$(ip route get 8.8.8.8 | awk '{print $1; exit}')" ] && notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>No internet connection. Exiting..</span>" && exit
 
 SOURCE="$(echo "$(xclip -sel primary -o)"| dmenu -p 'Source Text: ')"
+[ -z "$SOURCE" ] && exit
+
 TARGET="$(printf ":en\n:ja\n:hi" | dmenu -p 'Target Lang: ')"
+[ -z "$TARGET" ] && exit
 
 OUTPUT="$(trans -b "$TARGET" "$SOURCE")"
 echo $OUTPUT
 if [ -z "$OUTPUT" ]; then
-    notify-send -t 2000 "韛" "An Error Occurred"
+    notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
     exit
 elif [ -n "$OUTPUT" ]; then    
     var="$(echo "$OUTPUT" | dmenu -p 'Press Enter to copy: ')"
     echo "$var" | xclip -selection clipboard
     echo "$var" | xclip -selection primary
-    [ -z "$var" ] && exit || notify-send -t 2000 "韛" "Translated text copied to clipboard"
+    [ -z "$var" ] && exit || notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>"
 fi

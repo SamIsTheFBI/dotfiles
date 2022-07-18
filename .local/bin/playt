@@ -6,23 +6,23 @@
 if [ "$(pgrep -f $0)" != "$$" ]; then
     SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
     echo "Another instance of $SCRIPTNAME already exists! Exiting"
-    [ "$(command -v notify-send)" != '' ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of $SCRIPTNAME already exists! Exiting</span>"
+    [ "$(command -v notify-send)" != '' ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of $SCRIPTNAME already exists!</span>"
     exit
 fi
 
 format='none'
+prompt="dmenu -l 12"
 
 rm -rf ~/.cache/format
 
 if [ "$1" == "-F" ];then
   yt-dlp -F $2 
 else
-	video_url=$(echo | dmenu -i -p "Enter YouTube video URL: ")
-	
-	[[ -z $video_url ]] && exit 
+	video_url="$(printf " Cancel\n$(xclip -sel primary -o)" | $prompt -p "Enter YouTube video URL: ")"
+    echo "$video_url"
+	[[ -z $video_url || "$video_url" == ' Cancel' ]] && exit 
 
-	type=$(printf "Video+Audio\nAudio Only" | dmenu -i -p "What are you trying to download?")
-	
+	type=$(printf "Video+Audio\nAudio Only" | $prompt -p "What are you trying to download?")
 	[[ -z $type ]] && exit 
 	
 	[ $type == 'Video+Audio' ] && notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Fetching available qualities...</span>"
@@ -35,8 +35,8 @@ else
 		output=$(yt-dlp -f 'ba' -x --audio-format mp3 --embed-thumbnail $video_url --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --parse-metadata "%(uploader|)s:%(meta_artist)s" --add-metadata --output "%(title)s.%(ext)s")
 	else
 		[[ -z $video_url ]] && exit 
-		audio=$(cat ~/.cache/format | grep audio | dmenu -i -p "Choose audio quality" -l 10 | awk '{print $1}')
-		video=$(cat ~/.cache/format | grep video | dmenu -i -p "Choose video quality" -l 10 | awk '{print $1}')
+		audio=$(cat ~/.cache/format | grep audio | $prompt -p "Choose audio quality" -l 10 | awk '{print $1}')
+		video=$(cat ~/.cache/format | grep video | $prompt -p "Choose video quality" -l 10 | awk '{print $1}')
 
 		[[ -z $video ]] && format=$audio || [[ -z $audio ]] && format="$video" || format="$audio+$video"
 

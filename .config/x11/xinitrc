@@ -20,5 +20,6 @@ nitrogen --restore
 [ "$(pgrep -x parcellite)" == '' ] && parcellite &
 [ "$(pgrep -x playerctld)" == '' ] && playerctld daemon &
 xrdb -load ~/.Xresources
+export QT_QPA_PLATFORMTHEME=gtk3
 
 exec dwm

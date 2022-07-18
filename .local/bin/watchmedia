@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#Check if script is already running 
+# Check if script is already running 
 if [ "$(pgrep -f $0)" != "$$" ]; then
     SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
     echo "Another instance of $SCRIPTNAME already exists!"
@@ -8,7 +8,7 @@ if [ "$(pgrep -f $0)" != "$$" ]; then
     exit
 fi
 
-#Define local directories
+# Local directories
 dir1=~/Local\ Disk\ D/Media/Anime
 dir2=~/Local\ Disk\ D/Media/Movies
 dir3=~/Local\ Disk\ D/Media/TV\ Show
@@ -18,7 +18,7 @@ dir6=~/Local\ Disk\ E/Shivam/Media/Movies
 dir7=~/Scripts/animepahe-dl
 dir8=~/Videos
 
-prompt="dmenu --border -c -l 16"
+prompt="dmenu -l 16"
 # prompt="rofi -dmenu"
 
 video_player="mpv --fs --save-position-on-quit --no-keepaspect-window"
@@ -51,9 +51,18 @@ update_list(){
 
 #Main menu
 main(){
-	query=$( printf " Cancel\n Show All\n Help\n Update\n話 Anime\n TV Shows\n Movies\n Videos"| $prompt -p " Search")
+    LAST_PLAYED="$(cat ~/.cache/watchmenu-last-played)"
+    LAST_PLAYED_NAME="$(cat ~/.cache/watchmenu-last-played | awk -F '/' '{{print ".../" $(NF-2) "/" $(NF-1) "/" $(NF) }}')"
+    query=$( printf " Cancel\n神 Last Played ($LAST_PLAYED_NAME)\n Show All\n Help\n Update\n話 Anime\n TV Shows\n Movies\n Videos"| $prompt -p " Search")
 	echo "Search Query: $query"
-	[[ $query == :q* || "$query" == ' Cancel' ]] && exit || [[ $query == ':h' || "$query" == ' Help' ]] && help || [[ "$query" == ':u' || "$query" == ' Update' ]] && update_list && main || search_results
+	[[ $query == :q* || "$query" == ' Cancel' ]] && exit
+    [[ $query == ':h' || "$query" == ' Help' ]] && help
+    if [[ "$query" == *Last* ]]; then
+        [ ! -f ~/.cache/watchmenu-last-played ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>No record of last played items</span>" && main
+        $video_player "$LAST_PLAYED" && main
+    fi
+    [[ "$query" == ':u' || "$query" == ' Update' ]] && update_list && main
+    search_results
 }
 
 #Get the root directory of given file/sub-directory by checking with above specified directories. Brute forcing?
@@ -86,9 +95,9 @@ search_results(){
 	fi
 	
     if [[ -z "$show" && "$query" == ' Videos' ]]; then
-        $video_player "$dir8"
-        search_results
+        exit
     elif [ "$show" == ' Play All' ]; then
+        echo "$dir8" > ~/.cache/watchmenu-last-played
         $video_player "$dir8"
         search_results
     elif [[ "$show" == ' Cancel' ]]; then
@@ -97,7 +106,8 @@ search_results(){
 
     #If chosen option is a video file then, get its absolute path, play it
 	file_path="$(abs_dir "$show")"
-	if [[ $(file -i "$file_path" | grep -o 'video') = "video" ]]; then
+	if [[ "$(file -i "$file_path" | grep -o 'video')" == "video" ]]; then
+        echo "$file_path" > ~/.cache/watchmenu-last-played
 		$video_player "$file_path"
 		search_results
 	fi
@@ -125,7 +135,7 @@ season_list(){
         [[ $season == ':q' || "$season" == ' Cancel' || -z "$season" ]] && exit
     fi
 	echo "Season Dir: $season_dir"
-    [ "$season" == ' Play All' ] && $video_player "$show_dir" && season_list
+    [ "$season" == ' Play All' ] && echo "$show_dir" > ~/.cache/watchmenu-last-played && $video_player "$show_dir" && season_list
 	[[ $season == ':s' ]] && main
     [[ $season == ':b' || "$season" == ' Back' ]] && search_results
     episode_list
@@ -136,19 +146,20 @@ episode_list(){
     if [[ "$show_dir" == */Movie* ]]; then
         movie=$(printf " Cancel\n Back\n Play All\n$(find "$season_dir" -mindepth 1 -maxdepth 1 -type f | sort -V -u | awk -F '/' '{print $NF}')" | $prompt -p ' Choose movie' )
         file_path="$season_dir/$movie"
-        [ "$movie" == ' Play All' ] && $video_player "$season_dir" && episode_list
+        [ "$movie" == ' Play All' ] && echo "$season_dir" > ~/.cache/watchmenu-last-played && $video_player "$season_dir" && episode_list
 	    [[ $movie == ':s' ]] && main
 	    [[ $movie == ':b' || "$movie" == ' Back' ]] && search_results
         [[ $movie == ':q' || "$movie" == ' Cancel' ]] && exit
     else
         episode=$(printf " Cancel\n Back\n Play All\n$(find "$season_dir" -mindepth 1 -maxdepth 1 -type f | sort -V -u | awk -F '/' '{print $NF}')" | $prompt -p '  Choose episode' )
         file_path="$season_dir/$episode"
-        [ "$episode" == ' Play All' ] && $video_player "$season_dir" && episode_list
+        [ "$episode" == ' Play All' ] && echo "$season_dir" > ~/.cache/watchmenu-last-played && $video_player "$season_dir" && episode_list 
 	    [[ $episode == ':s' ]] && main 
         [[ $episode == ':b' || "$episode" == ' Back' ]] && season_list 
         [[ $episode == ':q' || "$episode" == ' Cancel' ]] && exit
     fi
 	echo "File path: $file_path"
+    echo "$file_path" > ~/.cache/watchmenu-last-played
 
     [[ -n $(echo $DISPLAY) ]] && $video_player "$file_path"
 	episode_list

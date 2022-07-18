@@ -21,11 +21,11 @@ rx=$(update /sys/class/net/$network_interface/statistics/rx_bytes)
 tx=$(update /sys/class/net/$network_interface/statistics/tx_bytes)
 
 case "$1" in
-    'sbar') [ "$var" == '8.8.8.8' ] && printf "^B2^^C0^ %4sB/s %4sB/s ^d^\\n" $(numfmt --to=iec $rx $tx) || printf "^B2^^C0^ 睊 Disconnected ^d^" ;;
+    'sbar') [ "$var" == '8.8.8.8' ] && printf "^B2^^C0^ %4sB/s %4sB/s ^d^" $(numfmt --to=iec $rx $tx) || printf "^B2^^C0^ 睊 Disconnected ^d^" ;;
     *) [ "$var" == '8.8.8.8' ] && printf "%4sB/s %4sB/s\\n" $(numfmt --to=iec $rx $tx) || printf "睊 Disconnected" ;;
 esac
 
 case $BLOCK_BUTTON in
-    1) [ "$var" == '8.8.8.8' ] && notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)</span>" || notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Not connected to internet</span>";;
-	3) st nvim "$0" ;;
+    1) [ "$var" == '8.8.8.8' ] && notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)</span>" || notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Disconnected</span>" ;;
+	3) st -e nmtui ;;
 esac

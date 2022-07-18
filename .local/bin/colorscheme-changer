@@ -1,5 +1,8 @@
 #!/bin/sh
 
+prompt="dmenu -l 12"
+# prompt="rofi -dmenu"
+
 #Check if script is already running 
 if [ "$(pgrep -f $0)" != "$$" ]; then
     SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
@@ -10,10 +13,10 @@ fi
 
 [ "$1" != '' ] && theme_name="$1" || continue 
 
-[ -z $theme_name ] && sel=$(printf "Save current colorscheme\nChoose a colorscheme\nDelete a colorscheme" | dmenu -p " " -l 12)
+[ -z $theme_name ] && sel=$(printf "Save current colorscheme\nChoose a colorscheme\nDelete a colorscheme" | $prompt -p " ")
 
 if [[ $sel == *Save* ]]; then
-	theme_name="$( echo | dmenu -p "Give your colorscheme a name: ")" 
+	theme_name="$( echo | $prompt -p "Give your colorscheme a name: ")" 
 	[[ -z $theme_name ]] && exit
 
 	mkdir -p $HOME/.theme/"$theme_name"/ > /dev/null 2>&1 
@@ -27,7 +30,7 @@ if [[ $sel == *Save* ]]; then
 	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Current color scheme was saved as $theme_name</span>"
 
 elif [[ $sel == *Choose* || "$theme_name" != '' ]]; then
-	[ -z $theme_name ] && theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | dmenu -p "Choose a colorscheme: " -l 12)
+	[ -z $theme_name ] && theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | $prompt -p "Choose a colorscheme: ")
 	[ -z $theme_name ] && exit
     [ ! -d ~/.theme/"$theme_name" ] && notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>No such color scheme with the name $theme_name present!</span>" && exit
     
@@ -59,7 +62,7 @@ elif [[ $sel == *Choose* || "$theme_name" != '' ]]; then
 
 	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Color scheme set to "$theme_name"</span>"
 elif [[ $sel == *Delete* ]]; then
-	theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | dmenu -p "Choose a colorscheme: " -l 12)
+	theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | $prompt -p "Choose a colorscheme: ")
 	[[ -z $theme_name ]] && exit
 
 	rm -rf $HOME/.theme/"$theme_name"

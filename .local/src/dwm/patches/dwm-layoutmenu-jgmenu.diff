@@ -1,0 +1,58 @@
+diff --git a/config.def.h b/config.def.h
+index 92b3295..fa2bdd3 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -152,6 +152,7 @@ static const Layout layouts[] = {
+ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+ static const char *dmenucmd[] 			=	{ "dmenu_run", "-m", dmenumon, "-fn", dmenufont, topbar ? NULL : "-b"};
+ static const char *termcmd[]        = { "st",                NULL };
++static const char *layoutmenu_cmd = "~/.local/src/dwm/layoutmenu.sh";
+ static const char *browsercmd[]     = { "chromium",          NULL };
+ static const char *chatapp[]        = { "telegram-desktop",  NULL };
+ // static const char *txteditor[]	    = { "geany",             NULL };
+@@ -303,7 +306,7 @@ static Key keys[] = {
+ static Button buttons[] = {
+ 	/* click                event mask      button          function        argument */
+ 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
++	{ ClkLtSymbol,          0,              Button3,        layoutmenu,     {0} },
+ 	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {.i = 1} },
+ 	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {.i = 2} },
+ 	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {.i = 3} },
+diff --git a/dwm.c b/dwm.c
+index 411216b..7c418b1 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -261,6 +261,7 @@ static void incnmaster(const Arg *arg);
+ static void keypress(XEvent *e);
+ static int fake_signal(void);
+ static void killclient(const Arg *arg);
++static void layoutmenu(const Arg *arg);
+ static void loadxrdb(void);
+ static void manage(Window w, XWindowAttributes *wa);
+ static void mappingnotify(XEvent *e);
+@@ -2038,6 +2039,24 @@ loadxrdb()
+   XCloseDisplay(display);
+ }
+ 
++void
++layoutmenu(const Arg *arg) {
++	FILE *p;
++	char c[3], *s;
++	int i;
++
++	if (!(p = popen(layoutmenu_cmd, "r")))
++		 return;
++	s = fgets(c, sizeof(c), p);
++	pclose(p);
++
++	if (!s || *s == '\0' || c == '\0')
++		 return;
++
++	i = atoi(c);
++	setlayout(&((Arg) { .v = &layouts[i] }));
++}
++
+ void
+ manage(Window w, XWindowAttributes *wa)
+ {

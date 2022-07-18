@@ -8,12 +8,12 @@
 - Terminal: [st](https://st.suckless.org/)
 - Shell: [zsh](https://www.zsh.org/)
 - Text Editor: [Neovim](https://github.com/neovim/neovim)
-- Status Bar: [slstatus](https://tools.suckless.org/slstatus/)
+- Status Bar: [dwmblocks-async](https://github.com/UtkarshVerma/dwmblocks-async)
 - AUR Helper: [Pikaur](https://github.com/actionless/pikaur)
 - Image Viewer: [sxiv](https://github.com/muennich/sxiv)
 - Screenshot: [maim](https://github.com/naelstrof/maim)
 - Display Server: [Xorg](https://www.x.org/wiki)
-- Compositor: [Picom](https://github.com/yshui/picom)
+- Compositor: [Picom](https://github.com/dccsillag/picom)
 
 I also make use of [eww widgets](https://github.com/elkowar/eww) to display battery percentage and current song in the lockscreen.
 
@@ -45,11 +45,8 @@ rm -r tmpdotfiles
 - nerd-fonts-jetbrains-mono (The main font that is everywhere in my build)
 - rofi (app launcher)
 - jgmenu (X11 menu to launch apps)
-- [My dwm build](https://github.com/samisthefbi/dwm) (window manager)
-- [My dmenu build](https://github.com/samisthefbi/dmenu) (dynamic menu)
 - [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs & idk how to fix that)
-- [My slstatus configs](https://github.com/samisthefbi/slstatus) (using a single script to display status bar elements sometimes doesn't update on my ultra poor laptop so)
-- picom (Compositor for those fancy transparency) (I used the one I found on pacman)
+- picom-animations-git (Compositor for those fancy transparency) 
 - awk (utility to extract and present information) (I use this for scripts)
 - [eww](https://github.com/elkowar/eww) (for battery percentage and currently playing song in lockscreen)
 - ffmpeg (audio/video converter) (used to extract album art in a script)
@@ -80,16 +77,16 @@ rm -r tmpdotfiles
 	- [x] ~~Make theme changer script that uses Xresources to save/restore colorscheme & wallpaper~~
 - [X] ~~Add colors to status bar elements~~
 	- [X] ~~Use Status2d+xrdb instead of statuscolors~~
-- [ ] Remove unnecessary stuff
-- [ ] Clickable dwmblocks 
+- [X] ~~Clickable dwmblocks~~ 
     - [X] ~~Rewrite status bar scripts & probably others as well~~
-    - [ ] Merge dwmblocks, dmenu and dwm into dotfiles repository
+    - [X] ~~Merge dwmblocks, dmenu and dwm into dotfiles repository~~
 - [ ] Make some themes
 	- [X] ~~Nord Theme~~
 	- [X] ~~Gruvbox Theme~~
     - [ ] Catpuccin Theme
 	- [ ] Evangelion theme?
     - [ ] Get GTK themes for respective colorscheme
+- [ ] Remove unnecessary stuff
 
 ## Wallpaper Credits
 

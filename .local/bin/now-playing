@@ -2,10 +2,11 @@
 
 # Dependencies: mpc or playerctl
 
-ctl='playerctl'
+ctl='playerctl' # (playerctl | mpc)
 
-id='playerctld'
-[ "$(playerctl status)" == 'Stopped' ] && id="$(playerctl -l | sed -n 2p)"
+id='playerctld' # ( playerctld | mpd | chromium | ... )
+
+[[ "$(playerctl status)" == 'Stopped' && "$id" == 'playerctld' ]] && id="$(playerctl -l | sed -n 2p)"
 
 glyph(){
     if [ $ctl == 'playerctl' ]; then
@@ -37,6 +38,7 @@ player_glyph(){
         *) PLAYER_GLYPH="" ;;
     esac
 }
+
 glyph
 [ $ctl == 'playerctl' ] && player_glyph
 
@@ -45,9 +47,9 @@ if [ "$ctl" == 'playerctl' ]; then
         1) playerctl -p "$id" play-pause ;;
         3)  if [ "$(playerctl loop)" != 'Track' ]; then
                 playerctl -p "$id" loop Track
-                notify-send -t 2000 "Looping track"
+                [ "$(playerctl loop)" == 'Track' ] && notify-send -t 1500 "$PLAYER_GLYPH" "<span font = 'JetBrainsMono Nerd Font 11'>Looping current track now</span>" || notify-send -t 1500 "$PLAYER_GLYPH" "<span font = 'JetBrainsMono Nerd Font 11'>Error occurred. Can't change loop status.</span>"
             else
-                notify-send -t 2000 "Looping playlist"
+                notify-send -t 1500 "$PLAYER_GLYPH" "<span font = 'JetBrainsMono Nerd Font 11'>Looping playlist now</span>"
                 playerctl -p "$id" loop Playlist
             fi;;
     esac
@@ -65,7 +67,7 @@ if [ "$ctl" == 'playerctl' ]; then
     fi
 
     case "$1" in 
-        'sbar') [ "$(playerctl -p "$id" metadata)" == '' ] && echo ' '|| echo "^B1^^c#1d2225^ $OUTPUT ^d^";;
+        'sbar') [ "$(playerctl -p "$id" metadata)" == '' ] && echo ' '|| printf "^B1^^C0^ %.60s ^d^" "$OUTPUT";;
         *) printf "%s\n" "$OUTPUT";;
     esac
 
@@ -76,7 +78,7 @@ elif [ "$ctl" == 'mpc' ]; then
     esac
 
     case "$1" in
-        'sbar') [ "$(mpc current)" == '' ] && echo ' ' || echo "^B1^^c#1d2225^  | $GLYPH $(mpc current) ^d^" ;;
+        'sbar') [ "$(mpc current)" == '' ] && echo ' ' || echo "^B1^^C0^  | $GLYPH $(mpc current) ^d^" ;;
         *) [ "$(mpc current)" == '' ] && echo ' ' || echo "  | $GLYPH $(mpc current)" ;;
     esac
 else
