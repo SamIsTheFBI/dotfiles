@@ -45,7 +45,10 @@ rm -r tmpdotfiles
 - nerd-fonts-jetbrains-mono (The main font that is everywhere in my build)
 - rofi (app launcher)
 - jgmenu (X11 menu to launch apps)
+- [My dwm build](https://github.com/samisthefbi/dwm) (window manager)
+- [My dmenu build](https://github.com/samisthefbi/dmenu) (dynamic menu)
 - [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs & idk how to fix that)
+- [My dwmblocks-async config](https://github.com/samisthefbi/dwmblocks-async) (clickable dwm bar)
 - picom-animations-git (Compositor for those fancy transparency) 
 - awk (utility to extract and present information) (I use this for scripts)
 - [eww](https://github.com/elkowar/eww) (for battery percentage and currently playing song in lockscreen)
@@ -79,7 +82,6 @@ rm -r tmpdotfiles
 	- [X] ~~Use Status2d+xrdb instead of statuscolors~~
 - [X] ~~Clickable dwmblocks~~ 
     - [X] ~~Rewrite status bar scripts & probably others as well~~
-    - [X] ~~Merge dwmblocks, dmenu and dwm into dotfiles repository~~
 - [ ] Make some themes
 	- [X] ~~Nord Theme~~
 	- [X] ~~Gruvbox Theme~~

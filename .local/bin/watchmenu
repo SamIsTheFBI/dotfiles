@@ -18,23 +18,23 @@ dir6=~/Local\ Disk\ E/Shivam/Media/Movies
 dir7=~/Scripts/animepahe-dl
 dir8=~/Videos
 
-prompt="dmenu -l 16"
-# prompt="rofi -dmenu"
+prompt="dmenu -c --border -l 16"
+# prompt="rofi -dmenu -theme ~/.config/rofi/watchmenu.rasi"
 
 video_player="mpv --fs --save-position-on-quit --no-keepaspect-window"
 
 #Define cloud (rclone, nextcloud, etc.) directories
 #Uncomment lines 10 to 19 filling in respective paths and then put those dir vars in abs_dir() & search_results() 
-#var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
-#if [ $var == '8.8.8.8' ]; then
-#		dir9=~/Cloud\ Storage/Hikari\ Drive/Anime
-#		dir10=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series
-#		dir11=~/Cloud\ Storage/Hikari\ Drive/Movies
-#else
-#		dir9=~
-#		dir10=~
-#		dir11=~
-#fi
+var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
+if [ $var == '8.8.8.8' ]; then
+		# dir9=~/Cloud\ Storage/Hikari\ Drive/Anime
+		dir10=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series
+		# dir11=~/Cloud\ Storage/Hikari\ Drive/Movies
+else
+		dir9=~
+		dir10=~
+		dir11=~
+fi
 
 help(){
 	tmp=$(printf " Cancel\n Back\nUSAGE:\nSearch for media you have in your device. You can specify directories in this script itself.\nOnce you're done, choose Update on launching this script again.\nTo list all entries in your media directories, choose Show All in previous menu.\nCOMMANDS:\n:q - Quit\n:s - Go to search screen\n:b - Go back to previous screen" | $prompt -p ' Help page' )
@@ -45,8 +45,8 @@ help(){
 update_list(){
     find "$dir1" "$dir5" "$dir7" -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-anime-list
     find "$dir2" "$dir6" -mindepth 1 -maxdepth 1 | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-movies-list
-    find "$dir3" "$dir4" -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-tvshows-list
-    find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" "$dir8" "$dir9" -mindepth 1 -maxdepth 1 | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-all-list
+    find "$dir3" "$dir4" "$dir10" -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-tvshows-list
+    find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" "$dir8" "$dir9" "$dir10" -mindepth 1 -maxdepth 1 | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-all-list
 }
 
 #Main menu
@@ -67,7 +67,7 @@ main(){
 
 #Get the root directory of given file/sub-directory by checking with above specified directories. Brute forcing?
 abs_dir(){
-path=$(find "$dir1/$1" -maxdepth 0 || find "$dir2/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir4/$1" -maxdepth 0 || find "$dir5/$1" -maxdepth 0 || find "$dir6/$1" -maxdepth 0 || find "$dir7/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir8/$1" -maxdepth 0 || find "$dir9/$1" -maxdepth 0);
+path=$(find "$dir1/$1" -maxdepth 0 || find "$dir2/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir4/$1" -maxdepth 0 || find "$dir5/$1" -maxdepth 0 || find "$dir6/$1" -maxdepth 0 || find "$dir7/$1" -maxdepth 0 || find "$dir8/$1" -maxdepth 0 || find "$dir9/$1" -maxdepth 0 || find "$dir10/$1" -maxdepth 0);
   if [ -z "$path" ]; then
     echo "ERROR" && exit
   else
@@ -91,7 +91,7 @@ search_results(){
     elif [ -z "$query" ]; then
         exit
     else
-        show=$(printf " Cancel\n Back\n$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" "$dir8" -maxdepth 1 -mindepth 1 -iname "*$query*" | sort -V | awk -F '/' '{ print $NF; }')" | $prompt -p 'Choose: ')
+        show=$(printf " Cancel\n Back\n$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" "$dir8" "$dir10" -maxdepth 1 -mindepth 1 -iname "*$query*" | sort -V | awk -F '/' '{ print $NF; }')" | $prompt -p 'Choose')
 	fi
 	
     if [[ -z "$show" && "$query" == ' Videos' ]]; then
