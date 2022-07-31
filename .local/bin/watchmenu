@@ -1,170 +1,399 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Check if script is already running 
-if [ "$(pgrep -f $0)" != "$$" ]; then
-    SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
-    echo "Another instance of $SCRIPTNAME already exists!"
-    [ "$(command -v notify-send)" != '' ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of $SCRIPTNAME already exists!</span>"
+# Check if script is already running
+if [ "$(pgrep -f "${0}")" != "$$" ]; then
+    SCRIPTNAME="$(echo "${0}" | awk -F '/' '{print $NF}')"
+    echo "Another instance of ${SCRIPTNAME} already exists!"
+    [ -x "$(command -v notify-send)" ] && \
+        notify-send -r 309872 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of ${SCRIPTNAME} already exists!</span>"
     exit
 fi
 
-# Local directories
-dir1=~/Local\ Disk\ D/Media/Anime
-dir2=~/Local\ Disk\ D/Media/Movies
-dir3=~/Local\ Disk\ D/Media/TV\ Show
-dir4=~/Local\ Disk\ E/Shivam/Media/TV\ Shows
-dir5=~/Local\ Disk\ E/Shivam/Media/Anime
-dir6=~/Local\ Disk\ E/Shivam/Media/Movies
-dir7=~/Scripts/animepahe-dl
-dir8=~/Videos
+# Select prompt
+case "${WATCHMENU_PROMPT}" in
+    rofi)
+        prompt="rofi -dmenu -p"
+        ;;
+    fzf)
+        prompt="fzf --bind alt-enter:print-query --prompt"
+        ;;
+    dmenu | "")
+        prompt="dmenu -c -i --border -l 16 -p"
+        ;;
+    *)
+        prompt="${WATCHMENU_PROMPT}"
+        echo "Selected custom prompt: ${prompt}"
+        ;;
+esac
 
-prompt="dmenu -c --border -l 16"
-# prompt="rofi -dmenu -theme ~/.config/rofi/watchmenu.rasi"
+# Select plater
+case "${VIDEO_PLAYER}" in
+    mpv | "")
+        video_player="mpv --fs --save-position-on-quit --no-keepaspect-window"
+        ;;
+    *)
+        video_player="${VIDEO_PLAYER}"
+        echo "Selected custom video player: ${video_player}"
+        ;;
+esac
 
-video_player="mpv --fs --save-position-on-quit --no-keepaspect-window"
+# Get cache location
+WATCHMENU_CACHE="${XDG_CACHE_HOME:-${HOME}/.cache}/watchmenu"
+[ ! -d "${WATCHMENU_CACHE}" ] && mkdir -vp "${WATCHMENU_CACHE}"
 
-#Define cloud (rclone, nextcloud, etc.) directories
-#Uncomment lines 10 to 19 filling in respective paths and then put those dir vars in abs_dir() & search_results() 
-var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
-if [ $var == '8.8.8.8' ]; then
-		# dir9=~/Cloud\ Storage/Hikari\ Drive/Anime
-		dir10=~/Cloud\ Storage/Hikari\ Drive/TV\ Shows\ and\ Web\ Series
-		# dir11=~/Cloud\ Storage/Hikari\ Drive/Movies
-else
-		dir9=~
-		dir10=~
-		dir11=~
-fi
+ANIME_DIRS=(  "${HOME}/Local Disk D/Media/Anime"    "${HOME}/Local Disk E/Shivam/Media/Anime" )
+TVSHOW_DIRS=( "${HOME}/Local Disk D/Media/TV Show"  "${HOME}/Local Disk E/Shivam/Media/TV Shows" "${HOME}/Cloud Storage/Hikari Drive/TV Shows and Web Series" )
+MOVIE_DIRS=(  "${HOME}/Local Disk D/Media/Movies"   "${HOME}/Local Disk E/Shivam/Media/Movies" )
+VIDEO_DIRS=(  "${HOME}/Videos"         "${HOME}/Downloads" "${HOME}/Downloads/Telegram Desktop" )
 
-help(){
-	tmp=$(printf " Cancel\n Back\nUSAGE:\nSearch for media you have in your device. You can specify directories in this script itself.\nOnce you're done, choose Update on launching this script again.\nTo list all entries in your media directories, choose Show All in previous menu.\nCOMMANDS:\n:q - Quit\n:s - Go to search screen\n:b - Go back to previous screen" | $prompt -p ' Help page' )
-	[[ $tmp == ':q' || "$tmp" == ' Cancel' || -z "$tmp" ]] && exit || [[ $tmp == ':s' ]] && main || [[ $tmp == ':b' || "$tmp" == ' Back' ]] && main || main
+# Show help
+help () {
+    selection="$(cat <<- EOF | ${prompt} " Help page"
+		 Cancel
+		 Back
+		USAGE:
+		Search for media you have in your device. You can specify directories in this script itself.
+		Once you're done, choose Update on launching this script again.
+		To list all entries in your media directories, choose Show All in previous menu.
+		COMMANDS:
+		:q - Quit
+		:s - Go to search screen
+		:b - Go back to previous screen
+		EOF
+    )"
+
+    case "${selection}" in
+        :q | " Cancel" | "")
+            exit
+            ;;
+        :s)
+            main
+            ;;
+        :b | " Back")
+            main
+            ;;
+        *)
+            main
+            ;;
+    esac
 }
 
-#Update media list
-update_list(){
-    find "$dir1" "$dir5" "$dir7" -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-anime-list
-    find "$dir2" "$dir6" -mindepth 1 -maxdepth 1 | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-movies-list
-    find "$dir3" "$dir4" "$dir10" -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-tvshows-list
-    find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" "$dir8" "$dir9" "$dir10" -mindepth 1 -maxdepth 1 | awk -F '/' '{print $NF}' | sort -V > ~/.cache/watchmenu-all-list
+# Update media list
+update_list () {
+    echo "Category to update: $1"
+    case "$1" in
+    anime )
+        find "${ANIME_DIRS[@]}" -maxdepth 1 -mindepth 1 -type d  2>/dev/null \
+            | awk -F '/' '{print $NF}' \
+            | sort > "${WATCHMENU_CACHE}/watchmenu-anime-list"
+            ;;
+    tvshows )
+        find "${TVSHOW_DIRS[@]}" -maxdepth 1 -mindepth 1 -type d \
+            | awk -F '/' '{print $NF}' \
+            | sort > "${WATCHMENU_CACHE}/watchmenu-tvshows-list"
+            ;;
+    movies )
+        find "${MOVIE_DIRS[@]}" -maxdepth 1 -mindepth 1 \
+            | awk -F '/' '{print $NF}' \
+            | sort > "${WATCHMENU_CACHE}/watchmenu-movies-list"
+            ;;
+    videos )
+        find "${VIDEO_DIRS[@]}" -maxdepth 1 -mindepth 1 -type f -exec file -N -i -- {} + \
+            | grep "video" \
+            | awk -F ':' '{print $1}' \
+            | awk -F '/' '{print $NF}' \
+            | sort > "${WATCHMENU_CACHE}/watchmenu-videos-list"
+            ;;
+    esac
+
+    cat "${WATCHMENU_CACHE}/watchmenu-anime-list" \
+        "${WATCHMENU_CACHE}/watchmenu-movies-list" \
+        "${WATCHMENU_CACHE}/watchmenu-tvshows-list" \
+        "${WATCHMENU_CACHE}/watchmenu-videos-list" \
+        | sort > ${WATCHMENU_CACHE}/watchmenu-all-list
 }
 
-#Main menu
-main(){
-    LAST_PLAYED="$(cat ~/.cache/watchmenu-last-played)"
-    LAST_PLAYED_NAME="$(cat ~/.cache/watchmenu-last-played | awk -F '/' '{{print ".../" $(NF-2) "/" $(NF-1) "/" $(NF) }}')"
-    query=$( printf " Cancel\n神 Last Played ($LAST_PLAYED_NAME)\n Show All\n Help\n Update\n話 Anime\n TV Shows\n Movies\n Videos"| $prompt -p " Search")
-	echo "Search Query: $query"
-	[[ $query == :q* || "$query" == ' Cancel' ]] && exit
-    [[ $query == ':h' || "$query" == ' Help' ]] && help
-    if [[ "$query" == *Last* ]]; then
-        [ ! -f ~/.cache/watchmenu-last-played ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>No record of last played items</span>" && main
-        $video_player "$LAST_PLAYED" && main
-    fi
-    [[ "$query" == ':u' || "$query" == ' Update' ]] && update_list && main
+# Main menu
+main () {
+    LAST_PLAYED="$(cat "${WATCHMENU_CACHE}/watchmenu-last-played" 2>/dev/null)"
+    LAST_PLAYED_NAME="$(awk -F '/' '{{ print ".../" $(NF-2) "/" $(NF-1) "/" $(NF) }}' 2>/dev/null < <(echo "${LAST_PLAYED}"))"
+
+    title=" Search"
+    options="$(printf " Cancel\n神 Last Played (%s)\n Show All\n Help\n Update\n話 Anime\n TV Shows\n Movies\n Videos" "${LAST_PLAYED_NAME}")"
+
+    # Request selection
+    main_selection="$(${prompt} "${title}" < <(echo "${options}"))"
+
+    echo "Search Query: ${main_selection}"
+    case "${main_selection}" in
+        :q* | " Cancel")
+            exit
+            ;;
+        :h | " Help")
+            help
+            ;;
+        *"神 Last Played"*)
+            [ ! -f "${WATCHMENU_CACHE}/watchmenu-last-played" ] && notify-send -r 309872 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>No record of last played items</span>" && main
+            ${video_player} "${LAST_PLAYED}" && main
+            ;;
+        :u | " Update")
+            title=" Choose category"
+            options="$(printf " Cancel\n Back\n Update All\n話 Anime\n TV Shows\n Movies\n Videos")"
+
+            update_selection="$(${prompt} "${title}" < <(echo "${options}"))"
+
+            case "${update_selection}" in
+                :q | " Cancel" | "")
+                    exit
+                    ;;
+                :s)
+                    main
+                    ;;
+                :b | " Back")
+                    main
+                    ;;
+                " Update All")
+                    update_list anime
+                    update_list tvshows
+                    update_list movies
+                    update_list videos
+                    ;;
+                "話 Anime")
+                    update_list anime
+                    ;;
+                " TV Shows")
+                    update_list tvshows
+                    ;;
+                " Movies")
+                    update_list movies
+                    ;;
+                " Videos")
+                    update_list videos
+                    ;;
+            esac
+            main
+            ;;
+    esac
+
     search_results
 }
 
-#Get the root directory of given file/sub-directory by checking with above specified directories. Brute forcing?
-abs_dir(){
-path=$(find "$dir1/$1" -maxdepth 0 || find "$dir2/$1" -maxdepth 0 || find "$dir3/$1" -maxdepth 0 || find "$dir4/$1" -maxdepth 0 || find "$dir5/$1" -maxdepth 0 || find "$dir6/$1" -maxdepth 0 || find "$dir7/$1" -maxdepth 0 || find "$dir8/$1" -maxdepth 0 || find "$dir9/$1" -maxdepth 0 || find "$dir10/$1" -maxdepth 0);
-  if [ -z "$path" ]; then
-    echo "ERROR" && exit
-  else
-    show_dir="$path"
-  fi;
-  func_result="$show_dir"
-  echo "$func_result"
+# Get the root directory of given file/sub-directory by checking with above specified directories. Brute forcing?
+abs_dir () {
+    # Find $1 in different arrays of user specified directories. Not using -name flag to avoid problems with special characters.
+    # Selecting every line related to $1 with `grep -F` (-F flag to select special characters as well)
+    # and picking the first one with sed, since that's the root directory of $1.  
+    path="$(find "${VIDEO_DIRS[@]/%//${1}}" "${MOVIE_DIRS[@]/%//${1}}" "${ANIME_DIRS[@]/%//${1}}" "${TVSHOW_DIRS[@]/%//${1}}" -mindepth 0 -maxdepth 1 \
+                    | grep -F "$1" \
+                    | sed -n '1p')"
+
+    case "${path}" in
+        "")
+            2>&1 echo "ERROR"
+            exit
+            ;;
+        *)
+            show_dir="${path}"
+            ;;
+    esac
+
+    func_result="${show_dir}"
+    echo "${func_result}"
 }
 
-search_results(){
-	if [ "$query" == ' Show All' ]; then
-        show=$(printf " Cancel\n Back\n$(cat ~/.cache/watchmenu-all-list)" | $prompt -p '磊 Pick a show/movie' )
-    elif [ "$query" == '話 Anime' ]; then
-        show=$(printf " Cancel\n Back\n$(cat ~/.cache/watchmenu-anime-list)" | $prompt -p '話 Pick a show' )
-    elif [ "$query" == ' TV Shows' ]; then
-        show=$(printf " Cancel\n Back\n$(cat ~/.cache/watchmenu-tvshows-list)" | $prompt -p ' Pick a show' )
-    elif [ "$query" == ' Movies' ]; then
-        show=$(printf " Cancel\n Back\n$(cat ~/.cache/watchmenu-movies-list)" | $prompt -p ' Pick a movie' )
-    elif [ "$query" == ' Videos' ]; then
-        show=$(printf " Cancel\n Back\n Play All\n$(find "$dir8" -mindepth 1 -type f | sort -V | awk -F '/' '{print $NF}')" | $prompt -p ' Pick a video' )
-    elif [ -z "$query" ]; then
-        exit
-    else
-        show=$(printf " Cancel\n Back\n$(find "$dir1" "$dir2" "$dir3" "$dir4" "$dir5" "$dir6" "$dir7" "$dir8" "$dir10" -maxdepth 1 -mindepth 1 -iname "*$query*" | sort -V | awk -F '/' '{ print $NF; }')" | $prompt -p 'Choose')
-	fi
-	
-    if [[ -z "$show" && "$query" == ' Videos' ]]; then
-        exit
-    elif [ "$show" == ' Play All' ]; then
-        echo "$dir8" > ~/.cache/watchmenu-last-played
-        $video_player "$dir8"
+search_results () {
+    case "${main_selection}" in
+        " Show All")
+            title="磊 Pick a show/movie"
+            options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-all-list")")"
+            ;;
+        "話 Anime")
+            title="話 Pick a show"
+            options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-anime-list")")"
+            ;;
+        " TV Shows")
+            title=" Pick a show"
+            options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-tvshows-list")")"
+            ;;
+        " Movies")
+            title=" Pick a movie"
+            options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-movies-list")")"
+            ;;
+        " Videos")
+            title=" Pick a video"
+            options="$(printf " Cancel\n Back\n Play All\n$(cat "${WATCHMENU_CACHE}/watchmenu-videos-list")")"
+            ;;
+        "")
+            exit
+            ;;
+        *)
+            title="Choose"
+            options="$(printf " Cancel\n Back\n%s" "$(find "${ANIME_DIRS[@]}" "${TVSHOW_DIRS[@]}" "${MOVIE_DIRS[@]}" "${VIDEO_DIRS[@]}" -mindepth 1 -maxdepth 1 -iname "*${main_selection}*" 2>/dev/null \
+                | sort \
+                | awk -F '/' '{ print $NF }')")"
+            ;;
+    esac
+
+    # Request selection
+    selection="$(${prompt} "${title}" < <(echo "${options}"))"
+
+    case "${selection}" in
+        "" | " Videos")
+            exit
+            ;;
+        " Play All")
+            echo "${VIDEO_DIRS[@]}" > "${WATCHMENU_CACHE}/watchmenu-last-played"
+            ${video_player} "${VIDEO_DIRS[@]}"
+            search_results
+            ;;
+        " Cancel")
+            exit
+            ;;
+    esac
+
+    # If chosen option is a video file - get its absolute path and play it
+    file_path="$(abs_dir "${selection}")"
+    if [ "$(file -bi "${file_path}" | grep -o "video")" == "video" ]; then
+        echo "${file_path}" > "${WATCHMENU_CACHE}/watchmenu-last-played"
+        ${video_player} "${file_path}"
         search_results
-    elif [[ "$show" == ' Cancel' ]]; then
-  	    exit
-	fi
+    fi
 
-    #If chosen option is a video file then, get its absolute path, play it
-	file_path="$(abs_dir "$show")"
-	if [[ "$(file -i "$file_path" | grep -o 'video')" == "video" ]]; then
-        echo "$file_path" > ~/.cache/watchmenu-last-played
-		$video_player "$file_path"
-		search_results
-	fi
+    case "${selection}" in
+        :q | " Cancel")
+            exit
+            ;;
+        :s)
+            main
+            ;;
+        :b | " Back")
+            main
+            ;;
+        *)
+            show_dir="$(abs_dir "${selection}")"
+            echo "Show Dir: ${show_dir}"
+            ;;
+    esac
 
-    [[ $show == ':q' || "$show" == ' Cancel' ]] && exit
-	[[ $show == ':s' ]] && main 
-    [[ $show == ':b' || "$show" == ' Back' ]] && main  
-    
-	show_dir="$(abs_dir "$show")"
-	echo "Show Dir: $show_dir"
+    case "${show_dir}" in
+        ERROR)
+            notify-send -r 309872 -t 2000 " Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find the specified show/movie. Check your internet connection or try updating the media list.</span>"
+            main
+            ;;
+    esac
 
-    [[ "$show_dir" == 'ERROR' ]] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find the specified show/movie. Try updating the media list.</span>" && main
     season_list
 }
 
-#Choose season directory
-season_list(){
-    if [[ "$show_dir" == */Movie* ]]; then
-        season='NONE' #This will skip to episode_list
-        season_dir="$show_dir"
-    else
-        #Choose season of the show previously chosen
-        season=$(printf " Cancel\n Back\n Play All\n$(find "$show_dir" -mindepth 1 -type d | sort -V | awk -F '/' '{print $NF}')" | $prompt -p '  Choose season' )
-		season_dir="$show_dir/$season"
-        [[ $season == ':q' || "$season" == ' Cancel' || -z "$season" ]] && exit
-    fi
-	echo "Season Dir: $season_dir"
-    [ "$season" == ' Play All' ] && echo "$show_dir" > ~/.cache/watchmenu-last-played && $video_player "$show_dir" && season_list
-	[[ $season == ':s' ]] && main
-    [[ $season == ':b' || "$season" == ' Back' ]] && search_results
+# Choose season directory
+season_list () {
+    case "${show_dir}" in
+        */Movie*)
+            # This will skip to episode_list
+            season="NONE"
+            season_dir="${show_dir}"
+            ;;
+        *)
+            # Choose season of the show previously chosen
+            title="  Choose season"
+            options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${show_dir}" -mindepth 1 -type d 2>/dev/null | sort -V | awk -F '/' '{print $NF}')")"
+            selection="$(${prompt} "${title}" < <(echo "${options}"))"
+
+            season="${selection}"
+            season_dir="${show_dir}/${season}"
+            case "${selection}" in
+                :q | " Cancel" | "")
+                    exit
+                    ;;
+            esac
+            ;;
+    esac
+
+    echo "Season Dir: ${season_dir}"
+
+    case "${season}" in
+        " Play All")
+            echo "${show_dir}" > "${WATCHMENU_CACHE}/watchmenu-last-played"
+            ${video_player} "${show_dir}"
+            season_list
+            ;;
+        :s)
+            main
+            ;;
+        :b | " Back")
+            search_results
+            ;;
+    esac
+
     episode_list
 }
 
 # Choose episode/movie file
-episode_list(){
-    if [[ "$show_dir" == */Movie* ]]; then
-        movie=$(printf " Cancel\n Back\n Play All\n$(find "$season_dir" -mindepth 1 -maxdepth 1 -type f | sort -V -u | awk -F '/' '{print $NF}')" | $prompt -p ' Choose movie' )
-        file_path="$season_dir/$movie"
-        [ "$movie" == ' Play All' ] && echo "$season_dir" > ~/.cache/watchmenu-last-played && $video_player "$season_dir" && episode_list
-	    [[ $movie == ':s' ]] && main
-	    [[ $movie == ':b' || "$movie" == ' Back' ]] && search_results
-        [[ $movie == ':q' || "$movie" == ' Cancel' ]] && exit
-    else
-        episode=$(printf " Cancel\n Back\n Play All\n$(find "$season_dir" -mindepth 1 -maxdepth 1 -type f | sort -V -u | awk -F '/' '{print $NF}')" | $prompt -p '  Choose episode' )
-        file_path="$season_dir/$episode"
-        [ "$episode" == ' Play All' ] && echo "$season_dir" > ~/.cache/watchmenu-last-played && $video_player "$season_dir" && episode_list 
-	    [[ $episode == ':s' ]] && main 
-        [[ $episode == ':b' || "$episode" == ' Back' ]] && season_list 
-        [[ $episode == ':q' || "$episode" == ' Cancel' ]] && exit
-    fi
-	echo "File path: $file_path"
-    echo "$file_path" > ~/.cache/watchmenu-last-played
+episode_list () {
+    case "${show_dir}" in
+        */Movie*)
+            title=" Choose movie"
+            options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${season_dir}" -mindepth 1 -maxdepth 1 -type f 2>/dev/null \
+                | awk -F '/' '{print $NF}' \
+                | sort -u)")"
+            selection="$(${prompt} "${title}" < <(echo "${options}"))"
 
-    [[ -n $(echo $DISPLAY) ]] && $video_player "$file_path"
-	episode_list
+            movie="${selection}"
+            file_path="${season_dir}/${movie}"
+
+            case "${movie}" in
+                " Play All")
+                    echo "${season_dir}" > "${WATCHMENU_CACHE}/watchmenu-last-played"
+                    ${video_player} "${season_dir}"
+                    episode_list
+                    ;;
+                :s)
+                    main
+                    ;;
+                :b | " Back")
+                    search_results
+                    ;;
+                :q | " Cancel")
+                    exit
+                    ;;
+            esac
+            ;;
+        *)
+            title="  Choose episode"
+            options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${season_dir}" -mindepth 1 -maxdepth 1 -type f 2>/dev/null \
+                | awk -F '/' '{print $NF}' \
+                | sort -u)")"
+            selection="$(${prompt} "${title}" < <(echo "${options}"))"
+
+            episode="${selection}"
+            file_path="${season_dir}/${episode}"
+
+            case "${episode}" in
+                " Play All")
+                    echo "${season_dir}" > "${WATCHMENU_CACHE}/watchmenu-last-played"
+                    ${video_player} "${season_dir}"
+                    episode_list
+                    ;;
+                :s)
+                    main
+                    ;;
+                :b | " Back")
+                    season_list
+                    ;;
+                :q | " Cancel")
+                    exit
+                    ;;
+            esac
+            ;;
+    esac
+
+    echo "File path: ${file_path}"
+    echo "${file_path}" > "${WATCHMENU_CACHE}/watchmenu-last-played"
+
+    [[ -n "${DISPLAY}" ]] && ${video_player} "${file_path}"
+    episode_list
 }
 
 while true; do
-	main
+    main
 done

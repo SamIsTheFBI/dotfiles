@@ -4,10 +4,12 @@ if [ "$(pgrep -x ntfs-3g)" == '' ]; then
     sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
 fi
 
-var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
-if [ $var == '8.8.8.8' ]; then
-    [ "$(pgrep -x rclone)" == '' ] && rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
-fi
+# var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
+# if [ $var == '8.8.8.8' ]; then
+#     [ "$(pgrep -x rclone)" == '' ] && rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
+# else
+#     sudo killall rclone
+# fi
 
 brightnessctl s 0
 redshift -x

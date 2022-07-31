@@ -1,9 +1,18 @@
 #!/bin/sh
 
-
+[ -z "${TERMINAL}" ] && TERMINAL="st"
 
 network_interface=$(ip route get 8.8.8.8 | awk -- '{print $5; exit}')
 var=$(ip route get 8.8.8.8 | awk '{print $1; exit}')
+
+if [ "$var" != '8.8.8.8' ]; then
+    case "$1" in
+        'sbar') printf "^B2^^C0^ 睊 Disconnected ^d^" ;;
+        *) printf "睊 Disconnected" ;;
+    esac
+    [ "$BLOCK_BUTTON" == '3' ] && ${TERMINAL} -e nmtui
+    exit
+fi 
 
 update() {
     sum=0
@@ -26,6 +35,6 @@ case "$1" in
 esac
 
 case $BLOCK_BUTTON in
-    1) [ "$var" == '8.8.8.8' ] && notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)</span>" || notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Disconnected</span>" ;;
+    1) [ "$var" == '8.8.8.8' ] && notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)<br>$(ip route get 8.8.8.8 | awk 'NR==1 {print $7}')</span>" || notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Disconnected</span>" ;;
 	3) st -e nmtui ;;
 esac

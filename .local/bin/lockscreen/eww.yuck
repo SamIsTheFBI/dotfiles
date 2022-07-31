@@ -2,7 +2,7 @@
 (defpoll BATTERY :interval "1s" `~/.local/bin/battery`)
 
 ;; current song
-(defpoll SONG :interval "0.1s" `now-playing`)
+(defpoll SONG :interval "0.1s" `~/.local/bin/now-playing`)
 
 (defpoll UPTIME :interval "1s" `uptime -p | sed 's/up//'`)
 

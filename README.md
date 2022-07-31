@@ -114,3 +114,21 @@ sudo systemctl stop systemd-backlight@backlight:acpi_video1.service
 sudo systemctl disable systemd-backlight@backlight:acpi_video1.service
 ```
 </details>
+
+<details>
+<summary><b>Mixing two audio inputs with PulseAudio</b></summary>
+
+- Set up mixed sound sink:
+  ```
+  pactl load-module module-null-sink sink_name=MixedInputs
+  ```
+- Set up loopback sinks:
+  ```
+  pactl load-module module-loopback sink=MixedInputs
+  ```
+  Repeat this for as many times as the number of inputs you want to mix.
+- Launch pavucontrol and go to Recording tab. Choose All Inputs from the selector at the bottom. You should see new Loopback streams. You can change these to take input from different input devices. 
+
+Now you can go to the program to which you want to pass this mixed input to and select `Monitor of Null Output`. You can also set this new source as the default input in `Input Devices`. 
+
+</details>

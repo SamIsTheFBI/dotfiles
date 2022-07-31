@@ -3,6 +3,8 @@
 case $BLOCK_BUTTON in
     1) st htop;;
     3) st -e nvim $0;;
+    4) ~/.local/bin/volume incr ;;
+    5) ~/.local/bin/volume decr ;;
 esac
 
 ram_usage="$(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"

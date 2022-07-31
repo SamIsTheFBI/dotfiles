@@ -1,0 +1,21 @@
+#!/bin/sh
+
+prompt="dmenu -l 16 -i -p"
+
+QUERY=$(echo "Cancel" | $prompt "Search")
+[ "$QUERY" == 'Cancel' ] && exit
+
+curl -H "idk" "https://api.urbandictionary.com/v0/define?term=$QUERY" > /tmp/udsearch.json
+
+DEFINITIONS="$(jq '.' < /tmp/udsearch.json | grep definition | awk -F ': ' '{print $NF}' | sed -r 's!",!\n!g' | sed -r 's!"!!g' | sed -r 's!\n!!g' | sed -r 's!\r!!g')"
+
+echo $DEFINITIONS
+if [ -z "$DEFINITIONS" ]; then
+    notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
+    exit
+elif [ -n "$DEFINITIONS" ]; then    
+    var="$(echo "$DEFINITIONS" | $prompt 'Press Enter to copy: ')"
+    echo "$var" | xclip -selection clipboard
+    echo "$var" | xclip -selection primary
+    [ -z "$var" ] && exit || notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>"
+fi

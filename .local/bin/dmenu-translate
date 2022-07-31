@@ -17,5 +17,7 @@ elif [ -n "$OUTPUT" ]; then
     var="$(echo "$OUTPUT" | dmenu -p 'Press Enter to copy: ')"
     echo "$var" | xclip -selection clipboard
     echo "$var" | xclip -selection primary
-    [ -z "$var" ] && exit || notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>"
+    [ -z "$var" ] && exit \
+        || notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>" \
+        && notify-send -t 5000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translation:\n$var</span>"
 fi
