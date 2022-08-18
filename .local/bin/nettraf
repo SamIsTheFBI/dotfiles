@@ -35,6 +35,6 @@ case "$1" in
 esac
 
 case $BLOCK_BUTTON in
-    1) [ "$var" == '8.8.8.8' ] && notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)<br>$(ip route get 8.8.8.8 | awk 'NR==1 {print $7}')</span>" || notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Disconnected</span>" ;;
+    1) [ "$var" == '8.8.8.8' ] && notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Connected to $(nmcli -t -f NAME connection show --active)<br>$(ip route get 8.8.8.8 | awk 'NR==1 {print $7}')</span>" 2>/dev/null || notify-send -t 3000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Disconnected</span>" ;;
 	3) st -e nmtui ;;
 esac

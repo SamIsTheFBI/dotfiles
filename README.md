@@ -1,6 +1,7 @@
 <h1 align="center"><i>~/.dotfiles</i></h1>
 
-![Screenshot](https://user-images.githubusercontent.com/70562711/173168308-aa33e90d-bf1a-4031-b462-553ca70d3d10.png)
+![dwm](https://user-images.githubusercontent.com/70562711/185455970-bda57877-0665-45cf-996d-eba1ed4f0bbd.png)
+![i3lock](https://user-images.githubusercontent.com/70562711/185460408-5a0f591a-ac4c-47b7-8afd-ef86f1625820.jpg)
 
 ## A few programs that I use
 
@@ -72,27 +73,6 @@ rm -r tmpdotfiles
 - redshift (change color temperature of display)
 
 </details>
-
-## To-do
-
-- [x] ~~Apply Xresources/xrdb+live reloading patch to st, dwm and dmenu~~
-	- [x] ~~Make setwal script that uses pywal+Xresources to save colors~~
-	- [x] ~~Make theme changer script that uses Xresources to save/restore colorscheme & wallpaper~~
-- [X] ~~Add colors to status bar elements~~
-	- [X] ~~Use Status2d+xrdb instead of statuscolors~~
-- [X] ~~Clickable dwmblocks~~ 
-    - [X] ~~Rewrite status bar scripts & probably others as well~~
-- [ ] Make some themes
-	- [X] ~~Nord Theme~~
-	- [X] ~~Gruvbox Theme~~
-    - [ ] Catpuccin Theme
-	- [ ] Evangelion theme?
-    - [ ] Get GTK themes for respective colorscheme
-- [ ] Remove unnecessary stuff
-
-## Wallpaper Credits
-
-[Link to the wallpaper in the screenshot above.](https://nordthemewallpapers.com/Backgrounds/16-9/All/img/3mcg97oyotu61.jpg)
 
 ## Troubleshooting
 

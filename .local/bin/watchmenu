@@ -126,6 +126,9 @@ main () {
 
     echo "Search Query: ${main_selection}"
     case "${main_selection}" in
+        http*yout*watch?v=* )
+            ${video_player} "${main_selection}" && main
+            ;;
         :q* | " Cancel")
             exit
             ;;

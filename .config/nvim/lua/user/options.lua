@@ -43,3 +43,4 @@ require("bufferline").setup{}
 require("nvim-autopairs").setup{} 
 require("indent_blankline").setup{}
 require("nvim-tree").setup()
+require("Comment").setup()

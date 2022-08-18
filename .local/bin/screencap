@@ -1,30 +1,40 @@
 #!/bin/sh
 
+# Dependencies: maim | imagemagick
+
+SCREENSHOT="maim"
+[ "$(pgrep -x picom)" ] \
+  && SELECTSHOT="maim -s -u -b 2 -c 0.35,0.55,0.85,0.25 -l" \
+  || SELECTSHOT="maim -s -u -b 2 -c 0.35,0.55,0.85,0.25"
+
+#SCREENSHOT="import -window root"
+# SELECTSHOT="import"             # Freezes the screen when taking screenshot
+
 if [ -z "$1" ];then
-	maim ~/.cache/cache.png
+	${SCREENSHOT} ~/.cache/cache.png
 	xclip -selection clipboard -t image/png ~/.cache/cache.png
 	notify-send -i "~/.cache/cache.png" ' Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 elif [ "$1" == "fullsave" ];then
 	var=~/Screenshots/Screenshot_$(date +%Y%m%d_%H%M%S).png
-	maim $var 
+	${SCREENSHOT} $var 
 	xclip -selection clipboard -t image/png $var
 	notify-send -i "$var" ' Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "selectcopy" ];then
-	maim -s ~/.cache/cache.png
+	${SELECTSHOT} ~/.cache/cache.png
 	xclip -selection clipboard -t image/png ~/.cache/cache.png
 	notify-send -i "~/.cache/cache.png" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 elif [ "$1" == "selectsave" ];then
 	var=~/Screenshots/ScreenSelect_$(date +%Y%m%d_%H%M%S).png
-	maim -s $var
+	${SELECTSHOT} ${var}
 	xclip -selection clipboard -t image/png $var
 	notify-send -i "$var" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "actwincopy" ];then
-	maim -i $(xdotool getactivewindow) ~/.cache/cache.png
+	${SCREENSHOT} $(xdotool getactivewindow) ~/.cache/cache.png
 	xclip -selection clipboard -t image/png ~/.cache/cache.png
 	notify-send -i "~/.cache/cache.png" ' Active Window Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 elif [ "$1" == "actwinsave" ];then
 	var=~/Screenshots/$(xdotool getactivewindow getwindowclassname)_$(date +%Y%m%d_%H%M%S).png
-	maim -i $(xdotool getactivewindow) $var
+	${SCREENSHOT} $(xdotool getactivewindow) $var
 	xclip -selection clipboard -t image/png $var
 	notify-send -i "$var" ' Active Window Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 fi

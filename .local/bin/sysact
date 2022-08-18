@@ -1,13 +1,19 @@
 #!/bin/sh
 
+PROMPT='dmenu -c --border -l 12 -i -p'
+
 case "$(readlink -f /sbin/init)" in
 	*systemd*) ctl='systemctl' ;;
 	*) ctl='loginctl' ;;
 esac
 
-case "$(printf " lock\n reboot\n shutdown" | dmenu -i -p 'Action: ')" in
-	' lock') ~/.local/bin/screenlock ;;
-	' reboot') $ctl reboot ;;
-	' shutdown') $ctl poweroff ;;
+UPTIME="$(uptime -p | sed -r 's/up//')"
+OPTION="$(printf " Lock\n Reboot\n Shutdown\n鈴 Suspend" | ${PROMPT} "Uptime: ${UPTIME}")"
+
+case "${OPTION}" in
+	' Lock') ~/.local/bin/screenlock ;;
+	' Reboot') $ctl reboot ;;
+	' Shutdown') $ctl poweroff ;;
+    '鈴 Suspend') systemctl suspend && ~/.local/bin/screenlock ;;
 	*) exit 1 ;;
 esac

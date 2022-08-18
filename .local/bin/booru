@@ -3,8 +3,8 @@
 #dependencies: feh/sxiv, wget, jq, sed, curl, paplay (optional) 
 
 #Directory vars
-pict_path=~/Pictures
-cache_path=~/.cache/booru
+pict_path="."
+cache_path="."
 
 #Creating directories if not available
 if [ ! -d "$cache_path" ]; then

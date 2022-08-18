@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prompt="dmenu -l 12 -p"
+prompt="dmenu -c --border -l 12 -p"
 # prompt="rofi -dmenu"
 
 #Check if script is already running 

@@ -2,8 +2,10 @@
 
 # Dependencies: dmenu, xclip, paplay (optional)
 
+PROMPT='dmenu -l 12 -p'
+
 if [[ $1 == '--log' || $1 == '-l' ]]; then
-	sel="$(tac $HOME/Documents/0x0_log.txt | dmenu -l 12 | awk -F ' - ' '{print $NF}')"
+	sel="$(tac $HOME/Documents/0x0_log.txt | ${PROMPT} "Files uploaded to 0x0" | awk -F ' - ' '{print $NF}')"
 	[[ -z $sel ]] && exit || echo $sel | xclip -selection clipboard && notify-send -t 3000 "0x0" "URL copied to clipboard"
 else
 	file="$(realpath "$1")"

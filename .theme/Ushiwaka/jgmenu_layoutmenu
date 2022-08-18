@@ -1,0 +1,9 @@
+
+menu_width          = 300
+font                = JetBrainsMono Nerd Font 14px
+at_pointer          = 1
+icon_size           = 0
+color_menu_bg = #181c24
+color_norm_fg = #e6dcd1
+color_sel_fg = #181c24
+color_sel_bg = #C57A75

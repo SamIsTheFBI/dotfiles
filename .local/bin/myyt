@@ -1,8 +1,10 @@
 #!/bin/sh
 
+PROMPT='dmenu -h 30 -p'
+
 if [[ -z "$1" ]]; then
   printf "Search query: "; 
-  query=$( echo | dmenu -p "Search YT Video:" )
+  query=$( echo | ${PROMPT} "Search YT Video:" )
 else
 	query="$1"
 fi

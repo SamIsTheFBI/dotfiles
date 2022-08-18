@@ -88,7 +88,7 @@ if [ "$ctl" == 'playerctl' ]; then
                     echo ' '
                 else
                     n=${#OUTPUT}
-                    [ "$n" -gt 50 ] && printf "^B1^^C0^ $PLAYER_GLYPH | $GLYPH %.48s.. ^d^" "$OUTPUT" || printf "^B1^^C0^ $PLAYER_GLYPH | $GLYPH %s ^d^" "$OUTPUT"
+                    [ "$n" -gt 42 ] && printf "^B1^^C0^ $PLAYER_GLYPH | $GLYPH %.40s.. ^d^" "$OUTPUT" || printf "^B1^^C0^ $PLAYER_GLYPH | $GLYPH %s ^d^" "$OUTPUT"
                 fi
                 ;;
         *) printf "$PLAYER_GLYPH | $GLYPH %s\n" "$OUTPUT";;

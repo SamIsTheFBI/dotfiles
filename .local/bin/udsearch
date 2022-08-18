@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prompt="dmenu -l 16 -i -p"
+prompt="dmenu -c --border -l 16 -i -p"
 
 QUERY=$(echo "Cancel" | $prompt "Search")
 [ "$QUERY" == 'Cancel' ] && exit

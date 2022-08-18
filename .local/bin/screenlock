@@ -35,6 +35,12 @@ i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=1
 	--greeter-pos="ix+1:iy+140" \
 	--greeter-text="Type the password to unlock" \
 	--{verif,wrong,greeter}-size=18 \
+    --time-font="Metropolis:weight=150" \
+    --time-str="%R" \
+    --time-size=120 \
+    --date-font="Metropolis" \
+    --date-str="%a, %d %b" \
+    --date-size=20 \
 	--noinput-text="" \
 	--date-color=#ffffff \
 	--time-color=#ffffff \
