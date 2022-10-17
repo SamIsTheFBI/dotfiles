@@ -1,124 +1,177 @@
 #!/bin/sh
 
-# Dependencies: mpc or playerctl
+# p_name  : Player name
+# p_glyph : Player glyph
+# s_name  : (Player) state (name)
+# s_glyph : (Player) state glyph
+# ctl     : (playerctl | mpc)
+# id      : If chose playerctl as ctl, then id (playerctld | mpd | chromium | ... )
 
-[ "$(command -v notify-send)" != '' ] && NOTIFY="notify-send -r 324789" || NOTIFY=''
-ctl='playerctl' # (playerctl | mpc)
-id='playerctld' # ( playerctld | mpd | chromium | ... )
+tmp="/tmp"
+artdefault="$HOME/.config/ncmpcpp/albumarts/default_cover.jpg"
+artffmpeg="$HOME/.config/ncmpcpp/albumarts/ffmpeg"
+ctl="playerctl"
+id="playerctld"
 
-[[ "$(playerctl status)" == 'Stopped' && "$id" == 'playerctld' ]] && id="$(playerctl -l | sed -n 2p)"
+if [ "${id}" == 'playerctld' ]; then
+  [ "$(playerctl status)" == 'Stopped' ] && id="$(playerctl -l | sed -n 2p)"
+fi
 
-playpause_glyph(){
+notify () {
+  # $1 : Heading
+  # $2 : Message
+  # $3 : Image, if any
+
+  notify-send -r 165774 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
+}
+
+albumart () {
+  mpris_art="$(playerctl metadata | grep artUrl)"
+  artid="$( awk -F '/' '{print $(NF-1)}' <<< ${mpris_art} )"
+  [ -z ${mpris_art} ] \
+    && arturl='ffmpeg' \
+    || arturl="$( awk '{print $NF}' <<< ${mpris_art}  )"
+
+  case "$arturl" in
+    ffmpeg)
+      fileurl="$(echo -e "$(playerctl metadata --format '{{xesam:url}}' | sed 's!file://!!g' | sed 's!%!\\x!g')")"
+      [ -z "${fileurl}" ] && break
+
+      filename="$(echo "${fileurl}" | awk -F '/' '{print $NF}' )"
+      filetype="$(file -N -i -- "${fileurl}" | awk -F ': ' '{print $2}' | awk -F '/' '{print $1}' )"
+      artffmpeg="$(echo "${artffmpeg}_${filename}_.jpg" )"
+      if [ ! -f "${artffmpeg}" ]; then
+        [ "${filetype}" == 'video' ] \
+          && ffmpeg -y -hide_banner -loglevel panic -i "${fileurl}" -vframes 1 -an -s 400x222 -ss 30 "${artffmpeg}" \
+          || ffmpeg -y -hide_banner -loglevel panic -i "${fileurl}" -an -vcodec copy "${artffmpeg}"
+      fi
+      img=${artffmpeg}
+      ;;
+    file*) 
+      img=${arturl}
+      ;;
+    http*) 
+      artfile=${tmp}/${artid}
+      [ ! -f "${artfile}" ] && \
+      wget "${arturl}" -O "${artfile}"
+      img=${artfile}
+      ;;
+    *base64*) 
+      artfile=${tmp}/${output}
+      [ ! -f "${artfile}" ] && \
+      echo "${arturl}" | sed -e 's#data:image/jpeg;base64,##' | base64 --decode > ${artfile}
+      img=${artfile}
+      ;;
+    '')    
+      [ $p_name == 'mpd' ] && img=${artdefault}
+      ;;
+  esac
+  notify "$p_glyph Now Playing" "$output" "$img"
+}
+
+check_player () {
+    [ -z "$1" ] \
+      && p_name="$(playerctl metadata --format '{{ playerName }}')" \
+      || p_name="${1}"
+    # playerpid="$(playerctl -l | awk -F 'instance' 'NR==1{print $NF}')"
+    # p_name="$(ps -p "$playerpid" -o comm=)"
+    case $p_name in 
+        mpd*)       p_glyph=""  ;;
+        chromium*)  p_glyph=""  ;;
+        firefox*)   p_glyph=""  ;;
+        spotify*)   p_glyph=""  ;;
+        mpv*)       p_glyph=""  ;;
+        tdesktop*)  p_glyph=""  ;;
+        vlc*)       p_glyph="嗢" ;;
+        youtube)    p_glyph=""  ;;
+        *)          p_glyph=""  ;;
+    esac
+}
+
+check_state () {
     if [ $ctl == 'playerctl' ]; then
         case "$(playerctl status)" in
-            'Paused')  GLYPH="";;
-            'Playing') GLYPH="";;
-            'Stopped') GLYPH="" ;;
+            'Paused')  s_glyph="";;
+            'Playing') s_glyph="";;
+            'Stopped') s_glyph="" ;;
         esac
     elif [ $ctl == 'mpc' ]; then
         case "$(mpc status %state%)" in
-            'paused')  GLYPH="";;
-            'playing') GLYPH="";;
+            'paused')  s_glyph="";;
+            'playing') s_glyph="";;
         esac
     fi
 }
 
-player_glyph () {
-    player="$(playerctl metadata --format '{{ playerName }}')"
-    # playerpid="$(playerctl -l | awk -F 'instance' 'NR==1{print $NF}')"
-    # player="$(ps -p "$playerpid" -o comm=)"
-    case $player in 
-        mpd*)       PLAYER_GLYPH="" ;;
-        chromium*)  PLAYER_GLYPH="" ;;
-        firefox*)   PLAYER_GLYPH="" ;;
-        spotify*)   PLAYER_GLYPH="" ;;
-        mpv*)       PLAYER_GLYPH="" ;;
-        tdesktop*)  PLAYER_GLYPH="" ;;
-        vlc*)       PLAYER_GLYPH="嗢" ;;
-        *)          PLAYER_GLYPH="" ;;
-    esac
+mpc_output () {
+  output="$(mpc current)"
+  check_player "mpd"
 }
 
-notify () {
-    art="$(playerctl metadata | grep artUrl | awk '{print $NF}')"
-    case "$art" in
-        file*) 
-            img="$art" 
-            break
-            ;;
-        http* ) 
-            [ ! -f /tmp/"$(playerctl metadata | grep artUrl | awk -F '/' '{print $(NF-1)}')" ] && \
-            curl -H "idk" "$(playerctl metadata | grep artUrl | awk '{print $NF}')" \
-            > /tmp/$(playerctl metadata | grep artUrl | awk -F '/' '{print $(NF-1)}')
-            img=/tmp/"$(playerctl metadata | grep artUrl | awk -F '/' '{print $(NF-1)}')"
-            break
-            ;;
-        *base64* ) 
-            echo "$art" > /tmp/artURI
-            cat /tmp/artURI | sed -e 's#data:image/jpeg;base64,##' | base64 --decode > /tmp/art
-            img=/tmp/art
-            break
-            ;;
-        '')    
-            [ "$player" == 'mpd' ] && img=$HOME/.config/ncmpcpp/albumarts/default_cover.jpg
-            ;;
-    esac
-    $NOTIFY -i "$img" -t 5000 "$PLAYER_GLYPH Now Playing" "<span font = 'JetBrainsMono Nerd Font 11'>$OUTPUT</span>"
+playerctl_output () {
+  metadata="playerctl -p "$id" metadata"
+  artist="$( ${metadata} --format '{{artist}}' )"
+  fileurl="$( ${metadata} --format '{{xesam:url}}' )"
+  title="$( ${metadata} --format '{{title}}' )"
+  
+  [ -z "${metadata}" ] && return 0
+
+  case "${artist}" in
+    'unknown artist') [ "$(command -v mpc)" != '' ] \
+                      && output="$(mpc current)" \
+                      || output="${title}";;
+    '')               output="${title}" ;;
+    *)                output="${title} - ${artist}" ;;
+  esac
+
+  case "${fileurl}" in
+    *youtube*) check_player "youtube" ;;
+    *)         check_player ;;
+  esac
 }
 
-playpause_glyph
-[ $ctl == 'playerctl' ] && player_glyph
+sbar_output () {
+  output="${1}"
+  [ -z "${output}" ] && echo ' ' && return 0
 
-if [ "$ctl" == 'playerctl' ]; then
-    if [[ "$id" == 'mpd' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' ]]; then
-        OUTPUT="$(mpc current)" && break
-    elif [[ "$(playerctl metadata --format '{{xesam:url}}')" == *watch?v=* ]]; then
-        PLAYER_GLYPH=""
-        [ -z "$(playerctl -p "$id" metadata --format '{{artist}}' )" ] \
-            && OUTPUT="$(playerctl -p "$id" metadata --format '{{ title }}')" \
-            || OUTPUT="$(playerctl -p "$id" metadata --format '{{ artist }} - {{ title }}')" && break
-    elif [[ "$(playerctl -p "$id" metadata --format '{{artist}}' )" == 'unknown artist' || "$(playerctl -p "$id" metadata --format '{{artist}}' )" == '' ]]; then
-        OUTPUT="$(playerctl -p "$id" metadata --format '{{ title }}')" 
-    else
-        OUTPUT="$(playerctl -p "$id" metadata --format '{{ artist }} - {{ title }}')"
-    fi
+  n=${#output}
+  char_limit=35
+  [ "$n" -gt ${char_limit} ] \
+    && printf "^B1^^C0^ $p_glyph | $s_glyph %.$(( $char_limit - 2 ))s.. ^d^" "$output" \
+    || printf "^B1^^C0^ $p_glyph | $s_glyph %s ^d^" "$output"
+}
 
-    case "$1" in 
-        'sbar') if [ "$(playerctl -p "$id" metadata)" == '' ]; then
-                    echo ' '
-                else
-                    n=${#OUTPUT}
-                    [ "$n" -gt 42 ] && printf "^B1^^C0^ $PLAYER_GLYPH | $GLYPH %.40s.. ^d^" "$OUTPUT" || printf "^B1^^C0^ $PLAYER_GLYPH | $GLYPH %s ^d^" "$OUTPUT"
-                fi
-                ;;
-        *) printf "$PLAYER_GLYPH | $GLYPH %s\n" "$OUTPUT";;
-    esac
+norm_output () {
+  output="${1}"
+  [ -z "${output}" ] && echo ' ' && return 0
 
-    case $BLOCK_BUTTON in
-        1) playerctl -p "$id" play-pause ;;
-        2) notify ;;
-        3) if [ "$(playerctl loop)" != 'Track' ]; then
-               playerctl -p "$id" loop Track
-               [ "$(playerctl loop)" == 'Track' ] && \
-                   $NOTIFY -t 1500 "綾" "<span font = 'JetBrainsMono Nerd Font 11'>Looping current track now</span>" || \
-                   $NOTIFY -t 1500 "$PLAYER_GLYPH" "<span font = 'JetBrainsMono Nerd Font 11'>Error occurred. Can't change loop status.</span>"
-           else
-               $NOTIFY -t 1500 "凌" "<span font = 'JetBrainsMono Nerd Font 11'>Looping playlist now</span>"
-               playerctl -p "$id" loop Playlist
-           fi;;
-    esac
+  printf "$p_glyph | $s_glyph %s\n" "$output"
+}
 
-elif [ "$ctl" == 'mpc' ]; then
-    case "$1" in
-        'sbar') [ "$(mpc current)" == '' ] && echo ' ' || echo "^B1^^C0^  | $GLYPH $(mpc current) ^d^" ;;
-        *) [ "$(mpc current)" == '' ] && echo ' ' || echo "  | $GLYPH $(mpc current)" ;;
-    esac
+check_click () {
+  case $BLOCK_BUTTON in
+      1) playerctl -p "$id" play-pause ;;
+      2) albumart ;;
+      3) if [ "$(playerctl loop)" != 'Track' ]; then
+             playerctl -p "$id" loop Track
+             [ "$(playerctl loop)" == 'Track' ] && \
+                 notify "綾" "Looping current track now" || \
+                 notify "$p_glyph" "Error occurred. Can't change loop status"
+         else
+             notify "凌" "Looping playlist now"
+             playerctl -p "$id" loop Playlist
+         fi;;
+  esac
+}
 
-    case $BLOCK_BUTTON in
-        1) mpc toggle ;;
-        2) ${HOME}/.local/bin/song_notif ;;
-        3) mpc repeat on && mpc single ;;
-    esac
-else
-    echo ' '
-fi
+check_state
+case "${ctl}" in
+  'playerctl') playerctl_output ;;
+  'mpc')       mpc_output ;;
+esac
+
+case "${1}" in
+  'sbar') sbar_output "$output" ;;
+  '' | *) norm_output "$output" ;;
+esac
+check_click

@@ -1,16 +1,16 @@
 #!/bin/sh
 
-PROMPT='dmenu -c --border -l 12 -i -p'
+prompt='dmenu -y 5 -h 30 -i -p'
 
 case "$(readlink -f /sbin/init)" in
 	*systemd*) ctl='systemctl' ;;
 	*) ctl='loginctl' ;;
 esac
 
-UPTIME="$(uptime -p | sed -r 's/up//')"
-OPTION="$(printf " Lock\n Reboot\n Shutdown\n鈴 Suspend" | ${PROMPT} "Uptime: ${UPTIME}")"
+uptime="$(uptime -p | sed -r 's/up//')"
+option="$(printf " Lock\n Reboot\n Shutdown\n鈴 Suspend" | ${prompt} "Uptime: ${uptime}")"
 
-case "${OPTION}" in
+case "${option}" in
 	' Lock') ~/.local/bin/screenlock ;;
 	' Reboot') $ctl reboot ;;
 	' Shutdown') $ctl poweroff ;;

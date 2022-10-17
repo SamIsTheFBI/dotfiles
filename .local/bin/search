@@ -1,0 +1,114 @@
+#!/bin/sh
+
+# Check if connected to internet
+net_connect="$(ip route get 8.8.8.8 | awk 'NR==1 {print $7}')"
+[ -z "${net_connect}" ] && notify-send -r 224921 -t 2000 "🌐" "<span font = 'JetBrainsMono Nerd Font 11'>No internet connection.</span>" && exit
+
+prompt='dmenu -i -h 30 -y 5 -p'
+promptl='dmenu -i -h 30 -y 5 -l 10 -p'
+web_browser='chromium'
+
+website="$(cat <<- EOF | ${prompt} "" 
+URL
+YouTube
+TheMovieDB
+RottenTomatoes
+Danbooru
+AnimePahe
+MyAnimeList
+MangaDex
+PSArips
+Google
+ArchWiki
+GitHub
+HikariDrive
+Torrminatorr
+GOG-Games
+FreeLinuxPCGames
+Spotify
+UrbanDictionary
+EOF
+)"
+
+[ ! -z "${website}" ] && query="$(echo | ${prompt} "Search ${website} ")"
+
+[ ! -z "${query}" ] && case "${website}" in
+  YouTube)
+    setsid "${web_browser}" "https://www.youtube.com/results?search_query=${query}"
+    ;;
+  TheMovieDB)
+    setsid "${web_browser}" "https://www.themoviedb.org/search?query=${query}"
+    ;;
+  MyAnimeList)
+    setsid "${web_browser}" "https://myanimelist.net/search/all?q=${query}"
+    ;;
+  Google)
+    setsid "${web_browser}" "https://www.google.com/search?q=${query}"
+    ;;
+  ArchWiki)
+    setsid "${web_browser}" "https://wiki.archlinux.org/index.php?search=${query}"
+    ;;
+  Github)
+    setsid "${web_browser}" "https://github.com/search?q=${query}"
+    ;;
+  PSArips)
+    setsid "${web_browser}" "https://psa.pm/?s=${query}"
+    ;;
+  HikariDrive)
+    setsid "${web_browser}" "https://snowy-mountain.hikari-drive.workers.dev/0:search?q=${query}"
+    ;;
+  MangaDex)
+    setsid "${web_browser}" "https://mangadex.org/search?q=${query}"
+    ;;
+  Spotify)
+    setsid "${web_browser}" "https://open.spotify.com/search/${query}"
+    ;;
+  GOG-Games)
+    setsid "${web_browser}" "https://gog-games.com/search/${query}"
+    ;;
+  Torrminatorr)
+    setsid "${web_browser}" "https://forum.torrminatorr.com/search.php?keywords=${query}"
+    ;;
+  FreeLinuxPCGames)
+    setsid "${web_browser}" "https://freelinuxpcgames.com/?s=${query}"
+    ;;
+  RottenTomatoes)
+    setsid "${web_browser}" "https://www.rottentomatoes.com/search?search=${query}"
+    ;;
+  UrbanDictionary)
+    json="$(curl -sS -L "https://api.urbandictionary.com/v0/define?term=${query}" --compressed)"
+    defs="$(jq '.list[].definition' <<< ${json})"
+    [ ! -z "${defs}" ] && echo -e "${defs}" | tee -a | ${promptl} ""
+    ;;
+  URL)
+    setsid "${web_browser}" "${query}"
+    ;;
+  Danbooru)
+    host="https://danbooru.donmai.us"
+    json="$(curl -sS -L "${host}/tags.json?commit=Search&search%5Bhide_empty%5D=yes&search%5Bname_or_alias_matches%5D=${query}&search%5Border%5D=count" --compressed)"
+    related_tags="$(jq -r '.[] | "\(.name)"' <<< ${json})"
+    [ -z "${related_tags}" ] \
+      && res="$(echo ${query} | ${prompt} "")" \
+      || res="$(echo -e "${related_tags}" | ${promptl} "" )"
+
+    [ ! -z "${res}" ] && setsid "${web_browser}" "${host}/posts?tags=${res}"
+    ;;
+  AnimePahe)
+    # Get list of all anime on AnimePahe
+    # curl -sS -L "https://animepahe.org/anime" --compressed | grep "/anime/" | sed -E 's/.*anime\//[/;s/" title="/] /;s/\">.*//' | dmenu -i -h 30 -y 5 -l 10
+    host="https://animepahe.com"
+    json="$(curl -sS -L "${host}/api?m=search&q=${query// /%20}" --compressed)"
+    anime_list="$(jq -r '.total' <<< "${json}")"
+    if [[ "$anime_list" -eq "0" ]]; then
+      res="$(echo | ${prompt} "")"
+    else
+      res="$(jq -r '.data[] | "[\(.session)] \(.title)"' <<< "${json}" | tee -a | ${promptl} "" | awk '{print $1}' | sed 's/\[//g' | sed 's/\]//g')"
+    fi
+
+    [ ! -z "${res}" ] && setsid "${web_browser}" "${host}/anime/${res}"
+    ;;
+  '' | *)
+    exit
+    ;;
+esac
+

@@ -1,0 +1,77 @@
+#!/bin/sh
+
+tmp="/tmp"
+old="${tmp}/oldnames"
+new="${tmp}/newnames"
+ext="${1}"
+# show="${2}"
+name_format="${2}"
+cnt_begin="${3}"
+cnt_end="${4}"
+
+
+[ -f "${old}" ] && rm -rf ${old}
+[ -f "${new}" ] && rm -rf ${new}
+
+files=$(find . -maxdepth 1 -mindepth 1 -iname "*${ext}" | sort -V)
+
+list_files () {
+  for f in "$( awk -F '/' '{print $NF}' <<< ${files} )"
+  do
+    echo "$f" >> ${old}
+  done
+  cp ${old} ${new}
+}
+
+ask_vars () {
+  echo "Create names manually? [y/n]"
+  read ans
+  [ ${ans} == 'y' ] && st -e nvim ${new} && return 0
+  echo -e "What is the name of the show? [\${show}]: "
+  read show
+  echo -e "Begin episode count with?: "
+  read cnt_begin
+  echo -e "End episode count with?: "
+  read cnt_end
+  echo -e "Extension of files? [\${ext}]: "
+  read ext
+  echo -e "Specify a custom name format? [y/n]: "
+  read ans
+  if [ ${ans} == 'y' ]; then
+    echo -e "Type the name format [e.g. \${show} - S01E%02d.\${ext} | MyJPGs%03d.jpg]"
+    read name_format
+  fi
+}
+
+check_vars () {
+  [ -z ${cnt_begin} ] && cnt_begin=1
+  [ -z ${cnt_end} ] && cnt_end=$(( $cnt_begin + $(wc -l <<< "${files}") - 1 ))
+  [ -z "${ext}" ] && ext='mp4'
+  [ -z "${name_format}" ] && name_format="${show} - S01E%02d - [720p].${ext}"
+}
+
+create_names () {
+  for ((i = ${cnt_begin}; i <= ${cnt_end}; i++)); do
+    new_name="$(printf "$name_format\n" "$i")"
+    echo "${new_name}" >> ${new}
+    sed -ir '1d' ${new}
+  done
+}
+
+rename_files () {
+  for ((i = ${cnt_begin}; i <= ${cnt_end}; i++)); do
+    new_name="$(sed -n '1p' ${new})"
+    old_name="$(sed -n '1p' ${old})"
+    mv "${old_name}" "${new_name}"
+    sed -ir '1d' ${new}
+    sed -ir '1d' ${old}
+  done
+}
+
+list_files
+check_vars
+echo "Create names manually? [y/n]"
+read ans
+[ ${ans} == 'n' ] && create_names || st -e nvim ${new}
+
+rename_files

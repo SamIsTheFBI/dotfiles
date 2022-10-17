@@ -21,7 +21,7 @@ slowfade () {
             $obj $ifc.opts_set string:fade_out_step double:0.1
     fi
 }
-sleep 1 && ${HOME}/.local/bin/eww -c ~/.local/bin/lockscreen/ open-many battery song uptime &
+sleep 1 && ${HOME}/.local/bin/eww -c ~/.local/bin/lockscreen/ open-many song system_info &
 slowfade start 
 i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=15 --date-str="%a, %d %b %Y" \
 	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
@@ -33,7 +33,7 @@ i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=1
 	--wrong-pos="ix+1:iy+70" \
 	--wrong-text="Incorrect password" \
 	--greeter-pos="ix+1:iy+140" \
-	--greeter-text="Type the password to unlock" \
+	--greeter-text="User is AFK. Type the correct password to unlock." \
 	--{verif,wrong,greeter}-size=18 \
     --time-font="Metropolis:weight=150" \
     --time-str="%R" \

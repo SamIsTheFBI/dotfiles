@@ -2,6 +2,7 @@
 
 # Dependencies: maim | imagemagick
 
+prompt='dmenu -i -h 30 -y 5 -p'
 SCREENSHOT="maim"
 [ "$(pgrep -x picom)" ] \
   && SELECTSHOT="maim -s -u -b 2 -c 0.35,0.55,0.85,0.25 -l" \
@@ -20,9 +21,23 @@ elif [ "$1" == "fullsave" ];then
 	xclip -selection clipboard -t image/png $var
 	notify-send -i "$var" ' Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "selectcopy" ];then
+	var=~/Screenshots/ScreenSelect_$(date +%Y%m%d_%H%M%S).png
 	${SELECTSHOT} ~/.cache/cache.png
-	xclip -selection clipboard -t image/png ~/.cache/cache.png
-	notify-send -i "~/.cache/cache.png" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
+    choice="$(echo -e "Yes\nNo\nNo & don't copy" | ${prompt} "Save?")"
+    case "${choice}" in
+      Yes) 
+	    xclip -selection clipboard -t image/png ~/.cache/cache.png
+        cp ~/.cache/cache.png ${var}
+	    notify-send -i "$var" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
+        ;;
+      No | '')
+	    xclip -selection clipboard -t image/png ~/.cache/cache.png
+	    notify-send -i "~/.cache/cache.png" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
+        ;;
+      "No & don't copy")
+        exit
+        ;;
+    esac 
 elif [ "$1" == "selectsave" ];then
 	var=~/Screenshots/ScreenSelect_$(date +%Y%m%d_%H%M%S).png
 	${SELECTSHOT} ${var}

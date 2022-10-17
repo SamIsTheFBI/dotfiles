@@ -2,10 +2,10 @@
 
 # Dependencies: dmenu, xclip, paplay (optional)
 
-PROMPT='dmenu -l 12 -p'
+prompt='dmenu -c --border -h 30 -l 12 -p'
 
 if [[ $1 == '--log' || $1 == '-l' ]]; then
-	sel="$(tac $HOME/Documents/0x0_log.txt | ${PROMPT} "Files uploaded to 0x0" | awk -F ' - ' '{print $NF}')"
+	sel="$(tac $HOME/Documents/0x0_log.txt | ${prompt} "Files uploaded to 0x0" | awk -F ' - ' '{print $NF}')"
 	[[ -z $sel ]] && exit || echo $sel | xclip -selection clipboard && notify-send -t 3000 "0x0" "URL copied to clipboard"
 else
 	file="$(realpath "$1")"
@@ -14,5 +14,5 @@ else
 	echo $var | xclip -selection clipboard
 	notify-send -t 3000 "0x0" "Your file was uploaded and URL copied to clipboard"
     [ -x /usr/bin/paplay ] && paplay $HOME/.config/dunst/notif.wav &
-	echo $(date '+ %a %x') - $file - $var >> $HOME/Documents/0x0_log.txt
+	echo "$(date '+ %a %x') - $file - $var" >> $HOME/Documents/0x0_log.txt
 fi

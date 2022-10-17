@@ -1,25 +1,24 @@
 #!/bin/sh
 
-PROMPT='dmenu -h 30 -p'
+prompt='dmenu -y 5 -h 30 -p'
 
 [ -z "$(ip route get 8.8.8.8 | awk '{print $1; exit}')" ] && notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>No internet connection. Exiting..</span>" && exit
 
-SOURCE="$(echo "$(xclip -sel primary -o)"| ${PROMPT} 'Source Text: ')"
-[ -z "$SOURCE" ] && exit
+source="$(echo "$(xclip -sel primary -o)"| ${prompt} 'Translate: ')"
+[ -z "$source" ] && exit
 
-TARGET="$(printf ":en\n:ja\n:hi" | ${PROMPT} 'Target Lang: ')"
-[ -z "$TARGET" ] && exit
+target="$(printf ":en\n:ja\n:hi" | ${prompt} 'Target Lang: ')"
+[ -z "$target" ] && exit
 
-OUTPUT="$(trans -b "$TARGET" "$SOURCE")"
-echo $OUTPUT
-if [ -z "$OUTPUT" ]; then
+output="$(trans -b "$target" "$source")"
+echo $output
+if [ -z "$output" ]; then
     notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
     exit
-elif [ -n "$OUTPUT" ]; then    
-    var="$(echo "$OUTPUT" | ${PROMPT} 'Press Enter to copy: ')"
+elif [ -n "$output" ]; then    
+    var="$(echo "$output" | ${prompt} 'Press Enter to copy: ')"
     echo "$var" | xclip -selection clipboard
-    echo "$var" | xclip -selection primary
     [ -z "$var" ] && exit \
-        || notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>" \
-        && notify-send -t 5000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translation:\n$var</span>"
+        || notify-send -t 5000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translation:\n$var</span>" \
+        && notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>"
 fi

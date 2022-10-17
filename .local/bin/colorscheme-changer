@@ -1,73 +1,95 @@
 #!/bin/sh
 
-prompt="dmenu -c --border -l 12 -p"
-# prompt="rofi -dmenu"
+prompt="dmenu -c --border -h 30 -l 12 -p"
 
-#Check if script is already running 
-if [ "$(pgrep -f $0)" != "$$" ]; then
-    SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
-    echo "Another instance of $SCRIPTNAME already exists! Exiting"
-    [ "$(command -v notify-send)" != '' ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of $SCRIPTNAME already exists! Exiting</span>"
-    exit
-fi
+theme_dir="${HOME}/.theme"
 
-[ "$1" != '' ] && theme_name="$1" || continue 
+notify () {
+  # $1 : Heading
+  # $2 : Message
+  # $3 : Image, if any
 
-[ -z $theme_name ] && sel=$(printf "Save current colorscheme\nChoose a colorscheme\nDelete a colorscheme" | $prompt " ")
+  notify-send -r 332711 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
+}
 
-if [[ $sel == *Save* ]]; then
-	theme_name="$( echo | $prompt "Give your colorscheme a name: ")" 
-	[[ -z $theme_name ]] && exit
+set_theme () {
+  [ -z "${1}" ] \
+    && theme_name="$(prompt_theme " Choose a colorscheme: ")" \
+    || theme_name="${1}"
 
-	mkdir -p $HOME/.theme/"$theme_name"/ > /dev/null 2>&1 
+  [ -z $theme_name ] && return 0
 
-	cp $HOME/.Xresources $HOME/.theme/"$theme_name"/Xresources
-	cp $HOME/.config/dunst/dunstrc $HOME/.theme/"$theme_name"/
-	cp $HOME/.config/jgmenu/jgmenurc $HOME/.config/jgmenu/jgmenu_layoutmenu $HOME/.theme/"$theme_name"/
-	cp $HOME/.config/rofi/theme.rasi $HOME/.theme/"$theme_name"/
-	cp $HOME/.local/share/wallpaper/bg.jpg $HOME/.theme/"$theme_name"/
-
-	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Current color scheme was saved as $theme_name</span>"
-
-elif [[ $sel == *Choose* || "$theme_name" != '' ]]; then
-	[ -z $theme_name ] && theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | $prompt "Choose a colorscheme: ")
-	[ -z $theme_name ] && exit
-    [ ! -d ~/.theme/"$theme_name" ] && notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>No such color scheme with the name $theme_name present!</span>" && exit
+  theme="${theme_dir}/${theme_name}"
+  [ ! -d "${theme}" ] \
+    && notify " Color Scheme" "No color scheme with the name $theme_name present in theme directory!" \
+    && return 0
     
-	cp $HOME/.theme/"$theme_name"/dunstrc $HOME/.config/dunst/dunstrc
-	cp $HOME/.theme/"$theme_name"/jgmenurc $HOME/.config/jgmenu/jgmenurc
-	cp $HOME/.theme/"$theme_name"/jgmenu_layoutmenu $HOME/.config/jgmenu/jgmenu_layoutmenu
-	cp $HOME/.theme/"$theme_name"/theme.rasi $HOME/.config/rofi/theme.rasi
-	cp $HOME/.theme/"$theme_name"/Xresources $HOME/.Xresources
+  cp "${theme}"/dunstrc $HOME/.config/dunst/dunstrc
+  cp "${theme}"/jgmenurc $HOME/.config/jgmenu/jgmenurc
+  cp "${theme}"/jgmenu_layoutmenu $HOME/.config/jgmenu/jgmenu_layoutmenu
+  cp "${theme}"/theme.rasi $HOME/.config/rofi/theme.rasi
+  cp "${theme}"/Xresources $HOME/.Xresources
 	
-	~/.local/bin/setbg $HOME/.theme/"$theme_name"/bg.jpg
-	~/.local/bin/setlockbg $HOME/.theme/"$theme_name"/bg.jpg
+  ~/.local/bin/setbg "${theme}"/bg.jpg
+  ~/.local/bin/setlockbg "${theme}"/bg.jpg
 	
-	xrdb -load $HOME/.Xresources
+  xrdb -load $HOME/.Xresources
 	
-	# Reloading dwm to apply changes
-	sleep 0.2
-	# xdotool key super+control+F5 #xrdb reload
-    xsetroot -name "fsignal:1"
+  # Reloading dwm to apply changes
+  sleep 0.2
+  # xdotool key super+control+F5 #xrdb reload
+  xsetroot -name "fsignal:1"
 
-	# Reloading dunst notification daemon to apply changes
-	pkill dunst
-	dunst >/dev/null 2>&1 < /dev/null & 
+  # Reloading dunst notification daemon to apply changes
+  pkill dunst
+  dunst >/dev/null 2>&1 < /dev/null & 
 	
-	# Reloading suckless terminal to apply changes
-	sleep 0.2
-	pidof st | xargs kill -s USR1
+  # Reloading suckless terminal to apply changes
+  sleep 0.2
+  pidof st | xargs kill -s USR1
 
-	# xdotool key control+F5 #dwm reload
+  # xdotool key control+F5 #dwm reload
 
-	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Color scheme set to "$theme_name"</span>"
-elif [[ $sel == *Delete* ]]; then
-	theme_name=$(find $HOME/.theme -mindepth 1 -maxdepth 1 -type d | awk -F '/' '{print $NF}' | sort -V | $prompt "Choose a colorscheme: ")
-	[[ -z $theme_name ]] && exit
+  notify " Color Scheme" "Color scheme set to $theme_name"
+}
 
-	rm -rf $HOME/.theme/"$theme_name"
+prompt_theme () {
+  title="${1}"
+  options="$(find "${theme_dir}" -mindepth 1 -maxdepth 1 -type d | sort | awk -F '/' '{print $NF}')"
+  sel="$(${prompt} "${title}" < <(echo "${options}"))"
 
-	notify-send -t 3000 " Color Scheme" "<span font = 'JetBrainsMono Nerd Font 11'>Deleted "$theme_name" color scheme</span>"
-else
-	exit
-fi
+  echo "${sel}"
+}
+
+save_theme () {
+  theme_name="$(prompt_theme " Give a name to your theme")"
+
+  [ -z "${theme_name}" ] && return 0
+  theme="${theme_dir}/${theme_name}"
+  mkdir -p "${theme}" > /dev/null 2>&1
+
+  cp $HOME/.Xresources "${theme}"/Xresources
+  cp $HOME/.config/dunst/dunstrc "${theme}"/
+  cp $HOME/.config/jgmenu/jgmenurc $HOME/.config/jgmenu/jgmenu_layoutmenu "${theme}"/
+  cp $HOME/.config/rofi/theme.rasi "${theme}"/
+  cp $HOME/.local/share/wallpaper/bg.jpg "${theme}"/
+
+  notify " Color Scheme" "Current color scheme was saved at ${theme}"
+}
+
+main_prompt () {
+  local title options sel
+  title=" "
+  options=" Save current colorscheme\n Choose a colorscheme\n Delete a colorscheme"
+  sel="$(${prompt} "${title}" < <(echo -e "${options}"))"
+
+  case "${sel}" in
+    " Save current colorscheme") save_theme;;
+    " Choose a colorscheme")     set_theme ;;
+    " Delete a colorscheme")     del_theme ;;
+		"Cancel" | *)								return 0  ;;
+  esac
+}
+
+[ -z "${1}" ] && main_prompt \
+  || set_theme "${1}"

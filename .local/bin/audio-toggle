@@ -1,0 +1,46 @@
+#!/bin/sh
+
+m_output="alsa_output.pci-0000_03_00.6.analog-stereo.monitor"
+s_input="alsa_input.pci-0000_03_00.6.analog-stereo"
+s_output="alsa_output.pci-0000_03_00.6.analog-stereo"
+
+check_vars () {
+  [ -z "${m_output}" ] && m_output=$(pactl list sources short | awk '{print $2}' | grep 'monitor')
+  [ -z "${s_input}" ] && s_input=$(pactl list sources short | awk '{print $2}' | grep -v 'monitor' | sed -n '1p')
+  [ -z "${s_output}" ] && s_output=$(pactl list sinks short | awk '{print $2}' | sed -n '1p')
+}
+
+notify () {
+  notify-send -r 224921 -t 2000 "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>"
+}
+
+# check_vars
+
+case "${1}" in
+  combine | '')
+    if [ -f /tmp/inputs.txt ]; then
+      pactl unload-module $(sed -n '1p' /tmp/inputs.txt)
+      pactl unload-module $(sed -n '2p' /tmp/inputs.txt)
+      pactl unload-module $(sed -n '3p' /tmp/inputs.txt)
+      rm /tmp/inputs.txt
+      pactl set-default-source ${s_input}
+      notify "" "Capturing Microphone<br>Mic: ${s_input}"
+      exit
+    else
+      pactl load-module module-null-sink sink_name=inputs sink_properties=device.description="CombinedInputs" > /tmp/inputs.txt
+      pactl load-module module-loopback source=${s_input} sink=inputs >> /tmp/inputs.txt
+      pactl load-module module-loopback source=${m_output} sink=inputs >> /tmp/inputs.txt
+      pacmd set-default-source inputs.monitor
+      notify " + " "Capturing Microphone+System Audio<br>Mic: ${s_input}<br>Sys: ${m_output}"
+    fi
+    ;;
+  system)
+    [ "$(pactl get-default-source)" == "${m_output}" ] \
+      && pactl set-default-source ${s_input} \
+      && notify "" "Capturing Microphone<br>Mic: ${s_input}" \
+      && exit
+    pactl set-default-source ${m_output}
+    notify "" "Capturing System Audio<br>Sys: ${m_output}"
+    ;;
+  *) echo "Invalid command"
+esac

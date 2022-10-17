@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Check if script is already running
+if [ "$(pgrep -f "${0}")" != "$$" ]; then
+    SCRIPTNAME="$(echo "${0}" | awk -F '/' '{print $NF}')"
+    echo "Another instance of ${SCRIPTNAME} already exists!"
+    [ -x "$(command -v notify-send)" ] && \
+        notify-send -r 415533 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of ${SCRIPTNAME} already exists!</span>"
+    exit
+fi
+
+PROMPT='dmenu -h 30 -c --border -l 12 -p'
+
+SELECTION="$(cat <<- EOF | ${PROMPT} "" | awk -F ' : ' '{print $NF}'
+Japanese Music : https://www.youtube.com/playlist?list=PLd9cB9x8qqbXjLTsLThDfaMetuXhSWp-P
+songs. : https://www.youtube.com/playlist?list=PLd9cB9x8qqbVrjrPhWEaMk6g8mDhRu4TT
+video game music. : https://www.youtube.com/playlist?list=PLd9cB9x8qqbVNCyzRQZCq16riaySfvUf4
+calm and lofi// : https://www.youtube.com/playlist?list=PLd9cB9x8qqbXu1D1aWSuF-hWfWLfOaCj1
+Ender Lilies OST : https://www.youtube.com/playlist?list=PLLiHaMFYDWBTFMLdgVBKUPxW2vs0WlAKL
+EOF
+)"
+
+[ ! -z "${SELECTION}" ] && st -e mpv --save-position-on-quit --no-video "${SELECTION}"
+# echo -e "${SELECTION}" | xclip -sel c

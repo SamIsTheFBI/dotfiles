@@ -1,21 +1,21 @@
 #!/bin/sh
 
-prompt="dmenu -c --border -l 16 -i -p"
+prompt="dmenu -c --border -h 30 -l 16 -i -p"
 
-QUERY=$(echo "Cancel" | $prompt "Search")
-[ "$QUERY" == 'Cancel' ] && exit
+query=$(echo "Cancel" | $prompt "Search")
+[[ "$query" == 'Cancel' || -z "$query" ]] && exit
 
-curl -H "idk" "https://api.urbandictionary.com/v0/define?term=$QUERY" > /tmp/udsearch.json
+curl -H "idk" "https://api.urbandictionary.com/v0/define?term=$query" > /tmp/udsearch.json
 
-DEFINITIONS="$(jq '.' < /tmp/udsearch.json | grep definition | awk -F ': ' '{print $NF}' | sed -r 's!",!\n!g' | sed -r 's!"!!g' | sed -r 's!\n!!g' | sed -r 's!\r!!g')"
+definitions="$(jq '.' < /tmp/udsearch.json | grep definition | awk -F ': ' '{print $NF}' | sed -r 's!",!\n!g' | sed -r 's!"!!g' | sed -r 's!\n!!g' | sed -r 's!\r!!g')"
 
-echo $DEFINITIONS
-if [ -z "$DEFINITIONS" ]; then
-    notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
+echo $definitions
+if [ -z "$definitions" ]; then
+    notify-send -t 2000 "﬜" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
     exit
-elif [ -n "$DEFINITIONS" ]; then    
-    var="$(echo "$DEFINITIONS" | $prompt 'Press Enter to copy: ')"
+elif [ -n "$definitions" ]; then    
+    var="$(echo "$definitions" | $prompt 'Press Enter to copy: ')"
     echo "$var" | xclip -selection clipboard
-    echo "$var" | xclip -selection primary
-    [ -z "$var" ] && exit || notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>"
+    [ -z "$var" ] && exit || notify-send -t 5000 "﬜" "<span font = 'JetBrainsMono Nerd Font 11'>$var</span>" \
+      && notify-send -t 2000 "﬜" "<span font = 'JetBrainsMono Nerd Font 11'>Text copied to clipboard</span>"
 fi

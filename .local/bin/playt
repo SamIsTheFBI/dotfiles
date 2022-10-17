@@ -2,48 +2,182 @@
 
 # Dependencies: dmenu awk yt-dlp
 
-#Check if script is already running 
-if [ "$(pgrep -f $0)" != "$$" ]; then
-    SCRIPTNAME="$(echo $0 | awk -F '/' '{print $NF}')"
-    echo "Another instance of $SCRIPTNAME already exists! Exiting"
-    [ "$(command -v notify-send)" != '' ] && notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of $SCRIPTNAME already exists!</span>"
-    exit
-fi
+scriptname="$(echo $0 | awk -F '/' '{print $NF}')"
+prompt="dmenu -i -h 30 -y 5 -l 10 -p"
+musicdl="${HOME}/Downloads/Music"
+videodl="${HOME}/Videos"
+cache_dir="${HOME}/.cache/ytdlp-dl"
+formats="${cache_dir}/formats"
+log="${cache_dir}/log"
+create_log_file='1'
 
-format='none'
-prompt="dmenu -l 12"
 
-rm -rf ~/.cache/format
+logger () {
+  # $1 : Log Text
+  # echo -e "${1}"
+  [ "${create_log_file}" == '1' ] && echo -e "${1}" >> "${log}"
+}
 
-if [ "$1" == "-F" ];then
-  yt-dlp -F $2 
-else
-	video_url="$(printf " Cancel\n$(xclip -sel primary -o)" | $prompt -p "Enter YouTube video URL: ")"
-    echo "$video_url"
-	[[ -z $video_url || "$video_url" == ' Cancel' ]] && exit 
+ask_user () {
+  # $1 : Prompt Text
+  # $2 : Options
+  sel="$(echo -e "$2" | $prompt "$1" )"
+  logger "PROMPT: ${1}\nUSER SELECTION: ${sel}"
+  echo "${sel}"
+}
 
-	type=$(printf "Video+Audio\nAudio Only" | $prompt -p "What are you trying to download?")
-	[[ -z $type ]] && exit 
-	
-	[ $type == 'Video+Audio' ] && notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Fetching available qualities...</span>"
+notify () {
+  notify-send -r 371228 -t 3000 ">_dlp" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>"
+}
 
-	yt-dlp -F $video_url | awk 'NR==4, NR==1000 {print $0}' > ~/.cache/format
+
+check_dir () {
+  if [[ ! -d "${1}" ]]; then 
+    notify "${1} does not exist. Creating.."
+    mkdir -p -- "${1}"
+  fi
+}
+
+check_dl () {
+  [ -e "${1}/$name"* ] \
+    && notify "File already present in ${1}. Exiting.." \
+    && logger "File already present in ${1}" \
+    && return 0
+  [ -n "$(cat "${cache_dir}/temp" | grep -E "\has already been downloaded")" ] \
+    && notify "File already present in ${1}. Exiting.." \
+    && return 0
+
+}
+
+check_output () {
+  # $1 : Download directory
+
+
+  cat "${cache_dir}/temp" >> "${log}"
+
+  [ -n "$(cat "${cache_dir}/temp" | grep -E "^WARNING:")" ] \
+    && notify "$(cat "${cache_dir}/temp" | grep -E '^WARNING:')" \
   
-	if [[ $type == 'Audio Only' ]]; then
-		cd ~/Music
-		notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Trying to download...</span>" 
-		output=$(yt-dlp -f 'ba' -x --audio-format mp3 --embed-thumbnail $video_url --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --parse-metadata "%(uploader|)s:%(meta_artist)s" --add-metadata --output "%(title)s.%(ext)s")
-	else
-		[[ -z $video_url ]] && exit 
-		audio=$(cat ~/.cache/format | grep audio | $prompt -p "Choose audio quality" -l 10 | awk '{print $1}')
-		video=$(cat ~/.cache/format | grep video | $prompt -p "Choose video quality" -l 10 | awk '{print $1}')
 
-		[[ -z $video ]] && format=$audio || [[ -z $audio ]] && format="$video" || format="$audio+$video"
+  # [ -n "$(cat "${cache_dir}/temp" | grep -E "\has already been recorded in the archive")" ] \
+  #   && notify ""
+  
+  [ -n "$(cat "${cache_dir}/temp" | grep -E "^ERROR")" ] \
+    && notify "Download unsuccessful. Check logs for error <br>(${log})" \
+    && return 0
+  
+  notify "Files downloaded successfully at ${1}"
+  rm -rf "${cache_dir}/temp"
+}
 
-		echo "User requested format: $format"
-		notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Trying to download...</span>" 
-		output=$(yt-dlp -f $format --embed-thumbnail --convert-subs srt --embed-sub --sub-langs "en.*,ja" --yes-playlist $video_url --throttled-rate 100K -P ~/Videos/)
-	fi
-	paplay ~/.config/dunst/notif.wav &
-	[[ -z $output ]] && notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Download unsuccessful</span>" || notify-send -t 2000 " " "<span font = 'JetBrainsMono Nerd Font 11'>Download finished</span>"
+ytdlp_best_audio () {
+  check_dir "${musicdl}"
+  cd "${musicdl}"
+
+  logger "Checking if already available..."
+  notify "Checking if already available..."
+
+  name="$(yt-dlp --print "%(title)s." "$url")"
+  [ -e "${musicdl}/$name"* ] && check_dl "${musicdl}" && return 0 || notify "Good to go"
+
+  notify "Trying to download..." 
+  yt-dlp -f 'ba' \
+    --no-progress \
+    -x --audio-format mp3 \
+    --embed-thumbnail \
+    $url \
+    --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" \
+    --parse-metadata "%(uploader|)s:%(meta_artist)s" \
+    --add-metadata \
+    --output "%(title)s.%(ext)s" \
+    > "${cache_dir}/temp" 2>&1
+
+  check_output "${musicdl}"
+}
+
+ytdlp_audio_video () {
+  check_dir "${videodl}"
+  cd "${videodl}"
+
+  logger "Checking if already available..."
+  notify "Checking if already available..."
+
+  name="$(yt-dlp --print "%(title)s [%(id)s]." "$url")"
+  [ -e "${videodl}/$name"* ] && check_dl "${videodl}" && return 0 || notify "Good to go"
+  # name="$(yt-dlp --print "%(uploader)s/%(playlist)s" "$url")"
+  # [ -e "${videodl}/$name"* ] && check_output "${videodl}" && return 0 || notify "Good to go"
+
+  notify "Fetching available qualities..."
+  
+  yt-dlp --quiet -F $url | awk 'NR==4, NR==1000 {print $0}' > "${formats}"
+  
+  audio="$(ask_user "Choose audio quality: " "$(cat ${formats} | grep audio)" | awk '{print $1}')"
+  video="$(ask_user "Choose video quality: " "$(cat ${formats} | grep -v audio)" | awk '{print $1}')"
+
+  [[ -z $video ]] && format=$audio || [[ -z $audio ]] && format=$video || format="$audio+$video"
+  echo "$format"
+  [[ -z $format ]] && return 0
+
+  notify "Trying to download..." 
+  case "${url}" in
+    *youtube*playlist?list=*)
+      echo "URL Type: YT Playlist"
+      yt-dlp -f $format \
+        --embed-thumbnail \
+        --convert-subs srt \
+        --embed-sub \
+        --sub-langs "en.*,ja" \
+        --yes-playlist \
+        $url \
+        --throttled-rate 100K \
+        -o "${videodl}/%(uploader)s/%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s" \
+        > "${cache_dir}/temp" 2>&1
+      ;;
+    *)
+      echo "URL Type: Video"
+      yt-dlp -f $format \
+        --embed-thumbnail \
+        --convert-subs srt \
+        --embed-sub \
+        --sub-langs "en.*,ja" \
+        --no-playlist \
+        $url \
+        --throttled-rate 100K \
+        > "${cache_dir}/temp" 2>&1
+  esac
+
+  check_output "${videodl}"
+}
+
+main () {
+  check_dir "${cache_dir}"
+
+  rm -rf "${formats}"
+
+  url="$(ask_user "Enter URL: " " Cancel\n$(xclip -sel primary -o)")"
+  [[ -z "${url}" || "${url}" == ' Cancel' ]] && return 0
+
+  typ="$(ask_user "What are you trying to download?" "Video+Audio\nAudio Only")"
+  case "${typ}" in
+    "Audio Only")   ytdlp_best_audio ;;
+    "Video+Audio")  ytdlp_audio_video ;;
+    "")             notify "No option selected. Exiting.." ;;
+  esac
+
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  # rm -rf "${log}"
+  logger ""
+  logger "=================================================="
+  logger "Started ${scriptname} at $(date '+%R') on $(date '+%a %x')"
+  logger "=================================================="
+  logger ""
+  main
+  logger ""
+  logger "=================================================="
+  logger "Ended ${scriptname} at $(date '+%R') on $(date '+%a %x')"
+  logger "=================================================="
+  logger ""
 fi
+

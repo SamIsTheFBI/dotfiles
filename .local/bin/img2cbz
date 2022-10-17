@@ -1,0 +1,33 @@
+#!/bin/sh
+
+[ ! -z "$1" ] && ext="$1" || ext='jpg'
+[ ! -z "$2" ] && filename="$2" || filename="$(pwd | awk -F '/' '{print $NF}').cbz"
+
+rename -v -a "=" '_' *
+rename -v -a "+" '_' *
+rename -v -a "'" '_' *
+rename -v -a " " '_' *
+
+VAR="$(find . -type f -exec file -N -i -- {} + \
+            | grep "image" \
+            | awk -F ':' '{print $1}' \
+            | sort -V)"
+a=1
+for i in ${VAR}; do
+    new="$(printf "%04d.$ext" "$a")"
+    mv -i -- "$i" "$new"
+    let a=a+1
+done
+
+mkdir -p "tmp"
+mv *.$ext ./tmp/
+cd tmp
+
+rename -v -a "=" '_' *
+rename -v -a "+" '_' *
+rename -v -a "'" '_' *
+zip "$filename" *.$ext
+
+mv *.cbz ../.
+cd ..
+rm -rf ./tmp

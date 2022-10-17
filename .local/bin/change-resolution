@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PROMPT='dmenu -h 30 -p'
+PROMPT='dmenu -h 30 -y 5 -p'
 
 MONITOR="$(xrandr --listactivemonitors | sed -n '1!p' | awk '{print $NF}' | ${PROMPT} 'Choose output display')"
 [ -z "$MONITOR" ] && exit

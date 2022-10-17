@@ -1,0 +1,42 @@
+#!/bin/sh
+
+[ -z "${TERMINAL}" ] && TERMINAL='st'
+[ -z "${EDITOR}" ] && EDITOR='nvim'
+
+prompt='rofi -dmenu -p'
+unicode_list="${HOME}/.local/bin/all_emojis.txt"
+copy=1
+desc="${@:3}"
+
+notify () {
+  notify-send -r 65868 -t 2000 "${char}" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>" 2>/dev/null
+}
+
+print_desc () {
+  echo "$(awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' <<< "$1" )"
+}
+
+insert () {
+  # $1 : Unicode character
+  # $2 : Little description
+  char="${1}"
+  entry="$1       $2"
+  char_="$(cat ${unicode_list} | grep "${char}")"
+  [ -z "${char_}" ] \
+    && echo -e "\u200E${entry}" >> "${unicode_list}" \
+    && notify "Added to list<br>$2" \
+    || notify "Already present<br>$(print_desc "${char_}")"
+}
+
+case "${1}" in
+  '-c' | '--copy' )    copy=1 ;;
+  '-i' | '--insert' )  insert ${2} "${desc}" && exit ;;
+  '-e' | '--edit' )    ${TERMINAL} -e ${EDITOR} "${unicode_list}" && exit ;;
+esac
+
+char="$(cat ${unicode_list} \
+  | ${prompt} "Select" | awk -F ' ' '{print $1}')"
+
+xdotool type "${char}"
+[ ${copy} -gt 0 ] && xclip -r -sel c <<< "${char}" \
+  && notify "Copied to clipboard"

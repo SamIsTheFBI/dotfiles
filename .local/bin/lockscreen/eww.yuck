@@ -4,15 +4,8 @@
 ;; current song
 (defpoll SONG :interval "0.1s" `~/.local/bin/now-playing`)
 
-(defpoll UPTIME :interval "1s" `uptime -p | sed 's/up//'`)
-
-(defwidget lock_info []
-	(box 	:class "bat_capacity" 
-			:orientation "h" 
-			:space-evenly "true" 
-			:halign "center"
-			'Battery: ${BATTERY}')
-)
+(defpoll UPTIME :interval "1s" `uptime -p | sed 's/up//'`)
+(defpoll NETNAME :interval "1s" `~/.local/bin/nettraf name`)
 
 (defwidget song []
 	(box	:class "song" 
@@ -22,15 +15,15 @@
 			'${SONG}')
 )
 
-(defwidget uptime []
-	(box	:class "uptime" 
+(defwidget system_info []
+	(box	:class "system_info" 
 			:orientation "h" 
 			:space-evenly "false" 
 			:halign "left"
-			'Uptime: ${UPTIME}')
+			'${UPTIME} | ${BATTERY} | ${NETNAME}')
 )
 
-(defwindow uptime
+(defwindow system_info
 				:monitor 0
 	    		:geometry 
 					(geometry 	:x "1%"
@@ -42,21 +35,7 @@
 				:stacking "bg" 
 				:focusable "false"
 				:screen 1
-           		(uptime))
-
-(defwindow battery
-				:monitor 0
-	    		:geometry 
-					(geometry 	;x "420"
-								:y "-9%" 
-								:width 3 
-								:height 3
-								:anchor "center bottom"
-							)
-				:stacking "bg" 
-				:focusable "false"
-				:screen 1
-           		(lock_info))
+           		(system_info))
 
 (defwindow song
 				:monitor 0
