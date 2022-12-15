@@ -43,12 +43,12 @@ cursorColor=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 19p)
 
 dmenufg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 1p)
 dmenubg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 2p)
-dmenuselfg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 3p)
+dmenuselfg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 2p)
 dmenuselbg=$(cat ~/.cache/wal/colors-wal-dmenu.h | grep -o '#......' | sed -n 4p)
 
 norm_fg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 1p)
 norm_bg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 2p)
-norm_border=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 3p)
+norm_border=$color0
 sel_fg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 4p)
 sel_bg=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 5p)
 sel_border=$(cat ~/.cache/wal/colors-wal-dwm.h | grep -o '#......' | sed -n 6p)
@@ -79,16 +79,20 @@ sed -ir "s/highlight = .*/highlight = \"$rofi_fg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/background = .*/background = \"$dunst_bg\"/g" $dunstrc_dir/dunstrc
 sed -ir "s/foreground = .*/foreground = \"$dunst_fg\"/g" $dunstrc_dir/dunstrc
 
-sed -ir "s/background.*/background: $rofi_bg;/g" ~/.config/rofi/theme.rasi
-sed -ir "s/foreground.*/foreground: $rofi_fg;/g" ~/.config/rofi/theme.rasi
-sed -ir "s/searchbarbg.*/searchbarbg: $rofi_bg;/g" ~/.config/rofi/theme.rasi
+sed -ir "s/background:.*/background: $rofi_bg;/g" ~/.config/rofi/colors.rasi
+sed -ir "s/background-alt.*/background-alt: $rofi_bg;/g" ~/.config/rofi/colors.rasi
+sed -ir "s/foreground.*/foreground: $rofi_fg;/g" ~/.config/rofi/colors.rasi
+sed -ir "s/selected.*/selected: $color3;/g" ~/.config/rofi/colors.rasi
+sed -ir "s/active.*/active: $color2;/g" ~/.config/rofi/colors.rasi
+sed -ir "s/urgent.*/urgent: $color1;/g" ~/.config/rofi/colors.rasi
 
 sed -ir "s/Sxiv.foreground.*/Sxiv.foreground: $rofi_fg/g" ~/.Xresources
+sed -ir "s/Sxiv.background.*/Sxiv.background: $color0/g" ~/.Xresources
 
 sed -ir "s/dwm.norm_fg.*/dwm.norm_fg: $norm_fg/g" ~/.Xresources
 sed -ir "s/dwm.norm_bg.*/dwm.norm_bg: $norm_bg/g" ~/.Xresources
 sed -ir "s/dwm.norm_border.*/dwm.norm_border: $norm_border/g" ~/.Xresources
-sed -ir "s/dwm.sel_fg.*/dwm.sel_fg: $sel_fg/g" ~/.Xresources
+sed -ir "s/dwm.sel_fg.*/dwm.sel_fg: $norm_bg/g" ~/.Xresources
 sed -ir "s/dwm.sel_bg.*/dwm.sel_bg: $sel_bg/g" ~/.Xresources
 sed -ir "s/dwm.sel_border.*/dwm.sel_border: $sel_border/g" ~/.Xresources
 

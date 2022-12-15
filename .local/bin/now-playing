@@ -22,7 +22,7 @@ notify () {
   # $2 : Message
   # $3 : Image, if any
 
-  notify-send -r 165774 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
+  notify-send -a "now-playing" -r 165774 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
 }
 
 albumart () {
@@ -66,7 +66,9 @@ albumart () {
       [ $p_name == 'mpd' ] && img=${artdefault}
       ;;
   esac
-  notify "$p_glyph Now Playing" "$output" "$img"
+	elapsed="$(playerctl metadata --format "{{ duration(position) }}")"
+	maxDuration="$(playerctl metadata --format "{{ duration(mpris:length) }}")"
+  notify "$p_glyph Now Playing" "$output<br><br>$s_name: $elapsed\/$maxDuration" "$img"
 }
 
 check_player () {
@@ -101,6 +103,8 @@ check_state () {
             'playing') s_glyph="";;
         esac
     fi
+
+		[ $s_glyph == "" ] && s_name="Paused" || s_name="Playing"
 }
 
 mpc_output () {
@@ -137,8 +141,8 @@ sbar_output () {
   n=${#output}
   char_limit=35
   [ "$n" -gt ${char_limit} ] \
-    && printf "^B1^^C0^ $p_glyph | $s_glyph %.$(( $char_limit - 2 ))s.. ^d^" "$output" \
-    || printf "^B1^^C0^ $p_glyph | $s_glyph %s ^d^" "$output"
+	  && printf "^B1^^C0^ $p_glyph | $s_glyph %.$(( $char_limit - 2 ))s.. ^d^" "$output" \
+	  || printf "^B1^^C0^ $p_glyph | $s_glyph %s ^d^" "$output"
 }
 
 norm_output () {

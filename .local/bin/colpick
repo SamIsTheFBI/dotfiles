@@ -2,6 +2,10 @@
 
 # Dependencies: gpick/colorpicker, dunstify, imagemagick (optional), xclip
 
+id=$(xinput list | grep Touchpad | awk '{print $6}' | cut -d '=' -f 2)
+touchpad_active=$(xinput list-props $id | grep "Device Enabled" | awk '{print $4}')
+[ $touchpad_active == 0 ] && exit
+
 if [ -x '/usr/bin/gpick' ]; then
     tool="gpick"
     col=$(gpick -pso --no-newline)

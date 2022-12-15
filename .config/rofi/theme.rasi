@@ -5,7 +5,7 @@ Colors for Gruvbox Theme
 */
 
 * {
-	background: #2E3440;
-	foreground: #88C0D0;
-	searchbarbg: #1d2225;
+	background: #120f16;
+	foreground: #A46655;
+	searchbarbg: #120f16;
 }

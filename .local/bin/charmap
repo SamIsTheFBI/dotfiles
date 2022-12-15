@@ -5,7 +5,7 @@
 
 prompt='rofi -dmenu -p'
 unicode_list="${HOME}/.local/bin/all_emojis.txt"
-copy=1
+copy=0
 desc="${@:3}"
 
 notify () {
@@ -37,6 +37,7 @@ esac
 char="$(cat ${unicode_list} \
   | ${prompt} "Select" | awk -F ' ' '{print $1}')"
 
-xdotool type "${char}"
+# xdotool type "${char}"
+xdotool getwindowfocus windowfocus --sync type "${char}"
 [ ${copy} -gt 0 ] && xclip -r -sel c <<< "${char}" \
   && notify "Copied to clipboard"

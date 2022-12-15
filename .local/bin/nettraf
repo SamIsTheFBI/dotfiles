@@ -3,7 +3,7 @@
 [ -z "${TERMINAL}" ] && TERMINAL="st"
 
 notify () {
-  notify-send -r 415178 -t 3000 "${n_glyph}" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>" 2>/dev/null
+  notify-send -a "nettraf" -r 415178 -t 3000 "${n_glyph}" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>" 2>/dev/null
 }
 
 check_internet () {

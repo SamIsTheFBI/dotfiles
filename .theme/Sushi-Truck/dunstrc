@@ -33,7 +33,7 @@
     origin = top-right
 
     # Offset from the origin
-    offset = 4x30
+    offset = 5x35
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
@@ -82,15 +82,15 @@
     horizontal_padding = 8
 
     # Padding between text and icon.
-    text_icon_padding = 1
+    text_icon_padding = 4
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.
     frame_width = 2
 
     # Defines color of the frame around the notification window.
-    frame_color = "#A45F34"
-	highlight = "#A45F34"
+    frame_color = "#CC683F"
+	  highlight = "#CC683F"
 
     # Define a color for the separator.
     # possible values are:
@@ -309,7 +309,7 @@ foreground = "#a5b3c4"
 [urgency_critical]
     background = "#151313"
     foreground = "#a5b3c4"
-    frame_color = "#A45F34"
+    frame_color = "#CC683F"
     timeout = 0
     # Icon for notifications with critical urgency, uncomment to enable
     #default_icon = /path/to/icon

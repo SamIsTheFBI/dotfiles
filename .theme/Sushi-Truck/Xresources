@@ -5,31 +5,47 @@ Sxiv.foreground: #A45F34
 ! DWM Colors
 dwm.norm_fg: #a5b3c4
 dwm.norm_bg: #151313
-dwm.norm_border: #737d89
+dwm.norm_border: #151313
 dwm.sel_fg: #a5b3c4
 dwm.sel_bg: #8F2827 
-dwm.sel_border: #a5b3c4
+dwm.sel_border: #CC683F
 
 ! Terminal Colors
-*.color0: #151313
-*.color1: #CC683F 
-*.color2: #717924
-*.color3: #C18F3F 
-*.color4: #5D8670
-*.color5: #A38E6C
-*.color6: #DEAF62
-*.color7: #a5b3c4
-*.color8: #737d89
-*.color9: #A45F34
-*.color10: #CC683F
-*.color11: #927154
-*.color12: #5D8670
-*.color13: #A38E6C
-*.color14: #DEAF62
-*.color15: #a5b3c4
-*.background: #151313
-*.foreground: #a5b3c4
-*.cursorColor: #a5b3c4
+*.foreground:   #a5a2a2
+*.background:   #151313
+*.cursorColor:  #a5a2a2
+
+! black
+*.color0:       #151313
+*.color8:       #5c5855
+
+! red
+*.color1:       #cc683f
+*.color9:       #a45f34
+
+! green
+*.color2:       #828e12
+*.color10:      #8d982a
+
+! yellow
+*.color3:       #c18f3f
+*.color11:      #deaf62
+
+! blue
+*.color4:       #5c88b5
+*.color12:      #6f92b5
+
+! magenta
+*.color5:       #885b8d
+*.color13:      #a16a94
+
+! cyan
+*.color6:       #5d8670
+*.color14:      #5aa17f
+
+! white
+*.color7:       #77818e
+*.color15:      #a5b3c4
 
 ! DMENU Colors
 dmenu.background: #151313

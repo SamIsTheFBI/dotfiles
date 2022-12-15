@@ -67,6 +67,7 @@ check_output () {
     && return 0
   
   notify "Files downloaded successfully at ${1}"
+	paplay ~/.config/dunst/notif.wav &
   rm -rf "${cache_dir}/temp"
 }
 
@@ -109,20 +110,21 @@ ytdlp_audio_video () {
 
   notify "Fetching available qualities..."
   
-  yt-dlp --quiet -F $url | awk 'NR==4, NR==1000 {print $0}' > "${formats}"
+  yt-dlp --quiet -F $url > "${formats}"
   
-  audio="$(ask_user "Choose audio quality: " "$(cat ${formats} | grep audio)" | awk '{print $1}')"
-  video="$(ask_user "Choose video quality: " "$(cat ${formats} | grep -v audio)" | awk '{print $1}')"
+  audio="$(ask_user "Choose audio quality: " "$(cat ${formats} | grep -v images | grep audio)" | awk '{print $1}')"
+  video="$(ask_user "Choose video quality: " "$(cat ${formats} | grep -v images | grep -v audio)" | awk '{print $1}')"
 
   [[ -z $video ]] && format=$audio || [[ -z $audio ]] && format=$video || format="$audio+$video"
   echo "$format"
-  [[ -z $format ]] && return 0
+  [[ -z $format ]] && notify "No audio/video format given by user. <br>Exiting..." && return 0
 
   notify "Trying to download..." 
   case "${url}" in
     *youtube*playlist?list=*)
       echo "URL Type: YT Playlist"
       yt-dlp -f $format \
+				--no-progress \
         --embed-thumbnail \
         --convert-subs srt \
         --embed-sub \
@@ -136,6 +138,7 @@ ytdlp_audio_video () {
     *)
       echo "URL Type: Video"
       yt-dlp -f $format \
+				--no-progress \
         --embed-thumbnail \
         --convert-subs srt \
         --embed-sub \

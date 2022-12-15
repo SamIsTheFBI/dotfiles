@@ -28,11 +28,13 @@ case "$1" in
 "C-d")      while read file; do rm "$file"; done ;;
 "C-l")	    while read file; do setlockbg "$file"; done ;;
 "C-L")	    while read file; do setlockbg --no-blur "$file"; done ;;
+"C-o")	    while read file; do 0x0 "$file"; done ;;
 "C-e")      while read file; do urxvt -bg "#444" -fg "#eee" -sl 0 -title "$file" -e sh -c "exiv2 pr -q -pa '$file' | less" & done ;;
 "C-g")      tr '\n' '\0' | xargs -0 gimp & ;;
 "C-b")	    while read file; do setbg "$file"; done ;;
 "C-w")	    while read file; do setwal "$file"; done ;;
-"C-r")      while read file; do rawtherapee "$file" & done ;;
+"C-r")      while read file; do convert "$file" -channel RGB -negate "$file"; done ;;
+# "C-r")      while read file; do rawtherapee "$file" & done ;;
 "C-comma")  rotate 270 ;;
 "C-period") rotate  90 ;;
 "C-slash")  rotate 180 ;;

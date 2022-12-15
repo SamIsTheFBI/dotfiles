@@ -27,7 +27,7 @@ set_theme () {
   cp "${theme}"/dunstrc $HOME/.config/dunst/dunstrc
   cp "${theme}"/jgmenurc $HOME/.config/jgmenu/jgmenurc
   cp "${theme}"/jgmenu_layoutmenu $HOME/.config/jgmenu/jgmenu_layoutmenu
-  cp "${theme}"/theme.rasi $HOME/.config/rofi/theme.rasi
+  cp "${theme}"/colors.rasi $HOME/.config/rofi/colors.rasi
   cp "${theme}"/Xresources $HOME/.Xresources
 	
   ~/.local/bin/setbg "${theme}"/bg.jpg
@@ -71,7 +71,7 @@ save_theme () {
   cp $HOME/.Xresources "${theme}"/Xresources
   cp $HOME/.config/dunst/dunstrc "${theme}"/
   cp $HOME/.config/jgmenu/jgmenurc $HOME/.config/jgmenu/jgmenu_layoutmenu "${theme}"/
-  cp $HOME/.config/rofi/theme.rasi "${theme}"/
+  cp $HOME/.config/rofi/colors.rasi "${theme}"/
   cp $HOME/.local/share/wallpaper/bg.jpg "${theme}"/
 
   notify " Color Scheme" "Current color scheme was saved at ${theme}"

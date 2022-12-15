@@ -1,0 +1,54 @@
+! SXIV Colors
+Sxiv.background: #120f16
+Sxiv.foreground: #E29939
+
+! DWM Colors
+dwm.norm_fg: #dde0df
+dwm.norm_bg: #120f16
+dwm.norm_border: #4E464A 
+dwm.sel_fg: #120F16
+dwm.sel_bg: #E29939
+dwm.sel_border: #E29939
+
+! Terminal Colors
+*.foreground: #dde0df
+*.background: #120f16
+*.cursorColor: #dde0df
+
+! black
+*.color0: #120f16
+*.color8: #9a9c9c
+
+! red
+*.color1: #C45F7E
+*.color9: #C45F7E
+
+! green
+*.color2: #84BF7E 
+*.color10: #84BF7E
+
+! yellow
+*.color3: #E29939 
+*.color11: #E29939
+
+! blue
+*.color4: #A8B8DF
+*.color12: #A8B8DB
+
+! magenta
+*.color5: #CDBEB2
+*.color13: #CDBEB2
+
+! cyan
+*.color6: #EBBCBA
+*.color14: #EBBCBA
+
+! white
+*.color7: #dde0df
+*.color15: #dde0df
+
+! DMENU Colors
+dmenu.background: #120f16
+dmenu.foreground: #dde0df
+dmenu.selbackground: #E29939
+dmenu.selforeground: #120f16

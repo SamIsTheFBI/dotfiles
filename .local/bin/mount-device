@@ -7,25 +7,33 @@ prompt='dmenu -i -h 30 -y 5 -p'
 promptl='dmenu -i -h 30 -y 5 -l 12 -p'
 cloud_dirs="${HOME}/Cloud Storage"
 
+notify () {
+  # $1 : Heading
+  # $2 : Message
+  # $3 : Image, if any
+
+  notify-send -r 261330 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
+}
+
 rclone_mount () {
   [ "${internet}" == 'NO' ] && \
-    notify-send -r 134567 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>No internet connection.</span>" && exit
+    notify "" "No internet connection." && exit
   
   rclone_remote="$( rclone listremotes | ${prompt} "Choose remote drive: ")"
   [ -z "${rclone_remote}" ] && exit
 
   mount_point="$(mount | grep "${rclone_remote}" | awk -F 'type' '{print $1}' | awk -F 'on ' '{print $NF}' )"
   [ ! -z "$( mount | grep "${rclone_remote}" )" ] && \
-    notify-send -r 134567 "" "<span font = 'JetBrainsMono Nerd Font 11'>Remote location already mounted at ${mount_point}</span>" && exit
+    notify "" "Remote location already mounted at ${mount_point}" && exit
   
   mount_point="$( find "${cloud_dirs}" -maxdepth 1 -mindepth 1 -type d | ${promptl} "Choose mount point")"
   [ -z "${mount_point}" ] && exit
-  [ ! -e "${mount_point}" ] && mkdir -p -- "${mount_point}"
+  [ ! -e "${mount_point}" ] && mkdir -p -- "${cloud_dirs}/${mount_point}"
   [ ! -z "$(mount | grep "${mount_point}")" ] && \
-    notify-send -r 134567 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Chosen directory is a mounted directory!</span>" && exit
+    notify "" "Chosen directory is a mounted directory!" && exit
   
   rclone mount "${rclone_remote}" "${mount_point}" &
-  notify-send -r 134567 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Rclone remote storage mounted successfully</span>"
+  notify "" "Rclone remote storage mounted successfully"
 }
 
 rclone_unmount () {
@@ -33,13 +41,15 @@ rclone_unmount () {
   [ -z "${mount_point}" ] && exit
   [ -z "$(mount | grep "${mount_point}")" ] && \
     echo EMPTY && \
-    notify-send -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Nothing mounted at \n${mount_point}</span>" && exit
+    notify "" "Nothing mounted at \n${mount_point}" && exit
   fusermount -uz "${mount_point}" &
-  notify-send -r 134567 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Rclone remote storage unmounted successfully</span>"
+  notify "" "Rclone remote storage unmounted successfully"
 }
 
 
 op="$(echo -e "Mount\nUnmount" | ${prompt} "What do you want to do?" )"
+
+[ -z ${op} ] && exit
 
 mount_type="$(cat <<- EOF | ${prompt} ""
 rclone

@@ -96,7 +96,8 @@ sudo systemctl disable systemd-backlight@backlight:acpi_video1.service
 </details>
 
 <details>
-<summary><b>Mixing two audio inputs with PulseAudio</b></summary>
+<summary><b>Mixing audio inputs with PulseAudio</b></summary>
+<br>
 
 - Set up mixed sound sink:
   ```
@@ -111,4 +112,40 @@ sudo systemctl disable systemd-backlight@backlight:acpi_video1.service
 
 Now you can go to the program to which you want to pass this mixed input to and select `Monitor of Null Output`. You can also set this new source as the default input in `Input Devices`. 
 
+</details>
+
+<details>
+<summary><b>(Almost) Windows-like clipboard feature</b></summary>
+<br>
+
+- Get `copyq` clipboard manager. Start it and then run the following in a terminal window:
+  ```
+  copyq config hide_main_window true
+  copyq config close_on_unfocus false
+  ```
+- Also, sometimes copying an image from web browsers by right clicking and then selecting 'Copy Image' does not work. It copies the URL to that image instead of copying the image itself. So, next time, firstly choose 'Open Image in New Tab' when right clicking an image on a web browser and then right click and 'Copy Image'.
+  
+</details>
+<details>
+<summary><b>Pacman not working (libcrypto.so.1.1 not found)</b></summary>
+<br>
+
+- Go to archlinux.org/packages and search for openssl. Click Download From Mirror and a .tar.zst file should start downloading.
+- Extract this to a separate folder:
+	```
+	mkdir some_dir
+	mv openssl*.pkg.tar.zst ./some_dir
+	cd some_dir
+	tar xvf openssl*
+	```
+- cd to the extracted `usr` directory. cd to `lib` directory. Here you can find `libcrypto.so.1.1` & `libssl.so.1.1`.
+- Copy these two files to your `/usr/lib` directory. You may need to use `sudo` or `doas` here.
+
+- In case you had panicked and rebooted, you would find your kernel is panicked now!. For when this happens, boot with your Arch Install Medium.
+- Connect to internet.
+- Mount the existing Arch Linux partition to `/mnt`.
+- `arch-chroot /mnt`
+- Now you must get the .tar.zst file from archlinux.org/packages. Either `wget` it (aria2c won't work) or if you dual boot, have it copied to your other OS's partition.
+
+Now follow everything as in previous steps. This should fix the problem and you should be able to work with pacman as usual.
 </details>
