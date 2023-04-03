@@ -57,7 +57,7 @@ check_network_interface
 
 case $BLOCK_BUTTON in
     1) [ ${internet} -gt 0 ] \
-      && notify "Connected to $(name)<br>$(ip route get 8.8.8.8 | awk 'NR==1 {print $7}')" \
+      && notify "Connected to $(name)<br>$(ifconfig wlo1 | grep 'inet' | sed -n 1p | awk '{print $1 " " $2}')" \
       || notify " Disconnected" ;;
 	3) ${TERMINAL} -e nmtui 2>/dev/null ;;
 esac

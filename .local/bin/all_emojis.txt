@@ -4778,3 +4778,4 @@ $       dollar
 ‎ﭮ       nf-mdi-discord
 ‎       nf-mdi-apple_finder
 ‎       nf-fa-apple
+‎ㅤㅤ       empty-space

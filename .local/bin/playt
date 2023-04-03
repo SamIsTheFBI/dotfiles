@@ -11,7 +11,6 @@ formats="${cache_dir}/formats"
 log="${cache_dir}/log"
 create_log_file='1'
 
-
 logger () {
   # $1 : Log Text
   # echo -e "${1}"
@@ -82,8 +81,7 @@ ytdlp_best_audio () {
   [ -e "${musicdl}/$name"* ] && check_dl "${musicdl}" && return 0 || notify "Good to go"
 
   notify "Trying to download..." 
-  yt-dlp -f 'ba' \
-    --no-progress \
+  st -e yt-dlp -f 'ba' \
     -x --audio-format mp3 \
     --embed-thumbnail \
     $url \
@@ -123,8 +121,8 @@ ytdlp_audio_video () {
   case "${url}" in
     *youtube*playlist?list=*)
       echo "URL Type: YT Playlist"
+			st -e \
       yt-dlp -f $format \
-				--no-progress \
         --embed-thumbnail \
         --convert-subs srt \
         --embed-sub \
@@ -137,8 +135,8 @@ ytdlp_audio_video () {
       ;;
     *)
       echo "URL Type: Video"
+			st -e \
       yt-dlp -f $format \
-				--no-progress \
         --embed-thumbnail \
         --convert-subs srt \
         --embed-sub \

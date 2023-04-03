@@ -1,54 +1,38 @@
 ! SXIV Colors
-Sxiv.background: #101213
-Sxiv.foreground: #DE9A1C
+Sxiv.background: #282828
+Sxiv.foreground: #A89984
 
 ! DWM Colors
-dwm.norm_fg: #ece4d0
-dwm.norm_bg: #101213
-dwm.norm_border: #101213
-dwm.sel_fg: #101213
-dwm.sel_bg: #D69821
-dwm.sel_border: #ece4d0
+dwm.norm_fg: #e3e0bb
+dwm.norm_bg: #131d14
+dwm.norm_border: #282828
+dwm.sel_fg: #e3e0bb
+dwm.sel_bg: #75892F
+dwm.sel_border: #9EA91A
 
 ! Terminal Colors
-*.foreground: #ece4d0
-*.background: #101213
-*.cursorColor: #ece4d0
-
-! black
-*.color0: #101213
-*.color8: #a59f91
-
-! red
-*.color1:	#CC231C 
-*.color9: #CC231C 
-
-! green
-*.color2: #D69821
-*.color10: #D69821
-
-! yellow
-*.color3: #988D73
-*.color11: #988D73
-
-! blue
-*.color4: #3D848E
-*.color12: #3D848E
-
-! magenta
-*.color5: #458588
-*.color13: #458588
-
-! cyan
-*.color6: #BBAF90
-*.color14: #BBAF90
-
-! white
-*.color7: #ece4d0
-*.color15: #ece4d0
+*.color0: #282828
+*.color1: #ea6962
+*.color2: #a9b665
+*.color3: #d8a657
+*.color4: #7daea3
+*.color5: #d3869b
+*.color6: #89b482
+*.color7: #d4be98
+*.color8: #928374
+*.color9: #ef938e
+*.color10: #bbc585
+*.color11: #e1bb7e
+*.color12: #9dc2ba
+*.color13: #e1acbb
+*.color14: #a7c7a2
+*.color15: #e2d3ba
+*.background: #282828
+*.foreground: #e2d3ba
+*.cursorColor: #e2d3ba
 
 ! DMENU Colors
-dmenu.background: #101213
-dmenu.foreground: #ece4d0
-dmenu.selbackground: #DE9A1C
-dmenu.selforeground: #101213
+dmenu.background: #282828
+dmenu.foreground: #ebdbb2
+dmenu.selbackground: #98971a
+dmenu.selforeground: #282828

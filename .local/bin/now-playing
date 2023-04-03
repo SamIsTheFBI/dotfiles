@@ -11,7 +11,7 @@ tmp="/tmp"
 artdefault="$HOME/.config/ncmpcpp/albumarts/default_cover.jpg"
 artffmpeg="$HOME/.config/ncmpcpp/albumarts/ffmpeg"
 ctl="playerctl"
-id="playerctld"
+[ -z "${id}" ] && id="playerctld"
 
 if [ "${id}" == 'playerctld' ]; then
   [ "$(playerctl status)" == 'Stopped' ] && id="$(playerctl -l | sed -n 2p)"
@@ -174,6 +174,7 @@ case "${ctl}" in
   'mpc')       mpc_output ;;
 esac
 
+[ -z "$(playerctl metadata --format '{{ playerName }}')" ] && output="No media on deck"
 case "${1}" in
   'sbar') sbar_output "$output" ;;
   '' | *) norm_output "$output" ;;

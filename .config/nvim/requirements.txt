@@ -1,0 +1,2 @@
+Requirements for this nvim setup
+*-language-server

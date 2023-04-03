@@ -95,41 +95,14 @@ compdef _directories md
 # Define named directories: ~w <=> Windows home directory on WSL.
 [[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
 
-# Define aliases.
-alias tree='tree -a -I .git'
-alias dots='/usr/sbin/git --git-dir=/home/samisthefbi/.dotfiles/ --work-tree=/home/samisthefbi'
-alias vi='/usr/bin/nvim'
-alias ls='/usr/bin/exa --color=always --group-directories-first --icons'
-alias ll='/usr/bin/exa --color=always --group-directories-first --icons -l'
-alias lt='/usr/bin/exa --color=always --group-directories-first --icons -T'
-alias spotify='LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify -no-zygote'
-alias rempd='pkill mpd && rm ~/.config/mpd/database && mpd &'
-alias cc='echo 3 | sudo tee /proc/sys/vm/drop_caches'
-alias d='echo "Space left:$(df -h /dev/sda7 --output=avail | sed -n 2p)"'
-alias s='sxiv -aq '
-alias sc='sxiv -iaq <<< "$(find -L . -mindepth 1 -maxdepth 1 -type f | sort -V)"'
-alias ss='sxiv -iaq <<< "$(find . -mindepth 1 -maxdepth 1 -type f | shuf)"'
-alias m='var=$(find . -mindepth 1 -maxdepth 1 -type f -exec file -N -i -- {} + | grep "video" | cut -d "/" -f2 | cut -d ":" -f1 | sort -V | fzf) && [ -n "$var" ] && mpv --no-keepaspect-window --save-position-on-quit -- $var'
-alias mpv='mpv --no-keepaspect-window --save-position-on-quit'
-alias h='tac ~/.zsh_history | cut -d ";" -f2- | sed 1d | fzf | xclip -r -sel c'
-alias n='setsid nemo .'
-alias z='zathura'
-alias bins='cd ${HOME}/.local/bin'
-alias confs='cd ${HOME}/.config'
-alias srcs='cd ${HOME}/.local/src'
-alias gtg='cd ${HOME}/Downloads/Telegram\ Desktop'
-alias gd='cd ${HOME}/Downloads'
-alias gr='cd ${HOME}/Scripts'
-alias gme='cd ${HOME}/Local\ Disk\ E/Shivam/Media'
-alias gmd='cd ${HOME}/Local\ Disk\ D/Media'
-alias gc='cd ${HOME}/Coding/'
-alias gv='cd ${HOME}/Videos/'
-alias gs='cd ${HOME}/Local\ Disk\ D/Studies/'
-# alias cp='rsync -avzhe ssh --append-verify --partial --progress'
-alias fetch='neofetch --config ~/.config/neofetch/blockfetch.conf'
+source ~/.shell_aliases
 
 sf() {
 	sxiv -iaq <<< "$(find -L . -mindepth 1 -maxdepth 1 -type f -iname "*$1*" | sort -V )"
+}
+
+sd() {
+	sxiv -iaq <<< "$(find -L $1 -mindepth 1 -maxdepth 1 -type f | sort -V)"
 }
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.

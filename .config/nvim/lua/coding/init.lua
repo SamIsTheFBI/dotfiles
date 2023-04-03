@@ -1,8 +1,13 @@
 local configs = {
- "treesitter",
- "autopairs",
+	"treesitter",
+	"autopairs",
+	"colorizer",
+	"lspconfig",
+	"lspkind",
+	"completion",
+	-- "lspsaga",
 }
 
 for _, config in ipairs(configs) do
-    require("coding." .. config)
+	require("coding." .. config)
 end

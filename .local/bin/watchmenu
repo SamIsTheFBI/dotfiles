@@ -46,7 +46,7 @@ WATCHMENU_CACHE="${XDG_CACHE_HOME:-${HOME}/.cache}/watchmenu"
 ANIME_DIRS=(  "${HOME}/Local Disk D/Media/Anime"    "${HOME}/Local Disk E/Shivam/Media/Anime" "${HOME}/Scripts/animepahe-dl" )
 TVSHOW_DIRS=( "${HOME}/Local Disk D/Media/TV Show"  "${HOME}/Local Disk E/Shivam/Media/TV Shows" "${HOME}/Cloud Storage/Hikari Drive/TV Shows and Web Series" )
 MOVIE_DIRS=(  "${HOME}/Local Disk D/Media/Movies"   "${HOME}/Local Disk E/Shivam/Media/Movies" )
-VIDEO_DIRS=(  "${HOME}/Videos"         							"${HOME}/Downloads" 		"${HOME}/Downloads/Telegram Desktop" "${HOME}/Local Disk D/Studies/Programming/Videos/" "${HOME}/Local Disk D/Studies/Not Really Academics/Videos")
+VIDEO_DIRS=(  "${HOME}/Videos"         							"${HOME}/Downloads" 		"${HOME}/Downloads/Telegram Desktop" "${HOME}/Local Disk E/Shivam/Media" "${HOME}/Local Disk D/Media" "${HOME}/Local Disk D/Studies/Programming/Videos/" "${HOME}/Local Disk D/Studies/Not Really Academics/Videos")
 
 # Help menu
 help () {
@@ -769,6 +769,15 @@ episode_list () {
     
     episode_list
 }
+
+if [ -n "${1}" ]; then
+	file_path="$(realpath "${1}")"
+	title="$(echo "${file_path}" | awk -F '/' '{print $NF}')"
+	entry="${title}<==>${file_path}"
+	${video_player} "${file_path}"
+	add_to_hist "${entry}"
+	exit
+fi
 
 # Uncomment these lines to automatically update list upon running the script
 # update_list anime

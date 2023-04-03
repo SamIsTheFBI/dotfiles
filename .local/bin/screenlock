@@ -22,7 +22,7 @@ slowfade () {
     fi
 }
 sleep 1 && ${HOME}/.local/bin/eww -c ~/.local/bin/lockscreen/ open-many song system_info &
-slowfade start 
+# slowfade start 
 i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=15 --date-str="%a, %d %b %Y" \
 	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
 	--ind-pos="w/2:1.2*h/2" \
@@ -58,5 +58,5 @@ i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=1
 	--pass-screen-keys \
 	--pass-volume-keys \
 	--pass-power-keys
-slowfade end
+# slowfade end
 ${HOME}/.local/bin/eww -c ~/.local/bin/lockscreen/ close-all
