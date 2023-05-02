@@ -1,22 +1,22 @@
 local options = {
-  clipboard = "unnamedplus",
-  fileencoding = "utf-8",
-  ignorecase = true,
-  smartcase = true,
-  smartindent = true,
-  swapfile = false,
-  backup = false,
-  writebackup = false,
-  mouse = "a",
-  showtabline = 2,
-  number = true,
-  hlsearch = true,
-  shiftwidth = 2,
-  tabstop = 2,
-  cursorline = true,
-	wrap = false,
+	clipboard = "unnamedplus",
+	fileencoding = "utf-8",
+	ignorecase = true,
+	smartcase = true,
+	smartindent = true,
+	swapfile = false,
+	backup = false,
+	writebackup = false,
+	mouse = "a",
+	showtabline = 2,
+	number = true,
+	hlsearch = true,
+	shiftwidth = 2,
+	tabstop = 2,
+	cursorline = true,
+	wrap = true,
 	undofile = true,
-	splitright = 	true,
+	splitright = true,
 	splitbelow = true,
 	termguicolors = true,
 	showtabline = 2,
@@ -27,7 +27,7 @@ local options = {
 }
 
 for j, k in pairs(options) do
-  vim.opt[j] = k
+	vim.opt[j] = k
 end
 
 vim.cmd [[set whichwrap+=<,>,[,],h,l]]

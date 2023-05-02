@@ -77,6 +77,13 @@ save_theme () {
   notify " Color Scheme" "Current color scheme was saved at ${theme}"
 }
 
+del_theme () {
+  theme_name="$(prompt_theme " Choose the theme you want to delete")"
+  [ -z "${theme_name}" ] && return 0
+	rm -r ~/.theme/"${theme_name}"
+  notify " Color Scheme" "Deleted the theme ${theme_name}"
+}
+
 main_prompt () {
   local title options sel
   title=" "

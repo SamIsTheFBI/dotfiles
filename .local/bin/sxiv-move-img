@@ -1,0 +1,35 @@
+#!/bin/sh
+
+FILE="$(realpath "${1}")"
+SXIV_PROMPT="dmenu -h 30 -i --border -l 10 -p"
+
+notify () {
+  # $1 : Heading
+  # $2 : Message
+  # $3 : Image, if any
+
+  notify-send -r 266495 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
+}
+
+show_dir_content () {
+	options="$(printf " Cancel\nSelect this directory\n..\n$(find . -maxdepth 1 -mindepth 1)")"
+	selection="$(${SXIV_PROMPT} "${title}" < <(echo "${options}"))"
+
+	case "${selection}" in
+		'..')
+			cd ..
+			;;
+		'Select this directory')
+			mv -- "${FILE}" . && notify "SXIV" "Moved file to $(pwd) successfully" && exit
+			;;
+		:q* | " Cancel" | '')
+			exit ;;
+		*)
+			[ -d "${selection}" ] && cd "${selection}"
+			;;
+	esac
+}
+
+while(true) do
+	show_dir_content
+done

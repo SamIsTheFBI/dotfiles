@@ -29,9 +29,10 @@ case "$1" in
 "C-l")	    while read file; do setlockbg "$file"; done ;;
 "C-L")	    while read file; do setlockbg --no-blur "$file"; done ;;
 "C-o")	    while read file; do 0x0 "$file"; done ;;
-"C-e")      while read file; do sxiv-handler; done ;;
+"C-e")      while read file; do sxiv-handler "$file"; done ;;
 "C-g")      tr '\n' '\0' | xargs -0 gimp & ;;
 "C-b")	    while read file; do setbg "$file"; done ;;
+"C-m")	    while read file; do sxiv-move-img "$file"; done ;;
 "C-w")	    while read file; do setwal "$file"; done ;;
 "C-r")      while read file; do convert "$file" -channel RGB -negate "$file"; done ;;
 # "C-r")      while read file; do rawtherapee "$file" & done ;;

@@ -1,0 +1,53 @@
+#!/bin/sh
+
+prompt='dmenu -i -h 30 -y 5 -p'
+FILE="${1}"
+
+edit_image() {
+	edit_opts="Rotate image\nChange color"
+
+	sel=$(echo -e ${edit_opts} | ${prompt} "")
+
+	case "${sel}" in
+		"Rotate image") rotate_image ;;
+		'') return 0;;
+		*) exit;;
+	esac
+}
+
+rotate_image () {
+	angle="$(echo -e "90\n-90\n180\n-180\nBack" | ${prompt} "Type the angle: ")"
+
+	case "${angle}" in
+		"Back" | ":b") edit_image;;
+		'') return 0 ;;
+		*) convert "${image_path}" -rotate "${angle}" "${image_path}" && rotate_image;;
+	esac
+}
+
+opts="$(cat <<- EOF | ${prompt} ""
+Set as Wallpaper
+Set as Lockscreen
+Delete Image
+Copy to
+Move to
+0x0
+EOF
+)"
+
+case "${opts}" in
+	'Set as Wallpaper')
+		setbg "${FILE}";;
+	'Set as Lockscreen')
+		setlockbg "${FILE}";;
+	'Delete Image')
+		rm "${FILE}";;
+	'Move to')
+		sxiv-move-img "${FILE}";;
+	'Copy to')
+		sxiv-copy-img "${FILE}";;
+	'0x0')
+		0x0 "${FILE}";;
+	*) exit ;;
+esac
+

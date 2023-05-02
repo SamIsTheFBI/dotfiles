@@ -11,6 +11,7 @@ local mappings = {
 	td = { "wbi\"<ESC>wea\"<ESC>", "Add double quotes around current word" },
 	ts = { "wbi'<ESC>wea'<ESC>", "Add single quotes around current word" },
 	w = { ":w<CR>", "Save" },
+	h = { ":noh<CR>", "stop highlight" },
 	W = { ":wq<CR>", "Save & quit" },
 	rn = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename occurrence" },
 }

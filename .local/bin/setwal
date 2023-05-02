@@ -7,19 +7,25 @@ st_dir=~/.local/src/st
 dunstrc_dir=~/.config/dunst
 jgmenurc_dir=~/.config/jgmenu
 
-if [ -z "$1" ];then
+[ -f "$(realpath "${1}")" ]
+
+if [ -f "$(realpath "${1}")" ];then
+	wall="$1"
+	wal -i "$wall"
+elif [[ "${1}" == '--random' || "${1}" == '-r' || "${1}" == '' ]]; then
 	echo "Choosing a random wallpaper from your wallpaper directory..."
 	wall="$(find "$wall_dir" -type f -name "*.jpg" -o -name "*.png" | shuf -n1)"
+	wal -i "$wall"
 else
-	wall="$1"
+	wal --theme "$@"
 fi
 
-convert "$wall" ~/.local/share/wallpaper/bg.jpg
-convert -scale 10% -blur 0x2.5 -resize 1000% "$wall" ~/.local/share/wallpaper/lockscreen.png
-convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
-wal -i "$wall"
-
-nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
+if [ -e "${wall}" ]; then
+	convert "$wall" ~/.local/share/wallpaper/bg.jpg
+	convert -scale 10% -blur 0x2.5 -resize 1000% "$wall" ~/.local/share/wallpaper/lockscreen.png
+	convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
+	nitrogen --set-zoom-fill --save ~/.local/share/wallpaper/bg.jpg
+fi
 
 color0=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 1p)
 color1=$(cat ~/.cache/wal/colors-wal-st.h | grep -o '#......' | sed -n 2p)
