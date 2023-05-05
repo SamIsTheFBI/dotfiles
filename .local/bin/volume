@@ -1,13 +1,13 @@
 #!/bin/sh
 
-pamixer --set-limit 254 
+pamixer --set-limit 5000 
 
 if [ "$1" == "incr" ];then
 	pamixer -u
-	pamixer -i 5
+	pamixer --allow-boost -i 5
 elif [ "$1" == "decr" ];then
 	pamixer -u
-	pamixer -d 5
+	pamixer --allow-boost -d 5
 elif [ "$1" == "tmute" ];then
 	pamixer -t
 fi

@@ -2,7 +2,7 @@
 
 prompt="dmenu -c --border -h 30 -l 12 -p"
 
-theme_dir="${HOME}/.theme"
+theme_dir="${HOME}/.themes"
 
 notify () {
   # $1 : Heading

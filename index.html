@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&family=Roboto&family=Shrikhand&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./src/styles/style.css">
+	<title>My dotfiles | SamIsTheFBI</title>
+</head>
+<body>
+		<section class="hero">
+			<div class="content">
+				<h1>~/.dotfiles</h1>
+				<p>My Linux configuration files.</p>
+				<div class="button"><a href="#introduction">Read More</a></div>
+			</div>
+		</section>
+		<main>
+		<section id="introduction">
+			<h2>What are dotfiles?</h2>
+			<p>Dotfiles are plain text configuration files on Unix like systems like Linux, BSD and MacOS. These files store your settings of almost all applications, service and tool running on your system. These files control the looks and behavior of applications. Dotfiles are mainly used to backup, restore and sync your current settings. These can also be used for sharing your configs for the rest of the world to try out.</p>
+		</section>
+		<section id="features">
+			<h2>My dotfiles will make your PC run faster!</h2>
+			<p>My Linux setup runs on a potato laptop but I needed it to be fast. With minimal programs like suckless' dynamic window manager (dwm), I have succeeded in making my 4GB RAM laptop run faster. This window manager is very lightweight and takes as little as 500MB of RAM.</p>
+		</section>
+		<section id="features">
+			<h2>You're gonna enjoy terminals with these configs!</h2>
+			<p>My workflow includes spending a lot of time on terminals; that's where I code, run and deploy! My dotfiles include configuration files for all my terminal needs. With the power of pywal and bash scripting, my setup adapts the colorscheme from images that you set as wallpaper.</p>
+		</section>
+		<section id="features">
+			<h2>Information</h2>
+			<p>Here are some more information about my setup:</p>
+			<ul>
+				<li>Window Manager: dwm</li>
+				<li>Display Server: xorg</li>
+				<li>Terminal: st</li>
+				<li>Shell: zsh</li>
+				<li>Compositor: picom-animations</li>
+				<li>Editor: neovim</li>
+				<li>Browser: Chromium</li>
+				<li>Image Viewer: sxiv</li>
+				<li>Notification Daemon: dunst</li>
+				<li>Application Launcher: rofi, dmenu</li>
+			</ul>
+		</section>
+		<section id="gallery">
+			<h1>Gallery</h1>
+			<p>Working on this...</p>
+		</section>
+		<section id="installation">
+			<h2>Installation</h2>
+			<div class="code">
+				git clone --separate-git-dir=$HOME/.dotfiles https://github.com/SamIsTheFBI/dotfiles.git tmpdotfiles
+				<br/>rsync --recursive --verbose --exclude '.git' tmpdotfiles/ $HOME/
+				<br/>rm -r tmpdotfiles
+			</div>
+		</section>
+		</main>
+		<footer class="footer">
+			&copy;SamIsTheFBI
+		</footer>
+</body>
+</html>

@@ -5,4 +5,4 @@ case $BLOCK_BUTTON in
     3) st -e nvim $0;;
 esac
 
-echo -e "^B4^^C0^ $(date '+ %a %x  %R ')^d^‏ ‎"
+echo -e "^B4^^C0^ $(date '+ %a %x  %R ')^d^ ‏ "
