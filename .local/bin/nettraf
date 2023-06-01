@@ -2,6 +2,10 @@
 
 [ -z "${TERMINAL}" ] && TERMINAL="st"
 
+SBAR_VAL="${XDG_CONFIG_HOME:-${HOME}/.config}/sbar_network"
+
+[ ! -f "${SBAR_VAL}" ] && touch "${SBAR_VAL}"
+
 notify () {
   notify-send -a "nettraf" -r 415178 -t 3000 "${n_glyph}" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>" 2>/dev/null
 }
@@ -41,7 +45,7 @@ net () {
 }
 
 name () {
-  [ ${internet} -gt 0 ] && echo -e "${n_glyph} $(nmcli -t -f NAME connection show --active)" || echo " Disconnected"
+  [ ${internet} -gt 0 ] && echo -e "${n_glyph}  $(nmcli -t -f NAME connection show --active | sed -n 1p)" || echo " Disconnected"
 }
 
 sbar_output () {
@@ -55,15 +59,19 @@ norm_output () {
 check_internet
 check_network_interface
 
+[ "${1}" == 'sbar' ] && sbar_value="$(cat "${SBAR_VAL}" | sed -n 1p)"
+
 case $BLOCK_BUTTON in
-    1) [ ${internet} -gt 0 ] \
+		1) [ "${sbar_value}" == 'name' ] && echo "net" > "${SBAR_VAL}" || echo "name" > "${SBAR_VAL}" ;;
+    2) [ ${internet} -gt 0 ] \
       && notify "Connected to $(name)<br>$(ifconfig wlo1 | grep 'inet' | sed -n 1p | awk '{print $1 " " $2}')" \
       || notify " Disconnected" ;;
-	3) ${TERMINAL} -e nmtui 2>/dev/null ;;
+		3) ${TERMINAL} -e nmtui 2>/dev/null ;;
 esac
 
+
 case "${1}" in
-  'sbar')  sbar_output "$(net)" ;;
+	'sbar') [ "${sbar_value}" == 'net' ] && sbar_output "$(net)" || sbar_output "$(name)" ;;
   'name')  norm_output "$(name)"    ;;
   '' | *)  norm_output "$(net)" ;;
 esac

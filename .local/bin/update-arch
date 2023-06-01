@@ -1,0 +1,44 @@
+#!/bin/sh
+
+PKG="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/packages.txt"
+RETRY="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/retry.txt"
+DED="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/problem-packages.txt"
+
+rm -rf "${PKG}" "${RETRY}" "${DED}"
+space_left=$(df /home/ --output=avail | grep "[0-9]")
+
+[ ${space_left} == 0 ] && echo -e "No space available for update!" && exit 
+
+[ ! -d "${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch" ] && mkdir -p "${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch"
+pacman -Qu | awk -F ' ' '{print $1}' >> "${PKG}"
+
+# echo "Please write your password. It will be needed to run sudo to update your system"
+# read password
+echo ${password} | sudo pacman -Sy --noconfirm --needed archlinux-keyring
+
+pages=1
+while [[ ${pages} != 0 && ${space_left} != 0 ]]; do
+	echo ${password} | sudo pacman -Sy --noconfirm --needed $(cat "${PKG}" | sed -n 1p)
+	[ $(echo $?) != 0 ] && echo -e $(cat "${PKG}" | sed -n 1p) >> "${RETRY}"
+	sed -i '1d' "${PKG}"
+	pages=$(cat "${PKG}" | wc -l)
+	space_left=$(df /home/ --output=avail | grep "[0-9]")
+done
+
+[ ${space_left} == 0 ] && echo -e "No space available for update!" && exit 
+
+pages=$(cat "${RETRY}" | wc -l)
+while [[ ${pages} != 0 && ${space_left} != 0 ]]; do
+	echo ${password} | sudo pacman -Sy --noconfirm --needed $(cat "${RETRY}" | sed -n 1p)
+	[ $(echo $?) != 0 ] && echo -e $(cat "${RETRY}" | sed -n 1p) >> "${DED}"
+	sed -i '1d' "${RETRY}"
+	pages=$(cat "${RETRY}" | wc -l)
+	space_left=$(df /home/ --output=avail | grep "[0-9]")
+done
+
+[ ${space_left} == 0 ] && echo -e "No space available for update!" && exit 
+
+pages=$(cat "${DED}" | wc -l)
+if [ ${pages} != 0 ]; then
+	echo -e "Some packages were not updated due to some issues. Please check ${DED}. You may download & install them manually"
+fi

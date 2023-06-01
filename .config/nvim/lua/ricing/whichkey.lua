@@ -5,7 +5,7 @@ local mappings = {
 	q = { ":q<CR>", "Quit" },
 	Q = { ":q!<CR>", "Force quit" },
 	gc = { ":!gcc -o a \"%\" -lm<CR>", "Compile C code" },
-	gp = { ":!g++ -fsanitize=address -std=gnu++20 -O2 -Wall \"%\" -o a<CR>", "Compile C++ code" },
+	gp = { ":!g++ -fsanitize=address -std=gnu++20 -O2 -Wall -lncurses \"%\" -o a<CR>", "Compile C++ code" },
 	tc = { ":ColorizerToggle<CR>", "Toggle Colorizer" },
 	tw = { ":set wrap!<CR>", "Toggle word wrap" },
 	td = { "wbi\"<ESC>wea\"<ESC>", "Add double quotes around current word" },

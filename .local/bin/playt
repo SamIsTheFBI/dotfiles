@@ -74,14 +74,14 @@ ytdlp_best_audio () {
   check_dir "${musicdl}"
   cd "${musicdl}"
 
-  logger "Checking if already available..."
-  notify "Checking if already available..."
-
-  name="$(yt-dlp --print "%(title)s." "$url")"
-  [ -e "${musicdl}/$name"* ] && check_dl "${musicdl}" && return 0 || notify "Good to go"
+  # logger "Checking if already available..."
+  # notify "Checking if already available..."
+  #
+  # name="$(yt-dlp --print "%(title)s." "$url")"
+  # [ -e "${musicdl}/$name"* ] && check_dl "${musicdl}" && return 0 || notify "Good to go"
 
   notify "Trying to download..." 
-  st -e yt-dlp -f 'ba' \
+  st -e yt-dlp -ciw -f 'ba' \
     -x --audio-format mp3 \
     --embed-thumbnail \
     $url \
@@ -98,11 +98,11 @@ ytdlp_audio_video () {
   check_dir "${videodl}"
   cd "${videodl}"
 
-  logger "Checking if already available..."
-  notify "Checking if already available..."
-
-  name="$(yt-dlp --print "%(title)s [%(id)s]." "$url")"
-  [ -e "${videodl}/$name"* ] && check_dl "${videodl}" && return 0 || notify "Good to go"
+  # logger "Checking if already available..."
+  # notify "Checking if already available..."
+  #
+  # name="$(yt-dlp --print "%(title)s [%(id)s]." "$url")"
+  # [ -e "${videodl}/$name"* ] && check_dl "${videodl}" && return 0 || notify "Good to go"
   # name="$(yt-dlp --print "%(uploader)s/%(playlist)s" "$url")"
   # [ -e "${videodl}/$name"* ] && check_output "${videodl}" && return 0 || notify "Good to go"
 
@@ -122,7 +122,7 @@ ytdlp_audio_video () {
     *youtube*playlist?list=*)
       echo "URL Type: YT Playlist"
 			st -e \
-      yt-dlp -f $format \
+      yt-dlp -ciw -f $format \
         --embed-thumbnail \
         --convert-subs srt \
         --embed-sub \
@@ -136,7 +136,7 @@ ytdlp_audio_video () {
     *)
       echo "URL Type: Video"
 			st -e \
-      yt-dlp -f $format \
+      yt-dlp -ciw -f $format \
         --embed-thumbnail \
         --convert-subs srt \
         --embed-sub \
