@@ -139,7 +139,7 @@ sbar_output () {
   [ -z "${output}" ] && echo ' ' && return 0
 
   n=${#output}
-  char_limit=35
+  char_limit=30
   [ "$n" -gt ${char_limit} ] \
 	  && printf "^B1^^C0^ $p_glyph | $s_glyph %.$(( $char_limit - 2 ))s.. ^d^" "$output" \
 	  || printf "^B1^^C0^ $p_glyph | $s_glyph %s ^d^" "$output"

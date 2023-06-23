@@ -1,0 +1,16 @@
+#!/bin/sh
+
+PROMPT='dmenu -h 30 -y 5 -p'
+
+[ "$(sh ~/.local/bin/touchpadtap --state)" == "1" ] && T_TRACKPAD="Deactivate" || T_TRACKPAD="Activate"
+[ "$(sh ~/.local/bin/disable_laptop_keyboard --state)" == "1" ] && T_LAPKEYB="Deactivate" || T_LAPKEYB="Activate"
+
+USER_SEL="$(echo -e "${T_TRACKPAD} trackpad\n${T_LAPKEYB} laptop keyboard" | ${PROMPT} 'Choose an option')"
+[ -z "$USER_SEL" ] && exit
+
+case "${USER_SEL}" in
+	*trackpad )
+		sh ~/.local/bin/touchpadtap ;;
+	*laptop\ keyboard )
+		sh ~/.local/bin/disable_laptop_keyboard ;;
+esac

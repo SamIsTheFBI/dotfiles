@@ -1,28 +1,11 @@
 #!/bin/sh
 
-#slowfade function from dark-dryu/i3lock-widgets-config
 RED=$(cat ~/.Xresources | grep 'color1:' | awk '{print $NF}')
 GREEN=$(cat ~/.Xresources | grep 'color2:' | awk '{print $NF}')
 BLUE=$(cat ~/.Xresources | grep 'color4:' | awk '{print $NF}')
 
-slowfade () {
-    dis=$(echo -n "$DISPLAY" | tr -c '[:alnum:]' _)
-    ifc='com.github.chjj.compton'
-    obj='/com/github/chjj/compton'
-    if [[ "$1" == "start" ]]; then
-        dbus-send --print-reply --dest=$ifc.$dis \
-            $obj $ifc.opts_set string:fade_in_step double:0.02
-        dbus-send --print-reply --dest=$ifc.$dis \
-            $obj $ifc.opts_set string:fade_out_step double:0.02
-    else
-        dbus-send --print-reply --dest=$ifc.$dis \
-            $obj $ifc.opts_set string:fade_in_step double:0.1
-        dbus-send --print-reply --dest=$ifc.$dis \
-            $obj $ifc.opts_set string:fade_out_step double:0.1
-    fi
-}
 sleep 1 && ${HOME}/.local/bin/eww -c ~/.local/bin/lockscreen/ open-many song system_info &
-# slowfade start 
+
 i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=15 --date-str="%a, %d %b %Y" \
 	--{time,date,layout,verif,wrong,greeter}-font="JetBrainsMono Nerd Font" \
 	--ind-pos="w/2:1.2*h/2" \
@@ -35,12 +18,12 @@ i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=1
 	--greeter-pos="ix+1:iy+140" \
 	--greeter-text="User is AFK. Type the correct password to unlock." \
 	--{verif,wrong,greeter}-size=18 \
-    --time-font="Metropolis:weight=150" \
-    --time-str="%R" \
-    --time-size=120 \
-    --date-font="Metropolis" \
-    --date-str="%a, %d %b" \
-    --date-size=20 \
+  --time-font="Metropolis:weight=150" \
+  --time-str="%R" \
+  --time-size=120 \
+  --date-font="Metropolis" \
+  --date-str="%a, %d %b" \
+  --date-size=20 \
 	--noinput-text="" \
 	--date-color=#ffffff \
 	--time-color=#ffffff \
@@ -58,5 +41,5 @@ i3lock -n -F -i ~/.local/share/wallpaper/lockscreen.png --force-clock --radius=1
 	--pass-screen-keys \
 	--pass-volume-keys \
 	--pass-power-keys
-# slowfade end
+
 ${HOME}/.local/bin/eww -c ~/.local/bin/lockscreen/ close-all

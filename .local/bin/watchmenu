@@ -44,7 +44,7 @@ WATCHMENU_CACHE="${XDG_CACHE_HOME:-${HOME}/.cache}/watchmenu"
 
 # Directory Config
 ANIME_DIRS=(  "${HOME}/Local Disk D/Media/Anime"    "${HOME}/Local Disk E/Shivam/Media/Anime" "${HOME}/Scripts/animepahe-dl" )
-TVSHOW_DIRS=( "${HOME}/Local Disk D/Media/TV Show"  "${HOME}/Local Disk E/Shivam/Media/TV Shows" "${HOME}/Cloud Storage/Hikari Drive/TV Shows and Web Series" )
+TVSHOW_DIRS=( "${HOME}/Local Disk D/Media/TV Show"  "${HOME}/Local Disk E/Shivam/Media/TV Shows" "${HOME}/Cloud Storage/Hikari Drive/TV Shows and Web Series" "${HOME}/Local Disk C/AlgoZenith")
 MOVIE_DIRS=(  "${HOME}/Local Disk D/Media/Movies"   "${HOME}/Local Disk E/Shivam/Media/Movies" )
 VIDEO_DIRS=(  "${HOME}/Videos"         							"${HOME}/Downloads" 		"${HOME}/Downloads/Telegram Desktop" "${HOME}/Local Disk E/Shivam/Media" "${HOME}/Local Disk D/Media" "${HOME}/Local Disk D/Studies/Programming/Videos/" "${HOME}/Local Disk D/Studies/Not Really Academics/Videos")
 
@@ -378,7 +378,7 @@ main () {
     LAST_PLAYED_PATH="$(tac "${WATCHMENU_CACHE}/watchmenu-watch-history" | awk -F '<==>' '{print $2}' | sed -n '1p')"
 
     title=" Search"
-    options="$(echo -e " Cancel\n神 Last Played [${LAST_PLAYED_NAME}]\n Search YouTube Playlists\n Search YouTube Videos\n Watch History\n Show All\n Help\n Update\n話 Anime\n TV Shows\n Movies\n Videos" )"
+    options="$(echo -e " Cancel\n神 Last Played [${LAST_PLAYED_NAME}]\n Search YouTube Playlists\n Search YouTube Videos\n Watch History\n Show All\n Help\n Update\n充 Anime\n TV Shows\n Movies\n Videos" )"
 
     # Request selection
     main_selection="$(${prompt} "${title}" < <(echo "${options}"))"
@@ -485,7 +485,7 @@ main () {
             ;;
         :u | " Update")
             title=" Choose category"
-            options="$(printf " Cancel\n Back\n Update All\n話 Anime\n TV Shows\n Movies\n Videos")"
+            options="$(printf " Cancel\n Back\n Update All\n充 Anime\n TV Shows\n Movies\n Videos")"
 
             update_selection="$(${prompt} "${title}" < <(echo "${options}"))"
 
@@ -505,7 +505,7 @@ main () {
                     update_list movies
                     update_list videos
                     ;;
-                "話 Anime")
+                "充 Anime")
                     update_list anime
                     ;;
                 " TV Shows")
@@ -566,7 +566,7 @@ search_results () {
             title="磊 Pick a show/movie"
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-all-list")")"
             ;;
-        "話 Anime")
+        "充 Anime")
             title="話 Pick a show"
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-anime-list")")"
             ;;
@@ -769,15 +769,6 @@ episode_list () {
     
     episode_list
 }
-
-if [ -n "${1}" ]; then
-	file_path="$(realpath "${1}")"
-	title="$(echo "${file_path}" | awk -F '/' '{print $NF}')"
-	entry="${title}<==>${file_path}"
-	${video_player} "${file_path}"
-	add_to_hist "${entry}"
-	exit
-fi
 
 # Uncomment these lines to automatically update list upon running the script
 # update_list anime
