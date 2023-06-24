@@ -8,12 +8,12 @@ case "$(readlink -f /sbin/init)" in
 esac
 
 uptime="$(uptime -p | sed -r 's/up//')"
-option="$(printf " Lock\n Reboot\n Shutdown\n鈴 Suspend" | ${prompt} "Uptime: ${uptime}")"
+option="$(printf " Lock\n Reboot\n Shutdown\n󰒲 Suspend" | ${prompt} "Uptime: ${uptime}")"
 
 case "${option}" in
 	' Lock') ~/.local/bin/screenlock ;;
 	' Reboot') $ctl reboot ;;
 	' Shutdown') $ctl poweroff ;;
-    '鈴 Suspend') systemctl suspend && ~/.local/bin/screenlock ;;
+	'󰒲 Suspend') systemctl suspend && ~/.local/bin/screenlock ;;
 	*) exit 1 ;;
 esac

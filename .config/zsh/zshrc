@@ -58,7 +58,10 @@ z4h init || return
 # Extend PATH.
 path=(~/bin $path)
 path+=($HOME/.local/bin)
+path+=($HOME/gems/bin)
+path+=($HOME/.local/share/gem/ruby/3.0.0/bin)
 export PATH
+export GEM_HOME="$HOME/gems"
 
 
 # Export environment variables.
@@ -110,4 +113,4 @@ setopt glob_dots     # no special treatment for file names with a leading dot
 setopt no_auto_menu  # require an extra TAB press to open the completion menu
 
 TODO_LIST_PATH=${HOME}/Documents/todo.txt
-[ -f ${TODO_LIST_PATH} ] && cat "${TODO_LIST_PATH}"
+[ -f ${TODO_LIST_PATH} ] && cat "${TODO_LIST_PATH}" && echo ""
