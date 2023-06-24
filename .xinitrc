@@ -1,1 +1,1 @@
-/home/samisthefbi/.config/x11/xinitrc
+.config/x11/xinitrc

@@ -1,1 +1,1 @@
-/home/samisthefbi/.config/zsh/p10k.zsh
+.config/zsh/p10k.zsh

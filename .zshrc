@@ -1,1 +1,1 @@
-/home/samisthefbi/.config/zsh/zshrc
+.config/zsh/zshrc

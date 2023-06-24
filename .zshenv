@@ -1,1 +1,1 @@
-/home/samisthefbi/.config/zsh/zshenv
+.config/zsh/zshenv
