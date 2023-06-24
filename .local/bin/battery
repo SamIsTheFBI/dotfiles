@@ -9,16 +9,16 @@ bat_stat=$(cat "/sys/class/power_supply/BAT1/status")
 
 if [ "$bat_stat" != "Charging" ]; then
 	case 1 in
-		$(( $capacity <= 10 ))) status="" ;;
-		$(( $capacity <= 20 ))) status="" ;;
-		$(( $capacity <= 30 ))) status="" ;;
-		$(( $capacity <= 40 ))) status="" ;;
-		$(( $capacity <= 50 ))) status="" ;;
-		$(( $capacity <= 60 ))) status="" ;;
-		$(( $capacity <= 70 ))) status="" ;;
-		$(( $capacity <= 80 ))) status="" ;;
-		$(( $capacity <= 90 ))) status="" ;;
-		$(( $capacity <= 100 ))) status="" ;;
+		$(( $capacity <= 10 ))) status="󰁺" ;;
+		$(( $capacity <= 20 ))) status="󰁻" ;;
+		$(( $capacity <= 30 ))) status="󰁼" ;;
+		$(( $capacity <= 40 ))) status="󰁽" ;;
+		$(( $capacity <= 50 ))) status="󰁾" ;;
+		$(( $capacity <= 60 ))) status="󰁿" ;;
+		$(( $capacity <= 70 ))) status="󰂀" ;;
+		$(( $capacity <= 80 ))) status="󰂁" ;;
+		$(( $capacity <= 90 ))) status="󰂂" ;;
+		$(( $capacity <= 100 ))) status="󰁹" ;;
 	# case 1 in 
 	# 	$(( $capacity <= 25 ))) status=" ";;
 	# 	$(( $capacity <= 50 ))) status="" ;;

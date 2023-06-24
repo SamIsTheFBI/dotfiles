@@ -87,12 +87,12 @@ del_theme () {
 main_prompt () {
   local title options sel
   title=" "
-  options=" Save current colorscheme\n Choose a colorscheme\n Delete a colorscheme"
+  options=" Save current colorscheme\n󰲍 Choose a colorscheme\n Delete a colorscheme"
   sel="$(${prompt} "${title}" < <(echo -e "${options}"))"
 
   case "${sel}" in
     " Save current colorscheme") save_theme;;
-    " Choose a colorscheme")     set_theme ;;
+    "󰲍 Choose a colorscheme")     set_theme ;;
     " Delete a colorscheme")     del_theme ;;
 		"Cancel" | *)								return 0  ;;
   esac

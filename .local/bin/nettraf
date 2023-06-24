@@ -20,9 +20,9 @@ check_internet () {
 check_network_interface () {
   network_interface=$(ip route get 8.8.8.8 | awk '{print $5; exit}')
   case "${network_interface}" in
-    eno* | eth* | enp*)  n_glyph="" ;;
+    eno* | eth* | enp*)  n_glyph="󰈀" ;;
     wlo* | wlan* | wlp*) n_glyph="" ;;
-    *)                   n_glyph="泌"
+    *)                   n_glyph="󰑩"
   esac
 }
 
@@ -41,11 +41,11 @@ update() {
 net () {
   rx=$(update /sys/class/net/$network_interface/statistics/rx_bytes)
   tx=$(update /sys/class/net/$network_interface/statistics/tx_bytes)
-  [ ${internet} -gt 0 ] && printf "%4sB/s %4sB/s" $(numfmt --to=iec $rx $tx) || echo " Disconnected"
+  [ ${internet} -gt 0 ] && printf "󰁆%4sB/s 󰁞%4sB/s" $(numfmt --to=iec $rx $tx) || echo "󰇨 Disconnected"
 }
 
 name () {
-  [ ${internet} -gt 0 ] && echo -e "${n_glyph}  $(nmcli -t -f NAME connection show --active | sed -n 1p)" || echo " Disconnected"
+  [ ${internet} -gt 0 ] && echo -e "${n_glyph}  $(nmcli -t -f NAME connection show --active | sed -n 1p)" || echo "󰇨 Disconnected"
 }
 
 sbar_output () {

@@ -5,7 +5,7 @@ if [ "$(pgrep -f "${0}")" != "$$" ]; then
     SCRIPTNAME="$(echo "${0}" | awk -F '/' '{print $NF}')"
     echo "Another instance of ${SCRIPTNAME} already exists!"
     [ -x "$(command -v notify-send)" ] && \
-        notify-send -r 309872 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of ${SCRIPTNAME} already exists!</span>"
+        notify-send -r 309872 -t 2000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of ${SCRIPTNAME} already exists!</span>"
     exit
 fi
 
@@ -50,7 +50,7 @@ VIDEO_DIRS=(  "${HOME}/Videos"         							"${HOME}/Downloads" 		"${HOME}/Dow
 
 # Help menu
 help () {
-    selection="$(cat <<- EOF | ${prompt} " Help page"
+    selection="$(cat <<- EOF | ${prompt} "󰋖 Help page"
 		 Cancel
 		 Back
 		USAGE:
@@ -330,7 +330,7 @@ youtube_video_extract () {
     [ ! -d  "${WATCHMENU_CACHE}/yt_vid_extract" ] && mkdir -p "${WATCHMENU_CACHE}/yt_vid_extract"
     if [ ! -f "${yturls}" ]; then
       touch "${yturls}"
-      notify-send -r 309872 -t 4000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Extracting video links to ${yturls}</span>"
+      notify-send -r 309872 -t 4000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>Extracting video links to ${yturls}</span>"
       yt-dlp --no-flat-playlist --print "https://www.youtube.com/watch?v=%(id)s" "${playlisturl}" >> "${yturls}"
     fi
 }
@@ -378,7 +378,7 @@ main () {
     LAST_PLAYED_PATH="$(tac "${WATCHMENU_CACHE}/watchmenu-watch-history" | awk -F '<==>' '{print $2}' | sed -n '1p')"
 
     title=" Search"
-    options="$(echo -e " Cancel\n神 Last Played [${LAST_PLAYED_NAME}]\n Search YouTube Playlists\n Search YouTube Videos\n Watch History\n Show All\n Help\n Update\n充 Anime\n TV Shows\n Movies\n Videos" )"
+    options="$(echo -e " Cancel\n󰸳 Last Played [${LAST_PLAYED_NAME}]\n Search YouTube Playlists\n Search YouTube Videos\n Watch History\n Show All\n󰋖 Help\n Update\n充 Anime\n TV Shows\n󰎁 Movies\n Videos" )"
 
     # Request selection
     main_selection="$(${prompt} "${title}" < <(echo "${options}"))"
@@ -455,10 +455,10 @@ main () {
         :q* | " Cancel" | '')
             exit
             ;;
-        :h | " Help")
+        :h | "󰋖 Help")
             help
             ;;
-        *"神 Last Played"*)
+        *"󰸳 Last Played"*)
             echo "${LAST_PLAYED_NAME}"
             case "${LAST_PLAYED_NAME}" in
               " Videos")
@@ -466,7 +466,7 @@ main () {
                   main
                   ;;
               '')
-                  notify-send -r 309872 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>No record of last played items</span>"
+                  notify-send -r 309872 -t 2000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>No record of last played items</span>"
                   main
                   ;;
               *) 
@@ -485,7 +485,7 @@ main () {
             ;;
         :u | " Update")
             title=" Choose category"
-            options="$(printf " Cancel\n Back\n Update All\n充 Anime\n TV Shows\n Movies\n Videos")"
+            options="$(printf " Cancel\n Back\n Update All\n充 Anime\n TV Shows\n󰎁 Movies\n Videos")"
 
             update_selection="$(${prompt} "${title}" < <(echo "${options}"))"
 
@@ -511,7 +511,7 @@ main () {
                 " TV Shows")
                     update_list tvshows
                     ;;
-                " Movies")
+                "󰎁 Movies")
                     update_list movies
                     ;;
                 " Videos")
@@ -528,7 +528,7 @@ main () {
               ${video_player} "${main_selection}"
               add_to_hist "${entry}"
             else
-              notify-send -r 309872 -t 2000 " Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find what you're looking for!</span>"
+              notify-send -r 309872 -t 2000 "󰎁 Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find what you're looking for!</span>"
             fi
             main
             ;;
@@ -574,8 +574,8 @@ search_results () {
             title=" Pick a show"
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-tvshows-list")")"
             ;;
-        " Movies")
-            title=" Pick a movie"
+        "󰎁 Movies")
+            title="󰎁 Pick a movie"
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CACHE}/watchmenu-movies-list")")"
             ;;
         " Videos")
@@ -640,7 +640,7 @@ search_results () {
 
     case "${show_dir}" in
         ERROR)
-            notify-send -r 309872 -t 2000 " Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find the specified show/movie. Check your internet connection or try updating the media list.</span>"
+            notify-send -r 309872 -t 2000 "󰎁 Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find the specified show/movie. Check your internet connection or try updating the media list.</span>"
             main
             ;;
     esac
@@ -697,7 +697,7 @@ episode_list () {
     check_dir
     case "${dir_type}" in
         MOVIE)
-            title=" Choose movie"
+            title="󰎁 Choose movie"
             options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${season_dir}" -mindepth 1 -maxdepth 1 -type f 2>/dev/null \
                 | awk -F '/' '{print $NF}' \
                 | sort -u)")"
