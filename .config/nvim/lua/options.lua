@@ -19,6 +19,7 @@ local options = {
 	splitright = true,
 	splitbelow = true,
 	termguicolors = true,
+	expandtab = true,
 	showtabline = 2,
 	--signcolumn = "yes",
 	scrolloff = 3,
