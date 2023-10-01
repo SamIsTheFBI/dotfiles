@@ -28,9 +28,9 @@ notify () {
 albumart () {
   mpris_art="$(playerctl metadata | grep artUrl)"
   artid="$( awk -F '/' '{print $(NF-1)}' <<< ${mpris_art} )"
-  [ -z ${mpris_art} ] \
+  [ -z "${mpris_art}" ] \
     && arturl='ffmpeg' \
-    || arturl="$( awk '{print $NF}' <<< ${mpris_art}  )"
+    || arturl="$( awk '{print $NF}' <<< "${mpris_art}"  )"
 
   case "$arturl" in
     ffmpeg)
@@ -84,9 +84,9 @@ check_player () {
         spotify*)   p_glyph=""  ;;
         mpv*)       p_glyph=""  ;;
         tdesktop*)  p_glyph=""  ;;
-        vlc*)       p_glyph="嗢" ;;
+        vlc*)       p_glyph="󰕼" ;;
         youtube)    p_glyph=""  ;;
-        *)          p_glyph=""  ;;
+        *)          p_glyph="󰍹"  ;;
     esac
 }
 
@@ -104,7 +104,7 @@ check_state () {
         esac
     fi
 
-		[ $s_glyph == "" ] && s_name="Paused" || s_name="Playing"
+		[ "$s_glyph" == "" ] && s_name="Paused" || s_name="Playing"
 }
 
 mpc_output () {
@@ -159,10 +159,10 @@ check_click () {
       3) if [ "$(playerctl loop)" != 'Track' ]; then
              playerctl -p "$id" loop Track
              [ "$(playerctl loop)" == 'Track' ] && \
-                 notify "綾" "Looping current track now" || \
+                 notify "󰑘" "Looping current track now" || \
                  notify "$p_glyph" "Error occurred. Can't change loop status"
          else
-             notify "凌" "Looping playlist now"
+             notify "󰕇" "Looping playlist now"
              playerctl -p "$id" loop Playlist
          fi;;
   esac
@@ -177,6 +177,7 @@ esac
 [ -z "$(playerctl metadata --format '{{ playerName }}')" ] && output="No media on deck"
 case "${1}" in
   'sbar') sbar_output "$output" ;;
+  'notify') albumart ;;
   '' | *) norm_output "$output" ;;
 esac
 check_click

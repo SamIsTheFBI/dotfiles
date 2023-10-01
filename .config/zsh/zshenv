@@ -29,7 +29,7 @@ umask o-w
 # lf icons
 # ex=:\
 export LF_ICONS="\
-di=:\
+di=:\
 fi=:\
 ln=:\
 or=:\
@@ -207,4 +207,3 @@ fi
 . "$Z4H"/z4h.zsh || return
 
 setopt rcs
-. "$HOME/.cargo/env"

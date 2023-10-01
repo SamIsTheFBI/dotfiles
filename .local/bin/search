@@ -6,7 +6,7 @@ net_connect="$(ip route get 8.8.8.8 | awk 'NR==1 {print $7}')"
 
 prompt='dmenu -i -h 30 -y 5 -p'
 promptl='dmenu -i -h 30 -y 5 -l 10 -p'
-web_browser='chromium'
+web_browser='google-chrome-stable'
 
 website="$(cat <<- EOF | ${prompt} "" 
 URL

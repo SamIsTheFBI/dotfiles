@@ -33,6 +33,7 @@ set_theme () {
   ~/.local/bin/setbg "${theme}"/bg.jpg
   ~/.local/bin/setlockbg "${theme}"/bg.jpg
 	
+	echo "Xft.dpi: 114" >> ~/.Xresources
   xrdb -load $HOME/.Xresources
 	
   # Reloading dwm to apply changes

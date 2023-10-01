@@ -8,7 +8,6 @@ local options = {
 	backup = false,
 	writebackup = false,
 	mouse = "a",
-	showtabline = 2,
 	number = true,
 	hlsearch = true,
 	shiftwidth = 2,

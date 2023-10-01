@@ -20,6 +20,26 @@ nvim_lsp.tsserver.setup {
 	cmd = { "typescript-language-server", "--stdio" }
 }
 
+nvim_lsp.dartls.setup {
+  on_attach = on_attach,
+  filetypes = { "dart" },
+  init_options = {
+    closingLabels = true,
+    flutterOutline = true,
+    onlyAnalyzeProjectsWithOpenFiles = true,
+    outline = true,
+    suggestFromUnimportedLibraries = true
+  },
+  cmd = { "dart", "language-server", "--protocol=lsp" },
+  root_dir = nvim_lsp.util.root_pattern("pubspec.yaml"),
+  settings = {
+    dart = {
+      completeFunctionCalls = true,
+      showTodos = true
+    }
+  }
+}
+
 -- Lua LSP (lua_ls)
 nvim_lsp.lua_ls.setup {
 	on_attach = on_attach,
@@ -57,8 +77,13 @@ nvim_lsp.emmet_ls.setup({
 -- TailwindCSS LSP (tailwindcss)
 nvim_lsp.tailwindcss.setup {
 	on_attach = on_attach,
-	filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "haml", "handlebars", "hbs", "html", 'html-eex', "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte", "typescript.tsx", "javascript.jsx" },
-	root_dir = nvim_lsp.util.root_pattern('tailwind.config.js', 'tailwind.config.ts', 'postcss.config.js', 'postcss.config.ts', 'package.json', 'node_modules', '.git'),
+	filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "django-", "htmldjango", "edge", "eelixir",
+		"elixir", "ejs", "erb", "eruby", "gohtml", "haml", "handlebars", "hbs", 'html-eex', "jade", "leaf", "liquid",
+		"markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass",
+		"scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact",
+		"vue", "svelte", "typescript.tsx", "javascript.jsx" },
+	root_dir = nvim_lsp.util.root_pattern('tailwind.config.js', 'tailwind.config.ts', 'postcss.config.js',
+		'postcss.config.ts', 'package.json', 'node_modules', '.git'),
 	cmd = { "tailwindcss-language-server", "--stdio" },
 }
 

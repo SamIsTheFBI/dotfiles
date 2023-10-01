@@ -2,8 +2,8 @@
 
 # Dependencies: a laptop running on Linux
 
-capacity=$(cat "/sys/class/power_supply/BAT1/capacity")
-bat_stat=$(cat "/sys/class/power_supply/BAT1/status")
+capacity=$(cat "/sys/class/power_supply/BAT0/capacity")
+bat_stat=$(cat "/sys/class/power_supply/BAT0/status")
 
 [ "$bat_stat" == "Charging" ] && status="" #|| status=""
 
