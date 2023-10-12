@@ -3,4 +3,4 @@
 path="$(realpath "${1}")"
 echo "${path}" | xclip -r -sel c
 
-notify-send " Copied to clipboard" "<span font = 'JetBrainsMono Nerd Font 11'>${path}</span>"
+notify-send " Copied to clipboard" "<span>${path}</span>"

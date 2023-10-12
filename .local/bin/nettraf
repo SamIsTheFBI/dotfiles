@@ -7,7 +7,7 @@ SBAR_VAL="${XDG_CONFIG_HOME:-${HOME}/.config}/sbar_network"
 [ ! -f "${SBAR_VAL}" ] && touch "${SBAR_VAL}"
 
 notify () {
-  notify-send -a "nettraf" -r 415178 -t 3000 "${n_glyph}" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>" 2>/dev/null
+  notify-send -a "nettraf" -r 415178 -t 3000 "${n_glyph}" "<span>$1</span>" 2>/dev/null
 }
 
 check_internet () {

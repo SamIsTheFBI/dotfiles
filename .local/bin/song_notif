@@ -17,7 +17,7 @@ title=no_title
 title=$title$(mpc --format '%title%' current)
 
 if [[ $title == "no_title" ]]; then
-  notify-send -i $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "<span font = 'JetBrainsMono Nerd Font 11'>$(mpc --format '%file%' current)</span>"
+  notify-send -i $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "<span>$(mpc --format '%file%' current)</span>"
 else
-  notify-send -i $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "<span font = 'JetBrainsMono Nerd Font 11'>$(mpc --format '%title% - %artist%' current)</span>"
+  notify-send -i $HOME/.config/ncmpcpp/albumarts/current.jpg -r 6600 " Now Playing" "<span>$(mpc --format '%title% - %artist%' current)</span>"
 fi

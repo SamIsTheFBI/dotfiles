@@ -11,11 +11,11 @@ definitions="$(jq '.' < /tmp/udsearch.json | grep definition | awk -F ': ' '{pri
 
 echo $definitions
 if [ -z "$definitions" ]; then
-    notify-send -t 2000 "﬜" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
+    notify-send -t 2000 "󰂺" "<span>An Error Occurred</span>"
     exit
 elif [ -n "$definitions" ]; then    
     var="$(echo "$definitions" | $prompt 'Press Enter to copy: ')"
     echo "$var" | xclip -selection clipboard
-    [ -z "$var" ] && exit || notify-send -t 5000 "﬜" "<span font = 'JetBrainsMono Nerd Font 11'>$var</span>" \
-      && notify-send -t 2000 "﬜" "<span font = 'JetBrainsMono Nerd Font 11'>Text copied to clipboard</span>"
+    [ -z "$var" ] && exit || notify-send -t 5000 "﬜" "<span>$var</span>" \
+      && notify-send -t 2000 "󰂺" "<span>Text copied to clipboard</span>"
 fi

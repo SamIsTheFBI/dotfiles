@@ -2,7 +2,7 @@
 
 prompt='dmenu -y 5 -h 30 -p'
 
-[ -z "$(ip route get 8.8.8.8 | awk '{print $1; exit}')" ] && notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>No internet connection. Exiting..</span>" && exit
+[ -z "$(ip route get 8.8.8.8 | awk '{print $1; exit}')" ] && notify-send -t 2000 "韛" "<span>No internet connection. Exiting..</span>" && exit
 
 source="$(echo "$(xclip -sel primary -o)"| ${prompt} 'Translate: ')"
 [ -z "$source" ] && exit
@@ -13,12 +13,12 @@ target="$(printf ":en\n:ja\n:hi" | ${prompt} 'Target Lang: ')"
 output="$(trans -b "$target" "$source")"
 echo $output
 if [ -z "$output" ]; then
-    notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>An Error Occurred</span>"
+    notify-send -t 2000 "韛" "<span>An Error Occurred</span>"
     exit
 elif [ -n "$output" ]; then    
     var="$(echo "$output" | ${prompt} 'Press Enter to copy: ')"
     echo "$var" | xclip -selection clipboard
     [ -z "$var" ] && exit \
-        || notify-send -t 5000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translation:\n$var</span>" \
-        && notify-send -t 2000 "韛" "<span font = 'JetBrainsMono Nerd Font 11'>Translated text copied to clipboard</span>"
+        || notify-send -t 5000 "韛" "<span>Translation:\n$var</span>" \
+        && notify-send -t 2000 "韛" "<span>Translated text copied to clipboard</span>"
 fi

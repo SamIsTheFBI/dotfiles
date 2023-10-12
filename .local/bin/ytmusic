@@ -5,7 +5,7 @@ if [ "$(pgrep -f "${0}")" != "$$" ]; then
     SCRIPTNAME="$(echo "${0}" | awk -F '/' '{print $NF}')"
     echo "Another instance of ${SCRIPTNAME} already exists!"
     [ -x "$(command -v notify-send)" ] && \
-        notify-send -r 415533 -t 2000 "" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of ${SCRIPTNAME} already exists!</span>"
+        notify-send -r 415533 -t 2000 "" "<span>Another instance of ${SCRIPTNAME} already exists!</span>"
     exit
 fi
 

@@ -63,7 +63,7 @@ notify () {
             [ "$player" == 'mpd' ] && img=$HOME/.config/ncmpcpp/albumarts/default_cover.jpg
             ;;
     esac
-    $NOTIFY -i "$img" -t 5000 "$PLAYER_GLYPH Now Playing" "<span font = 'JetBrainsMono Nerd Font 11'>$OUTPUT</span>"
+    $NOTIFY -i "$img" -t 5000 "$PLAYER_GLYPH Now Playing" "<span>$OUTPUT</span>"
 }
 
 playpause_glyph
@@ -108,10 +108,10 @@ if [ "$ctl" == 'playerctl' ]; then
         3) if [ "$(playerctl loop)" != 'Track' ]; then
                playerctl -p "$id" loop Track
                [ "$(playerctl loop)" == 'Track' ] && \
-                   $NOTIFY -t 1500 "綾" "<span font = 'JetBrainsMono Nerd Font 11'>Looping current track now</span>" || \
-                   $NOTIFY -t 1500 "$PLAYER_GLYPH" "<span font = 'JetBrainsMono Nerd Font 11'>Error occurred. Can't change loop status.</span>"
+                   $NOTIFY -t 1500 "綾" "<span>Looping current track now</span>" || \
+                   $NOTIFY -t 1500 "$PLAYER_GLYPH" "<span>Error occurred. Can't change loop status.</span>"
            else
-               $NOTIFY -t 1500 "凌" "<span font = 'JetBrainsMono Nerd Font 11'>Looping playlist now</span>"
+               $NOTIFY -t 1500 "凌" "<span>Looping playlist now</span>"
                playerctl -p "$id" loop Playlist
            fi;;
     esac

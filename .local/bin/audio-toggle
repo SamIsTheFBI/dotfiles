@@ -11,7 +11,7 @@ check_vars () {
 }
 
 notify () {
-  notify-send -r 224921 -t 2000 "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>"
+  notify-send -r 224921 -t 2000 "${1}" "${2}"
 }
 
 # check_vars

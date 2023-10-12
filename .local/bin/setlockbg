@@ -19,4 +19,4 @@ else
     convert -brightness-contrast -20x-5 ~/.local/share/wallpaper/lockscreen.png ~/.local/share/wallpaper/lockscreen.png
 fi
 
-dunstify -r 270582 -t 2000 -i ~/.local/share/wallpaper/lockscreen.png "  Wallpaper" "<span font = 'JetBrainsMono Nerd Font 11'>Lockscreen wallpaper has been changed</span>"
+dunstify -r 270582 -t 2000 -i ~/.local/share/wallpaper/lockscreen.png "  Wallpaper" "<span>Lockscreen wallpaper has been changed</span>"

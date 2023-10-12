@@ -12,7 +12,7 @@ notify () {
   # $2 : Message
   # $3 : Image, if any
 
-  notify-send -r 261330 -t 3000 -i "${3}" "${1}" "<span font = 'JetBrainsMono Nerd Font 11'>${2}</span>" 2>/dev/null
+  notify-send -r 261330 -t 3000 -i "${3}" "${1}" "<span>${2}</span>" 2>/dev/null
 }
 
 rclone_mount () {

@@ -9,7 +9,7 @@ copy=1
 desc="${@:3}"
 
 notify () {
-  notify-send -r 65868 -t 2000 "${char}" "<span font = 'JetBrainsMono Nerd Font 11'>$1</span>" 2>/dev/null
+  notify-send -r 65868 -t 2000 "${char}" "<span>$1</span>" 2>/dev/null
 }
 
 print_desc () {

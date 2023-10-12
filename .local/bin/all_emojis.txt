@@ -4779,3 +4779,4 @@ $       dollar
 ‎       nf-mdi-apple_finder
 ‎       nf-fa-apple
 ‎ㅤㅤ       empty-space
+‎ᓀ‸ᓂ       angry-face angy

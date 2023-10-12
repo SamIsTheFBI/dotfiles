@@ -4,7 +4,7 @@
 ;; current song
 (defpoll SONG :interval "0.1s" `~/.local/bin/now-playing`)
 
-(defpoll UPTIME :interval "1s" `uptime -p | sed 's/up//'`)
+(defpoll UPTIME :interval "1s" `uptime -p | sed 's/up/󰥔/'`)
 (defpoll NETNAME :interval "1s" `~/.local/bin/nettraf name`)
 
 (defwidget song []

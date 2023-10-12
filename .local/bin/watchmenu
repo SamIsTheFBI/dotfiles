@@ -6,7 +6,7 @@ prevent_new () {
       SCRIPTNAME="$(echo "${0}" | awk -F '/' '{print $NF}')"
       echolog "Another instance of ${SCRIPTNAME} already exists!"
       [ -x "$(command -v notify-send)" ] && \
-          notify-send -r 309872 -t 2000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>Another instance of ${SCRIPTNAME} already exists!</span>"
+          notify-send -r 309872 -t 2000 "󰎁" "<span>Another instance of ${SCRIPTNAME} already exists!</span>"
       exit
   fi
 }
@@ -233,7 +233,7 @@ search_youtube_vid () {
               ;;
           esac
         else
-          echolog "No YouTube API key found!!" && notify-send -r 309872 -t 2000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>No YouTube API key found!!</span>"
+          echolog "No YouTube API key found!!" && notify-send -r 309872 -t 2000 "󰎁" "<span>No YouTube API key found!!</span>"
         fi
         ;;
     esac
@@ -289,7 +289,7 @@ search_youtube_playlist () {
           
           list_playlists
         else
-          echolog "No YouTube API key found!!" && notify-send -r 309872 -t 2000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>No YouTube API key found!!</span>"
+          echolog "No YouTube API key found!!" && notify-send -r 309872 -t 2000 "󰎁" "<span>No YouTube API key found!!</span>"
           search_youtube_playlist
         fi
         ;;
@@ -352,7 +352,7 @@ youtube_video_extract () {
     [ ! -d  "${WATCHMENU_CONFIG}/yt/yt_vid_extract" ] && mkdir -p "${WATCHMENU_CONFIG}/yt/yt_vid_extract"
     if [ ! -f "${yturls}" ]; then
       touch "${yturls}"
-      notify-send -r 309872 -t 4000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>Extracting video links to ${yturls}</span>"
+      notify-send -r 309872 -t 4000 "󰎁" "<span>Extracting video links to ${yturls}</span>"
       yt-dlp --no-flat-playlist --print "https://www.youtube.com/watch?v=%(id)s" "${playlisturl}" >> "${yturls}"
     fi
 }
@@ -360,7 +360,7 @@ youtube_video_extract () {
 # Watch History menu
 watch_history () {
     title=" Watch History"
-    options="$(echo -e " Cancel\n Back\n Clear Watch History\n$(tac "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history" | awk -F '<==>' '{print $1}')")"
+    options="$(echo -e " Cancel\n Back\n󰎟 Clear Watch History\n$(tac "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history" | awk -F '<==>' '{print $1}')")"
     watch_history_sel="$(${prompt} "${title}" < <(echo "${options}"))"
 
     grepFunc "${watch_history_sel}"
@@ -376,7 +376,7 @@ watch_history () {
       :s | :b | " Back") 
         main
         ;;
-      " Clear Watch History")
+      "󰎟 Clear Watch History")
         rm -rf "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history"
         ;;
       " Videos")
@@ -466,7 +466,7 @@ main () {
             main
             ;;
         http*mp4* | http*webm* | http*mkv* | http*cdn* | https*)
-            title="$(yt-dlp --no-warnings --print "%(title)s" "${main_selection}" )"
+            title="$(yt-dlp --no-warnings --print "󰖟 %(title)s" "${main_selection}" )"
             [ -z "${title}" ] && title="$(echo "${main_selection}" | awk -F '/' '{print $NF}')"
             entry="${title}<==>${main_selection}"
 
@@ -488,7 +488,7 @@ main () {
                   main
                   ;;
               '')
-                  notify-send -r 309872 -t 2000 "󰎁" "<span font = 'JetBrainsMono Nerd Font 11'>No record of last played items</span>"
+                  notify-send -r 309872 -t 2000 "󰎁" "<span>No record of last played items</span>"
                   main
                   ;;
               *) 
@@ -550,7 +550,7 @@ main () {
               ${video_player} "${main_selection}"
               add_to_hist "${entry}"
             else
-              notify-send -r 309872 -t 2000 "󰎁 Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find what you're looking for!</span>"
+              notify-send -r 309872 -t 2000 "󰎁 Error" "<span>Could not find what you're looking for!</span>"
             fi
             main
             ;;
@@ -663,7 +663,7 @@ search_results () {
 
     case "${show_dir}" in
         ERROR)
-            notify-send -r 309872 -t 2000 "󰎁 Error" "<span font = 'JetBrainsMono Nerd Font 11'>Could not find the specified show/movie. Check your internet connection or try updating the media list.</span>"
+            notify-send -r 309872 -t 2000 "󰎁 Error" "<span>Could not find the specified show/movie. Check your internet connection or try updating the media list.</span>"
             main
             ;;
     esac
