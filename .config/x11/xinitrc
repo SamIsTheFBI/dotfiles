@@ -27,6 +27,11 @@ sudo systemctl disable systemd-backlight@backlight:acpi_video1.service
 sound-fix
 
 DEFAULT_SESSION="dwm"
+
+# Fix problems with Java apps
+wmname "LG3D"
+export _JAVA_AWT_WM_NONREPARENTING=1
+
 case "$1" in
 	"cinnamon") exec cinnamon-session ;;
 	"dwm") exec dwm ;;
