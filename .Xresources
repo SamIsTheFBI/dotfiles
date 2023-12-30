@@ -1,6 +1,3 @@
-Xft.dpi: 114
-
-
 ! SXIV Colors
 Sxiv.background: #262626
 Sxiv.foreground: #d75f5f
@@ -55,3 +52,4 @@ dmenu.background: #262626
 dmenu.foreground: #ebdbb2
 dmenu.selbackground: #d75f5f
 dmenu.selforeground: #262626
+Xft.dpi: 114

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+GITHUB_LICENSE_API="https://api.github.com/licenses"
+CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/license-generator"
+
+[ ! -d "${CACHE_DIR}" ] && mkdir -p "${CACHE_DIR}"
+
+if command -v curl >/dev/null 2>&1; then
+  curl -sS -L "${GITHUB_LICENSE_API}" --compressed > "${CACHE_DIR}/licenses.json"
+else
+  wget -r "${GITHUB_LICENSE_API}" --tries=5 -O "${CACHE_DIR}/licenses.json"
+fi
+
+jq -r '[.[] | select(.key) | .url]' "${CACHE_DIR}/licenses.json" | sed 's/\\//g' | sed '1d' | sed '$d' | sed 's/,//g' | sed 's/"//g' | sed 's/^[ \t]*//' > "${CACHE_DIR}/LICENSE_URLS"
+
+jq -r '[.[] | select(.key) | .name]' "${CACHE_DIR}/licenses.json" | sed 's/\\//g' | sed 's/^[ \t]*//' | sed '1d' | sed '$d' | sed 's/"//' | sed 's/.$//' | sed 's/"$//' > "${CACHE_DIR}/LICENSE_NAMES"
+
+NAME=$(grep '' "${CACHE_DIR}/LICENSE_NAMES" | fzf --prompt "> Choose a license: " --height 40% --reverse)
+[ -z "${NAME}" ] && exit
+echo -e "Choose a license: ${NAME}"
+
+N=$(grep -n "${NAME}" "${CACHE_DIR}/LICENSE_NAMES" | cut -d ":" -f1)
+
+LICENSE_URL="$(sed -n "${N}p" "${CACHE_DIR}/LICENSE_URLS")"
+LICENSE_NAME="$(echo -e "${LICENSE_URL}" | cut -d "/" -f5)"
+
+if command -v curl >/dev/null 2>&1; then
+  curl -sS -L "${LICENSE_URL}" --compressed > "${CACHE_DIR}/${LICENSE_NAME}.json"
+else
+  wget -r "${LICENSE_URL}" --tries=5 -O "${CACHE_DIR}/${LICENSE_NAME}.json"
+fi
+
+echo -n "Enter your name: "
+read FN
+FULLNAME="${FN}"
+
+echo -n "Enter year: "
+read FN
+[ -z "${FN}" ] && FN="$(date '+%Y')"
+YEAR="${FN}"
+
+jq -r '.body' "${CACHE_DIR}/${LICENSE_NAME}.json" |
+  sed "s/\[fullname\]/${FULLNAME}/g" | 
+  sed "s/\[year\]/${YEAR}/g" > LICENSE

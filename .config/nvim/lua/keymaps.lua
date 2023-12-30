@@ -13,7 +13,7 @@ vim.g.maplocalleader = " "
 -- Navigate buffers
 keymap("n", "<TAB>", ":bnext<CR>", opts)
 keymap("n", "<S-TAB>", ":bprevious<CR>", opts)
-keymap("n", "<C-s>", ":w<CR>", opts)
+keymap("n", "<C-s>", ":retab<CR>:w<CR>", opts)
 
 keymap("n", "<leader>e", ":NvimTreeFindFileToggle<cr>", opts)
 keymap("n", "<leader>q", ":NvimTreeClose<cr>:wq!<cr>", opts)
@@ -24,7 +24,7 @@ keymap("n", "<leader>td", "wbi\"<ESC>wea\"<ESC>", opts)
 keymap("n", "<leader>cf", "ggVGy", opts)
 keymap("n", "<leader>cq", ":COQnow<cr>", opts)
 keymap("n", "<leader>sf", ":source %<cr>", opts)
-keymap("n", "<leader>w", ":w<CR>", opts)
+keymap("n", "<leader>w", ":retab<CR>:w<CR>", opts)
 keymap("n", "<leader>tc", ":ColorizerToggle<cr>", opts)
 
 -- Visual --

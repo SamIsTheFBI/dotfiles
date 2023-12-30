@@ -139,8 +139,9 @@ help () {
 
 # Check if movie or tv show directory 
 check_dir () {
+    echo "${show_dir}"
     dir1="$(echo "${show_dir}" | awk -F '/' '{print $NF}' )"
-    echolog "Selected: $dir1"
+    echolog "Selected file/folder: $dir1"
     dir_type="$(echo "${show_dir}" | sed "s/${dir1}//g" | sed 's/.$//g' )"
     echolog "From: ${dir_type}"
 
