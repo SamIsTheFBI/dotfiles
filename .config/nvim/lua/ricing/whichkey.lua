@@ -13,6 +13,7 @@ local mappings = {
   w = { ":w!<CR>", "Save" },
   h = { ":noh<CR>", "stop highlight" },
   W = { ":wq<CR>", "Save & quit" },
+  gd = { ":Telescope lsp_definitions<CR>", "Go to definition" },
   rn = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename occurrence" },
 }
 local opts = { prefix = '<leader>' }

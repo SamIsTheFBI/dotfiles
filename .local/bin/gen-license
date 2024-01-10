@@ -1,44 +1,61 @@
 #!/bin/sh
 
-GITHUB_LICENSE_API="https://api.github.com/licenses"
-CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/license-generator"
+github_license_api="https://api.github.com/licenses"
+cache_dir="${XDG_CACHE_HOME:-${HOME}/.cache}/license-generator"
 
-[ ! -d "${CACHE_DIR}" ] && mkdir -p "${CACHE_DIR}"
+downloadFile() {
+  url="${1}"
+  dest="${2}"
 
-if command -v curl >/dev/null 2>&1; then
-  curl -sS -L "${GITHUB_LICENSE_API}" --compressed > "${CACHE_DIR}/licenses.json"
-else
-  wget -r "${GITHUB_LICENSE_API}" --tries=5 -O "${CACHE_DIR}/licenses.json"
-fi
+  if command -v curl >/dev/null 2>&1; then
+    curl -sS -L "${url}" --compressed > "${dest}" \
+      || { printf "%s" "Error: Failed to fetch data using curl."; exit 1; }
+  elif command -v wget >/dev/null 2>&1; then
+    wget -r "${url}" --tries=5 -O "${dest}" \
+      || { printf "%s" "Error: Failed to fetch data using wget."; exit 1; }
+  elif command -v aria2c >/dev/null 2>&1; then
+    aria2c --allow-overwrite=true "${url}" -o "${dest}" \
+      || { printf "%s" "Error: Failed to fetch data using aria2c."; exit 1; }
+  else
+    printf "%s" "Error: Neither curl nor wget nor aria2c is available. Install one of them."
+    exit 1
+  fi
+}
 
-jq -r '[.[] | select(.key) | .url]' "${CACHE_DIR}/licenses.json" | sed 's/\\//g' | sed '1d' | sed '$d' | sed 's/,//g' | sed 's/"//g' | sed 's/^[ \t]*//' > "${CACHE_DIR}/LICENSE_URLS"
+[ "$(command -v fzf)" ] \
+  || { printf "%s" "Error: fzf is required for this script. Install it first."; exit 1; }
 
-jq -r '[.[] | select(.key) | .name]' "${CACHE_DIR}/licenses.json" | sed 's/\\//g' | sed 's/^[ \t]*//' | sed '1d' | sed '$d' | sed 's/"//' | sed 's/.$//' | sed 's/"$//' > "${CACHE_DIR}/LICENSE_NAMES"
+mkdir -p "${cache_dir}"
 
-NAME=$(grep '' "${CACHE_DIR}/LICENSE_NAMES" | fzf --prompt "> Choose a license: " --height 40% --reverse)
-[ -z "${NAME}" ] && exit
-echo -e "Choose a license: ${NAME}"
+downloadFile "${github_license_api}" "${cache_dir}/licenses.json"
 
-N=$(grep -n "${NAME}" "${CACHE_DIR}/LICENSE_NAMES" | cut -d ":" -f1)
+jq -r '.[] | select(.key) | .url' "${cache_dir}/licenses.json" \
+  > "${cache_dir}/license_urls"
 
-LICENSE_URL="$(sed -n "${N}p" "${CACHE_DIR}/LICENSE_URLS")"
-LICENSE_NAME="$(echo -e "${LICENSE_URL}" | cut -d "/" -f5)"
+jq -r '.[] | select(.key) | .name' "${cache_dir}/licenses.json" \
+  > "${cache_dir}/license_names"
 
-if command -v curl >/dev/null 2>&1; then
-  curl -sS -L "${LICENSE_URL}" --compressed > "${CACHE_DIR}/${LICENSE_NAME}.json"
-else
-  wget -r "${LICENSE_URL}" --tries=5 -O "${CACHE_DIR}/${LICENSE_NAME}.json"
-fi
+chosen_license=$(grep '' "${cache_dir}/license_names" \
+  | fzf --prompt "> Choose a license: " --height 40% --reverse)
 
-echo -n "Enter your name: "
-read FN
-FULLNAME="${FN}"
+[ "${chosen_license}" ] || exit 1
+printf "%s" "Choose a license: ${chosen_license}"
 
-echo -n "Enter year: "
-read FN
-[ -z "${FN}" ] && FN="$(date '+%Y')"
-YEAR="${FN}"
+line_number=$(grep -n "${chosen_license}" "${cache_dir}/license_names" \
+  | cut -d ":" -f1)
 
-jq -r '.body' "${CACHE_DIR}/${LICENSE_NAME}.json" |
-  sed "s/\[fullname\]/${FULLNAME}/g" | 
-  sed "s/\[year\]/${YEAR}/g" > LICENSE
+license_url="$(sed -n "${line_number}p" "${cache_dir}/license_urls")"
+license_name="$(printf "%s" "${license_url}" | cut -d "/" -f5)"
+
+downloadFile "${license_url}" "${cache_dir}/${license_name}.json"
+
+printf "\n%s" "Enter your name: "
+read -r fullname
+
+printf "%s" "Enter year: "
+read -r year
+[ "${year}" ] || year="$(date '+%Y')"
+
+jq -r '.body' "${cache_dir}/${license_name}.json" \
+  | sed "s/\[fullname\]/${fullname}/g" \
+  | sed "s/\[year\]/${year}/g" > LICENSE

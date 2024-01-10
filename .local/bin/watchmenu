@@ -71,25 +71,27 @@ WATCHMENU_CONFIG="${XDG_CONFIG_HOME:-${HOME}/.config}/watchmenu"
 
 # watchmenu Config
 source "${WATCHMENU_CONFIG}"/watchmenu.conf
-[ ${ALLOW_MULTIPLE_INSTANCES} -eq 0 ] && prevent_new
 
 # Checking YouTube API Key
 [ -z "${YT_API_KEY}" ] && YT_API_KEY="$( cat "${HOME}"/.api_keys/YT_API_KEY )"
 
 # Select prompt
-[ -z "${WATCHMENU_PROMPT}" ] && WATCHMENU_PROMPT="$1"
-case "${WATCHMENU_PROMPT}" in
+if [ "${1}" == "--prompt" ] || [ "${1}" == "-p"  ]; then
+  watchmenu_prompt="${2}"
+fi
+
+case "${watchmenu_prompt}" in
     rofi)
         prompt="rofi -dmenu -p"
         ;;
     fzf)
-        prompt="fzf --bind alt-enter:print-query --prompt"
+        prompt="fzf --reverse --height 40% --bind alt-enter:print-query --prompt"
         ;;
     "")
         prompt="dmenu -h 30 -c -i --border -l 16 -p"
         ;;
     *)
-        prompt="${WATCHMENU_PROMPT}"
+        prompt="${watchmenu_prompt}"
         echolog "Selected custom prompt: ${prompt}"
         ;;
 esac
@@ -139,10 +141,9 @@ help () {
 
 # Check if movie or tv show directory 
 check_dir () {
-    echo "${show_dir}"
     dir1="$(echo "${show_dir}" | awk -F '/' '{print $NF}' )"
     echolog "Selected file/folder: $dir1"
-    dir_type="$(echo "${show_dir}" | sed "s/${dir1}//g" | sed 's/.$//g' )"
+    dir_type="$(echo "${show_dir}" | sed "s/${dir1}//g" | sed "s/.$//g" )"
     echolog "From: ${dir_type}"
 
     for i in "${MOVIE_DIRS[@]}"
@@ -213,7 +214,7 @@ search_youtube_vid () {
             | sed "s/&apos;/\'/g" | sed "s/&#39;/\'/g" \
             | sed 's/&quot;/\"/g' | sed 's/&#34;/\"/g' >> "${WATCHMENU_CONFIG}/yt/youtube-search-results"
 
-          title="$(cat "${WATCHMENU_CONFIG}/yt/youtube-search-results" | awk -F '<==>' '{print $1}' | ${prompt} "Select Video" )"
+          title="$(cat "${WATCHMENU_CONFIG}/yt/youtube-search-results" | awk -F '<==>' '{print $1}' | ${prompt} "Select Video " )"
 
           case "${title}" in
             :b) 
@@ -299,7 +300,7 @@ search_youtube_playlist () {
 
 # List YouTube playlists
 list_playlists () {
-    title="$(cat "${WATCHMENU_CONFIG}/yt/youtube-search-results" | awk -F '<==>' '{print $1}' | ${prompt} "Select Playlist" )"
+    title="$(cat "${WATCHMENU_CONFIG}/yt/youtube-search-results" | awk -F '<==>' '{print $1}' | ${prompt} "Select Playlist " )"
 
     case "${title}" in
       ":b" | "") 
@@ -316,7 +317,7 @@ list_playlists () {
             title="$(echo "${entry}"| awk -F '<==>' '{print $1}' )"
             url="$(echo "${entry}"| awk -F '<==>' '{print $2}' )"
 
-            extract="$( echo -e "Yes\nNo" | ${prompt} "Extract Video links to play?" )"
+            extract="$( echo -e "Yes\nNo" | ${prompt} "Extract Video links to play? " )"
 
             case "${extract}" in
               Yes) 
@@ -360,7 +361,7 @@ youtube_video_extract () {
 
 # Watch History menu
 watch_history () {
-    title=" Watch History"
+    title=" Watch History "
     options="$(echo -e " Cancel\n Back\n󰎟 Clear Watch History\n$(tac "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history" | awk -F '<==>' '{print $1}')")"
     watch_history_sel="$(${prompt} "${title}" < <(echo "${options}"))"
 
@@ -400,7 +401,7 @@ main () {
     LAST_PLAYED_NAME="$(tac "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history" | awk -F '<==>' '{print $1}'  | sed -n '1p')"
     LAST_PLAYED_PATH="$(tac "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history" | awk -F '<==>' '{print $2}' | sed -n '1p')"
 
-    title=" Search"
+    title=" Search "
     options="$(echo -e " Cancel\n󰸳 Last Played [${LAST_PLAYED_NAME}]\n Search YouTube Playlists\n Search YouTube Videos\n Watch History\n Show All\n󰋖 Help\n Update\n充 Anime\n TV Shows\n󰎁 Movies\n Videos" )"
 
     # Request selection
@@ -507,7 +508,7 @@ main () {
             watch_history && main
             ;;
         :u | " Update")
-            title=" Choose category"
+            title=" Choose category "
             options="$(printf " Cancel\n Back\n Update All\n充 Anime\n TV Shows\n󰎁 Movies\n Videos")"
 
             update_selection="$(${prompt} "${title}" < <(echo "${options}"))"
@@ -587,23 +588,23 @@ abs_dir () {
 search_results () {
     case "${main_selection}" in
         " Show All")
-            title="磊 Pick a show/movie"
+            title="磊 Pick a show/movie "
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CONFIG}/list/watchmenu-all-list")")"
             ;;
         "充 Anime")
-            title="話 Pick a show"
+            title="話 Pick a show "
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CONFIG}/list/watchmenu-anime-list")")"
             ;;
         " TV Shows")
-            title=" Pick a show"
+            title=" Pick a show "
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CONFIG}/list/watchmenu-tvshows-list")")"
             ;;
         "󰎁 Movies")
-            title="󰎁 Pick a movie"
+            title="󰎁 Pick a movie "
             options="$(printf " Cancel\n Back\n$(cat "${WATCHMENU_CONFIG}/list/watchmenu-movies-list")")"
             ;;
         " Videos")
-            title=" Pick a video"
+            title=" Pick a video "
             options="$(printf " Cancel\n Back\n Play All\n$(cat "${WATCHMENU_CONFIG}/list/watchmenu-videos-list")")"
             ;;
         "")
@@ -684,7 +685,7 @@ season_list () {
             ;;
         *)
             # Choose season of the show previously chosen
-            title="  Choose season"
+            title="  Choose season "
             options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${show_dir}" -mindepth 1 -type d 2>/dev/null | sort -V | awk -F '/' '{print $NF}')")"
             selection="$(${prompt} "${title}" < <(echo "${options}"))"
 
@@ -721,7 +722,7 @@ episode_list () {
     check_dir
     case "${dir_type}" in
         MOVIE)
-            title="󰎁 Choose movie"
+            title="󰎁 Choose movie "
             options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${season_dir}" -mindepth 1 -maxdepth 1 -type f 2>/dev/null \
                 | awk -F '/' '{print $NF}' \
                 | sort -u)")"
@@ -752,7 +753,7 @@ episode_list () {
             esac
             ;;
         *)
-            title="  Choose episode"
+            title="  Choose episode "
             options="$(printf " Cancel\n Back\n Play All\n%s" "$(find "${season_dir}" -mindepth 1 -maxdepth 1 -type f 2>/dev/null \
                 | awk -F '/' '{print $NF}' \
                 | sort -u)")"
@@ -794,4 +795,16 @@ episode_list () {
     episode_list
 }
 
-main
+if [ "${1}" == "--list" ] || [ "${1}" == "-l"  ]; then
+  case "${2}" in
+    "anime") cat "${WATCHMENU_CONFIG}/list/watchmenu-anime-list" ;;
+    "tvshows") cat "${WATCHMENU_CONFIG}/list/watchmenu-tvshows-list" ;;
+    "movies") cat "${WATCHMENU_CONFIG}/list/watchmenu-movies-list" ;;
+    "videos") cat "${WATCHMENU_CONFIG}/list/watchmenu-videos-list" ;;
+    "history" | "hist") tac "${WATCHMENU_CONFIG}/hist/watchmenu-watch-history" | grep '' | awk -F '<==>' '{print $1}' ;;
+    "all" | "") cat "${WATCHMENU_CONFIG}/list/watchmenu-all-list" ;;
+  esac
+else
+  [ ${ALLOW_MULTIPLE_INSTANCES} -eq 0 ] && prevent_new
+  main
+fi

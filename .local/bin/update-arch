@@ -1,16 +1,16 @@
 #!/bin/sh
 
-PKG="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/packages.txt"
-RETRY="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/retry.txt"
-DED="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/problem-packages.txt"
+pkgs="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/packages.txt"
+retry_pkgs="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/retry.txt"
+ded_pkgs="${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch/problem-packages.txt"
 
-rm -rf "${PKG}" "${RETRY}" "${DED}"
+rm -rf "${pkgs}" "${retry_pkgs}" "${ded_pkgs}"
 space_left=$(df /home/ --output=avail | grep "[0-9]")
 
 [ ${space_left} == 0 ] && echo -e "No space available for update!" && exit 
 
 [ ! -d "${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch" ] && mkdir -p "${XDG_CONFIG_HOME:-${HOME}/.config}/update-arch"
-pacman -Qu | awk -F ' ' '{print $1}' >> "${PKG}"
+pacman -Qu | awk -F ' ' '{print $1}' >> "${pkgs}"
 
 # echo "Please write your password. It will be needed to run sudo to update your system"
 # read password
@@ -18,27 +18,27 @@ echo ${password} | sudo pacman -Sy --noconfirm --needed archlinux-keyring
 
 pages=1
 while [[ ${pages} != 0 && ${space_left} != 0 ]]; do
-	echo ${password} | sudo pacman -Sy --noconfirm --needed $(cat "${PKG}" | sed -n 1p)
-	[ $(echo $?) != 0 ] && echo -e $(cat "${PKG}" | sed -n 1p) >> "${RETRY}"
-	sed -i '1d' "${PKG}"
-	pages=$(cat "${PKG}" | wc -l)
+	echo ${password} | sudo pacman -Sy --noconfirm --needed $(cat "${pkgs}" | sed -n 1p)
+	[ $(echo $?) != 0 ] && echo -e $(cat "${pkgs}" | sed -n 1p) >> "${retry_pkgs}"
+	sed -i '1d' "${pkgs}"
+	pages=$(cat "${pkgs}" | wc -l)
 	space_left=$(df /home/ --output=avail | grep "[0-9]")
 done
 
 [ ${space_left} == 0 ] && echo -e "No space available for update!" && exit 
 
-pages=$(cat "${RETRY}" | wc -l)
+pages=$(cat "${retry_pkgs}" | wc -l)
 while [[ ${pages} != 0 && ${space_left} != 0 ]]; do
-	echo ${password} | sudo pacman -Sy --noconfirm --needed $(cat "${RETRY}" | sed -n 1p)
-	[ $(echo $?) != 0 ] && echo -e $(cat "${RETRY}" | sed -n 1p) >> "${DED}"
-	sed -i '1d' "${RETRY}"
-	pages=$(cat "${RETRY}" | wc -l)
+	echo ${password} | sudo pacman -Sy --noconfirm --needed $(cat "${retry_pkgs}" | sed -n 1p)
+	[ $(echo $?) != 0 ] && echo -e $(cat "${retry_pkgs}" | sed -n 1p) >> "${ded_pkgs}"
+	sed -i '1d' "${retry_pkgs}"
+	pages=$(cat "${retry_pkgs}" | wc -l)
 	space_left=$(df /home/ --output=avail | grep "[0-9]")
 done
 
 [ ${space_left} == 0 ] && echo -e "No space available for update!" && exit 
 
-pages=$(cat "${DED}" | wc -l)
+pages=$(cat "${ded_pkgs}" | wc -l)
 if [ ${pages} != 0 ]; then
-	echo -e "Some packages were not updated due to some issues. Please check ${DED}. You may download & install them manually"
+	echo -e "Some packages were not updated due to some issues. Please check ${ded_pkgs}. You may download & install them manually"
 fi

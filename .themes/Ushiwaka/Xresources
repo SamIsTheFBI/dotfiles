@@ -6,7 +6,7 @@ Sxiv.foreground: #C57A75
 dwm.norm_fg: #e9dac0
 dwm.norm_bg: #181c24
 dwm.norm_border: #a19a92
-dwm.sel_fg: #e9dac0
+dwm.sel_fg: #181c24
 dwm.sel_bg: #907788
 dwm.sel_border: #e6dcd1
 
@@ -35,4 +35,4 @@ dwm.sel_border: #e6dcd1
 dmenu.background: #181c24
 dmenu.foreground: #e9dac0
 dmenu.selbackground: #907788
-dmenu.selforeground: #e9dac0
+dmenu.selforeground: #181c24 

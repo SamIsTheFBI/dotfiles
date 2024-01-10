@@ -104,14 +104,4 @@ return require('packer').startup(function(use)
   if PACKER_BOOTSTRAP then
     require("packer").sync()
   end
-
-  -- load modules
-  local modules = {
-    "coding",
-    "ricing",
-  }
-
-  for _, mod in ipairs(modules) do
-    require("" .. mod)
-  end
 end)

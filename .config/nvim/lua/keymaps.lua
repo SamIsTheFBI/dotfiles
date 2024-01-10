@@ -16,7 +16,6 @@ keymap("n", "<S-TAB>", ":bprevious<CR>", opts)
 keymap("n", "<C-s>", ":retab<CR>:w<CR>", opts)
 
 keymap("n", "<leader>e", ":NvimTreeFindFileToggle<cr>", opts)
-keymap("n", "<leader>q", ":NvimTreeClose<cr>:wq!<cr>", opts)
 keymap("n", "<leader>bd", ":bd<cr>", opts)
 keymap("n", "<leader>gc", ":w<CR>:!gcc -o a % -lm<cr>", opts)
 keymap("n", "<leader>gp", ":w<CR>:!g++ -std=gnu++20 -O2 -Wall % -o a<cr>", opts)
