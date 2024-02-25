@@ -2,11 +2,11 @@ local status, lualine = pcall(require, 'lualine')
 if (not status) then return end
 
 local breadcrumb = function()
-  local breadcrumb_status_ok, breadcrumb = pcall(require, "breadcrumb")
+  local breadcrumb_status_ok, breadcrumb = pcall(require, "lspsaga.symbol.winbar")
   if not breadcrumb_status_ok then
     return
   end
-  return breadcrumb.get_breadcrumb()
+  return breadcrumb.get_bar()
 end
 
 lualine.setup({

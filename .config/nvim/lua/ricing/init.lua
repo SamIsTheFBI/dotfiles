@@ -5,7 +5,7 @@ local configs = {
   "nvim-tree",
   "whichkey",
   "telescope",
-  "breadcrumb",
+  -- "breadcrumb",
 }
 
 for _, config in ipairs(configs) do

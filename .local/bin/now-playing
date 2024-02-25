@@ -83,7 +83,7 @@ check_player () {
         firefox*)   p_glyph=""  ;;
         spotify*)   p_glyph=""  ;;
         mpv*)       p_glyph=""  ;;
-        tdesktop*)  p_glyph=""  ;;
+        tdesktop* | TelegramDesktop)  p_glyph=""  ;;
         vlc*)       p_glyph="󰕼" ;;
         youtube)    p_glyph=""  ;;
         *)          p_glyph="󰍹"  ;;

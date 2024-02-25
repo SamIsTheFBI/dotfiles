@@ -83,7 +83,7 @@ return require('packer').startup(function(use)
   }
 
   use 'neovim/nvim-lspconfig'
-  use 'onsails/lspkind-nvim' -- VSCode-like pictograms
+  use 'onsails/lspkind.nvim' -- VSCode-like pictograms
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-nvim-lsp' -- nvim-cmp's source for LSP
   use 'hrsh7th/nvim-cmp'     -- Completion

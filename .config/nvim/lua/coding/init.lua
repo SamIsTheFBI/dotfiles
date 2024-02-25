@@ -6,7 +6,7 @@ local configs = {
   "lspkind",
   "completion",
   "mason",
-  -- "lspsaga",
+  "lspsaga",
 }
 
 for _, config in ipairs(configs) do
