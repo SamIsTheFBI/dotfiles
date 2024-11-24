@@ -4780,3 +4780,9 @@ $       dollar
 ‎       nf-fa-apple
 ‎ㅤㅤ       empty-space
 ‎ᓀ‸ᓂ       angry-face angy
+‎▼       caret down, triangle down
+‎◉       bullet, cooler bullet
+‎『       japanese open bracket, bracket
+‎』       japanese close bracket, bracket
+‎▲       delta, vercel delta, triangle
+‎⊕       xor, logical xor

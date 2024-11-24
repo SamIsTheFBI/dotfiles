@@ -45,10 +45,14 @@ return require('packer').startup(function(use)
   use 'rose-pine/neovim'
   use 'ellisonleao/gruvbox.nvim'
   use 'folke/which-key.nvim'
-  use 'nvim-treesitter/nvim-treesitter'
-  use 'windwp/nvim-ts-autotag'
   use 'windwp/nvim-autopairs'
-  use 'p00f/nvim-ts-rainbow'
+
+  use 'windwp/nvim-ts-autotag'
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate'
+  }
+
 
   use 'sbdchd/neoformat'
 
@@ -90,15 +94,14 @@ return require('packer').startup(function(use)
   use 'williamboman/mason.nvim'
 
   use 'L3MON4D3/LuaSnip'
-  use 'nvim-telescope/telescope.nvim'
   use 'nvim-telescope/telescope-file-browser.nvim'
-  use 'nvim-lua/plenary.nvim'
+
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+    requires = { { 'nvim-lua/plenary.nvim' } }
+  }
 
   use 'glepnir/lspsaga.nvim' -- LSP UIs
-  use({
-    "iamcco/markdown-preview.nvim",
-    run = function() vim.fn["mkdp#util#install"]() end,
-  })
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then

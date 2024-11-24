@@ -7,12 +7,13 @@
 if [ "$1" == '-l' ]; then 
 	for file in "${@:2}"; do
 		[[ -f "$file" ]] && case "$file" in
-			*.zip)		unzip -l "$file" && echo ;;
-			*.rar)  	unrar l "$file" && echo ;;
-			*.tar.gz)	tar -tf "$file" && echo ;;
-			*.tar.xz)	tar -tf "$file" && echo ;;
-			*.tar.bz2)	tar -tf "$file" && echo ;;
-			*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+		  *.7z)		  7z l "$file" ;;
+			*.zip)		unzip -l "$file";;
+			*.rar)  	unrar l "$file";;
+			*.tar.gz)	tar -tf "$file";;
+			*.tar.xz)	tar -tf "$file";;
+			*.tar.bz2)	tar -tf "$file";;
+			*) echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m';;
 		esac
 	done
 	exit
@@ -21,12 +22,13 @@ if [ "$1" == '-l' ]; then
 elif [ "$1" == '-c' ]; then
 	for file in "${@:2}"; do
 		[[ -f "$file" ]] && case "$file" in
-			*.zip)		unzip "$file" && echo ;;
-			*.rar)  	unrar x "$file" && echo ;;
-			*.tar.gz)	tar -xvf "$file" && echo ;;
-			*.tar.xz)	tar -xvf "$file" && echo ;;
-			*.tar.bz2)	tar -xvf "$file" && echo ;;
-			*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+		  *.7z)		  7z x "$file" ;;
+			*.zip)		unzip "$file";;
+			*.rar)  	unrar x "$file";;
+			*.tar.gz)	tar -xvf "$file";;
+			*.tar.xz)	tar -xvf "$file";;
+			*.tar.bz2)	tar -xvf "$file";;
+			*) echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m';;
 		esac
 	done
 	exit
@@ -35,12 +37,12 @@ elif [ "$1" == '-c' ]; then
 elif [ "$1" == '-d' ]; then
 	for file in "${@:3}"; do
 		[[ -f "$file" ]] && case "$file" in
-			*.zip)		var="$2" && mkdir -p -- "$var" && unzip "$file" -d "$var" && echo ;;
-			*.rar)  	var="$2" && mkdir -p -- "$var" && unrar x "$file" "$var" && echo ;;
-			*.tar.gz)	var="$2" && mkdir -p -- "$var" && tar -xvf "$file" --directory "$var" && echo ;;
-			*.tar.xz)	var="$2" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var" && echo ;;
-			*.tar.bz2)	var="$2" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var" && echo ;;
-			*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+			*.zip)		var="$2" && mkdir -p -- "$var" && unzip "$file" -d "$var";;
+			*.rar)  	var="$2" && mkdir -p -- "$var" && unrar x "$file" "$var";;
+			*.tar.gz)	var="$2" && mkdir -p -- "$var" && tar -xvf "$file" --directory "$var";;
+			*.tar.xz)	var="$2" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var";;
+			*.tar.bz2)	var="$2" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var";;
+			*) echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m';;
 		esac
 	done
 	exit
@@ -49,11 +51,12 @@ fi
 # For extracting files in separate directories of same name as archive file 
 for file in "$@"; do
 	[[ -f "$file" ]] && case "$file" in
-		*.zip)		var="$(echo "${file%.*}")" && mkdir -p -- "$var" && unzip "$file" -d "$var" && echo ;;
-		*.rar)  	var="$(echo "${file%.*}")" && mkdir -p -- "$var" && unrar x "$file" "$var" && echo ;;
-		*.tar.gz)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf "$file" --directory "$var" && echo ;;
-		*.tar.xz)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var" && echo ;;
-		*.tar.bz2)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var" && echo ;;
-		*) echo && echo $'\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m' && echo ;;
+		*.7z)		var="$(echo "${file%.*}")" && mkdir -p -- "$var" && 7z x "$file" -o"$var";;
+		*.zip)		var="$(echo "${file%.*}")" && mkdir -p -- "$var" && unzip "$file" -d "$var";;
+		*.rar)  	var="$(echo "${file%.*}")" && mkdir -p -- "$var" && unrar x "$file" "$var";;
+		*.tar.gz)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf "$file" --directory "$var";;
+		*.tar.xz)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var";;
+		*.tar.bz2)	var="$(echo "${file%.*.*}")" && mkdir -p -- "$var" && tar -xvf "$file" -C "$var";;
+		*) echo '\e[0;30m'$'\e[7;41m' $'\e[4;41m'"$file"$'\e[0m'$'\e[0;30m'$'\e[7;41m' is an invalid archive file $'\e[0m';;
 	esac
 done

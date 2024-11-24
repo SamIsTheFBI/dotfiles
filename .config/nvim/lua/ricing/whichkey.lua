@@ -2,20 +2,17 @@ local status, wk = pcall(require, 'which-key')
 if (not status) then return end
 
 local mappings = {
-  q = { ":q<CR>", "Quit" },
-  Q = { ":q!<CR>", "Force quit" },
-  gc = { ":!gcc -o a \"%\" -lm<CR>", "Compile C code" },
-  gp = { ":!g++ -fsanitize=address -std=gnu++20 -O2 -Wall \"%\" -o a<CR>", "Compile C++ code" },
-  tc = { ":ColorizerToggle<CR>", "Toggle Colorizer" },
-  tw = { ":set wrap!<CR>", "Toggle word wrap" },
-  td = { "wbi\"<ESC>wea\"<ESC>", "Add double quotes around current word" },
-  ts = { "wbi'<ESC>wea'<ESC>", "Add single quotes around current word" },
-  w = { ":w!<CR>", "Save" },
-  h = { ":noh<CR>", "stop highlight" },
-  W = { ":wq<CR>", "Save & quit" },
-  gd = { ":Telescope lsp_definitions<CR>", "Go to definition" },
-  rn = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename occurrence" },
+  {
+    mode = { "n", "v" },
+    { "<leader>q", "<cmd>q<cr>", desc = "Quit" },
+    { "<leader>Q", "<cmd>q!<cr>", desc = "Force Quit" },
+    { "<leader>gc", "<cmd>!g++ -fsanitize=address -std=gnu++20 -O2 -Wall \"%\" -o a<cr>", desc = "Compile C++ code" },
+    { "<leader>tw", "<cmd>set wrap!<cr>", desc = "Toggle Word Wrap" },
+    { "<leader>tc", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" },
+    { "<leader>w", "<cmd>w!<cr>", desc = "Save" },
+    { "<leader>h", "<cmd>noh<cr>", desc = "Stop Highlight" },
+    { "<leader>gd", "<cmd>Telescope lsp_definitions<cr>", desc = "Go to Definition" },
+  }
 }
-local opts = { prefix = '<leader>' }
 
-wk.register(mappings, opts)
+wk.add(mappings)

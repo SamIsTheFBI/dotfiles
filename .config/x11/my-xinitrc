@@ -1,0 +1,24 @@
+#pkill notify-song-cha
+pkill picom
+pkill slstatus
+pkill mpd
+pkill rclone
+pkill ntfs-3g
+killall dunst
+
+sudo ntfs-3g /dev/sda3 ~/Local\ Disk\ C &
+sudo ntfs-3g /dev/sda5 ~/Local\ Disk\ E &
+sudo ntfs-3g /dev/sda4 ~/Local\ Disk\ D &
+rclone mount teamdrive: ~/Cloud\ Storage/Hikari\ Drive &
+
+brightnessctl s 0
+redshift -O 4500
+redshift -O 4500
+nitrogen --restore
+picom --experimental-backend -b
+slstatus &
+dunst &
+mpd &
+#setsid notify-song-change >/dev/null 2>&1 < /dev/null &
+
+exec dwm

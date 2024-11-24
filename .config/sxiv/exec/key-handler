@@ -24,6 +24,7 @@ rotate() {
 
 case "$1" in
 "C-x")      xclip -in -filter | tr '\n' ' ' | xclip -in -selection clipboard ;;
+"C-p")      while read file; do realpath "$file" | xclip -sel c -r; done ;;
 "C-c")      while read file; do xclip -selection clipboard -target image/png "$file" && notify-send "🖼️" "Image copied to clipboard"; done ;;
 "C-d")      while read file; do rm "$file"; done ;;
 "C-l")	    while read file; do setlockbg "$file"; done ;;

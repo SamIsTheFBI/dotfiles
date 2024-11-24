@@ -18,18 +18,18 @@ if [ -z "$1" ];then
 	xclip -selection clipboard -t image/png ~/.cache/cache.png
 	notify-send -i "~/.cache/cache.png" '󰊓 Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Copied to clipboard</span>'
 elif [ "$1" == "fullsave" ];then
-	var="${SCR_DIR}"/Screenshot_$(date +%Y%m%d_%H%M%S).png
+	var="${SCR_DIR}"/Screenshot_$(date +%Y%m%d_%H%M%S)_$(xdotool getactivewindow getwindowclassname).png
 	${screenshot} $var 
 	xclip -selection clipboard -t image/png $var
 	notify-send -i "$var" '󰊓 Screenshot' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "selectcopy" ];then
-	var="${SCR_DIR}"/ScreenSelect_$(date +%Y%m%d_%H%M%S).png
+	var="${SCR_DIR}"/ScreenSelect_$(date +%Y%m%d_%H%M%S)_$(xdotool getactivewindow getwindowclassname).png
 	${SELECTSHOT} ~/.cache/cache.png
     choice="$(echo -e "Yes\nNo\nNo & don't copy" | ${prompt} "Save?")"
     case "${choice}" in
       Yes) 
 	    xclip -selection clipboard -t image/png ~/.cache/cache.png
-        cp ~/.cache/cache.png ${var}
+        cp ~/.cache/cache.png "$var"
 	    notify-send -i "$var" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
         ;;
       No | '')
@@ -41,9 +41,9 @@ elif [ "$1" == "selectcopy" ];then
         ;;
     esac 
 elif [ "$1" == "selectsave" ];then
-	var="${SCR_DIR}"/ScreenSelect_$(date +%Y%m%d_%H%M%S).png
+	var="${SCR_DIR}"/ScreenSelect_$(date +%Y%m%d_%H%M%S)_$(xdotool getactivewindow getwindowclassname).png
 	${SELECTSHOT} ${var}
-	xclip -selection clipboard -t image/png $var
+	xclip -selection clipboard -t image/png "$var"
 	notify-send -i "$var" '里 Screen Selection' '<span font="JetBrainsMono Nerd Font 11">   Saved & copied to clipboard</span>'
 elif [ "$1" == "actwincopy" ];then
 	${screenshot} $(xdotool getactivewindow) ~/.cache/cache.png

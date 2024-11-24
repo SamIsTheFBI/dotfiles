@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ "$(pgrep -x ntfs-3g)" == '' ]; then
+  sudo ntfs-3g /dev/nvme0n1p3 ~/ext/Local\ Disk\ C &
+  sudo ntfs-3g /dev/nvme0n1p5 ~/ext/Local\ Disk\ D &
+  sudo ntfs-3g /dev/sda3 ~/ext/Local\ Disk\ E &
+  sudo ntfs-3g /dev/sda4 ~/ext/Local\ Disk\ F &
+  sudo ntfs-3g /dev/sda5 ~/ext/Local\ Disk\ G &
+fi
+
+if [ "$(pgrep -x fusermount3)" == '' ]; then
+  sudo mount /dev/sda7 ~/ext/old-linux &
+fi

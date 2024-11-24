@@ -1,0 +1,48 @@
+#!/home/samisthefbi/.local/bin/python/.venv/bin/python3
+
+# Kemono.party Image Downloader 
+
+import requests
+from bs4 import BeautifulSoup
+import wget
+import sys
+
+def downloadPics(URL):
+    r = requests.get(URL)
+    soup = BeautifulSoup(r.content, 'html5lib')
+
+    # time = soup.find('time').get_text().strip()
+    # size = len(time)
+    # time = time[:size - 8]
+    # time = time.replace(':','_').replace('.','_')
+    published = soup.find("div", {"class":"post__published"}).get_text().strip()
+    published = published.replace("Published: ", "")
+    published = published.replace(':','_').replace('.','_')
+    print(published)
+
+    post_body = soup.find_all("a", {"class":"fileThumb"})
+
+    artist = soup.find("a", {"class":"post__user-name"}).get_text().strip()
+    post_title = soup.find("h1", {"class":"post__title"}).find("span").get_text().strip().replace('/', '-')
+
+
+    dl_list = []
+
+    for i in post_body:
+         dl_list += i.get("href").split("?f=")
+
+    list_size = len(dl_list)
+
+    for i in range(list_size):
+        if i < list_size - 1 and i % 2 == 0:
+            if i > 1 and dl_list[i - 2] == dl_list[i]:
+                i = i + 2
+                continue;
+            else:
+                wget.download(dl_list[i], artist + " - " + published + " - " + post_title + " - " + dl_list[i+1].replace('%20', ' ').replace('%28', '(').replace('%29', ')').replace('%5B', '[').replace('%5D', ']'))
+        i = i + 2
+    print("\n")
+
+for i in range(1, len(sys.argv)):
+    downloadPics(sys.argv[i])
+

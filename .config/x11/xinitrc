@@ -10,7 +10,7 @@ if [ "$(pgrep -x fusermount3)" == '' ]; then
   sudo mount /dev/sda7 ~/ext/old-linux &
 fi
 
-brightnessctl s 0
+brightnessctl s 5%
 redshift -x
 redshift -O 4500
 redshift -O 4500
@@ -24,7 +24,7 @@ xrdb -load ~/.Xresources
 
 sudo systemctl stop systemd-backlight@backlight:acpi_video1.service
 sudo systemctl disable systemd-backlight@backlight:acpi_video1.service
-sound-fix
+/home/samisthefbi/.local/bin/sound-fix
 
 DEFAULT_SESSION="dwm"
 
