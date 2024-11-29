@@ -1,0 +1,30 @@
+#!/bin/sh
+
+work=1500
+break=300
+
+if [ -n "$1" ]; then
+  work=$(( ${1} * 60 | bc ))
+fi
+
+if [ -n "$2" ]; then
+  break=$(( ${2} * 60 | bc ))
+fi
+
+echo "Starting a $(( ${work} / 60 | bc ))-minutes productivity session with $(( ${break} / 60 | bc ))-minutes break...\n\n"
+target_date=$(($(date '+%s') + $((work)) | bc))
+
+clock() {
+  while [ $(date '+%s') -ne ${target_date} ]; do printf '%s\r' "$(date)"; done
+  paplay ~/.config/dunst/notif.wav
+}
+
+clock
+
+# printf '%s\r' "Press c to change cycle\nPress q to end session"
+# read -r -N 1 input
+# if [ "$input" = "q" ] || [ "$input" = "Q" ]; then
+#   break
+# elif [ "$input" = "c" ] || [ "$input" = "C" ]; then
+#   break 
+# fi
