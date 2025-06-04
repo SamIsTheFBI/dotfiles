@@ -5,16 +5,16 @@
 
 ## A few programs that I use
 
-- Window Manager: [dwm](https://dwm.suckless.org/)
+- Window Manager: [dwm-flexipatch](https://github.com/SamIsTheFBI/dwm-flexipatch)
 - Terminal: [st](https://st.suckless.org/)
 - Shell: [zsh](https://www.zsh.org/)
 - Text Editor: [Neovim](https://github.com/neovim/neovim)
 - Status Bar: [dwmblocks-async](https://github.com/UtkarshVerma/dwmblocks-async)
-- AUR Helper: [Pikaur](https://github.com/actionless/pikaur)
+- AUR Helper: [yay](https://github.com/Jguer/yay)
 - Image Viewer: [sxiv](https://github.com/muennich/sxiv)
 - Screenshot: [maim](https://github.com/naelstrof/maim)
 - Display Server: [Xorg](https://www.x.org/wiki)
-- Compositor: [Picom](https://github.com/dccsillag/picom)
+- Compositor: [Picom](https://github.com/yshui/picom)
 
 I also make use of [eww widgets](https://github.com/elkowar/eww) to display battery percentage and current song in the lockscreen.
 
@@ -51,7 +51,7 @@ rm -r tmpdotfiles
 - [My dmenu build](https://github.com/samisthefbi/dmenu) (dynamic menu)
 - [My st build](https://github.com/samisthefbi/st) (because Alacritty has diminished p10k glyphs & idk how to fix that)
 - [My dwmblocks-async config](https://github.com/samisthefbi/dwmblocks-async) (clickable dwm bar)
-- picom-animations-git (Compositor for those fancy transparency) 
+- picom (Compositor for those fancy transparency) 
 - awk (utility to extract and present information) (I use this for scripts)
 - [eww](https://github.com/elkowar/eww) (for battery percentage and currently playing song in lockscreen)
 - ffmpeg (audio/video converter) (used to extract album art in a script)
@@ -165,6 +165,19 @@ Now follow everything as in previous steps. This should fix the problem and you 
 Edit your `/etc/hosts` file and the following in the last line.
 ```
 185.199.108.133 raw.githubusercontent.com
+```
+
+</p>
+</details>
+<details style="padding: 0.5rem 0rem">
+<summary><strong>Google Chrome not opening file chooser</strong></summary>
+<p>
+
+[Fix Source](https://bbs.archlinux.org/viewtopic.php?id=294417)
+
+Add the following line to your `.xinitrc`:
+```
+source /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
 ```
 
 </p>
