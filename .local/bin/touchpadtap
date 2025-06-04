@@ -1,14 +1,17 @@
 #!/bin/sh
 
+TOUCHPAD="Touchpad"
 
-id=$(xinput list | grep Touchpad | awk '{ print $6}' | cut -d '=' -f 2)
+line_number=$(xinput list --name-only | grep -n ${TOUCHPAD} | cut -d ":" -f1)
+
+id=$(xinput list --id-only | sed -n ${line_number}p | cut -d " " -f2)
 
 state=$(xinput list-props $id | grep "Device Enabled" | awk ' {print $4} ')
 
 [ "${1}" == '--state' ] && echo "${state}" && exit
 # paplay ~/.config/dunst/notif.wav &
 
-if [ $state = 1 ]; then
+if [ $state == 1 ]; then
 	dunstify -r 5 -a top-center -u normal "󰤳" "Touchpad disabled"
 	xinput set-prop $id "Device Enabled" 0
 else
