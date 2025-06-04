@@ -15,11 +15,12 @@ redshift -x
 redshift -O 4500
 redshift -O 4500
 nitrogen --restore
-[ "$(pgrep -x picom)" == '' ] && picom --experimental-backend -b
+[ "$(pgrep -x picom)" == '' ] && setsid picom &
 [ "$(pgrep -x dwmblocks)" == '' ] && setsid dwmblocks &
 [ "$(pgrep -x dunst)" == '' ] && dunst &
 [ "$(pgrep -x playerctld)" == '' ] && playerctld daemon &
 [ "$(pgrep -x copyq)" == '' ] && setsid copyq &
+[ "$(pgrep -x sxhkd)" == '' ] && setsid sxhkd &
 xrdb -load ~/.Xresources
 
 sudo systemctl stop systemd-backlight@backlight:acpi_video1.service
@@ -31,6 +32,9 @@ DEFAULT_SESSION="dwm"
 # Fix problems with Java apps
 wmname "LG3D"
 export _JAVA_AWT_WM_NONREPARENTING=1
+
+# Google Chrome not opening file chooser fix
+source /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
 
 case "$1" in
 	"cinnamon") exec cinnamon-session ;;

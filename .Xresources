@@ -3,12 +3,27 @@ Sxiv.background: #262626
 Sxiv.foreground: #d75f5f
 
 ! DWM Colors
-dwm.norm_fg: #ebdbb2
-dwm.norm_bg: #262626
-dwm.norm_border: #262626
-dwm.sel_fg: #262626
-dwm.sel_bg: #afaf00
-dwm.sel_border: #ebdbb2
+dwm.normfgcolor: #ebdbb2
+dwm.normbgcolor: #262626
+dwm.selfgcolor: #262626
+dwm.selbgcolor: #afaf00
+
+dwm.normbordercolor: #262626
+dwm.selbordercolor: #ebdbb2
+
+dwm.tagsnormfgcolor: #ebdbb2
+dwm.tagsnormbgcolor: #262626
+
+dwm.tagsselfgcolor: #262626
+dwm.tagsselbgcolor: #afaf00
+dwm.tagsselfloatcolor: #afaf00
+dwm.tagsselbordercolor: #afaf00
+
+dwm.titlenormfgcolor: #ebdbb2
+dwm.titlenormbgcolor: #262626
+
+dwm.titleselfgcolor: #ebdbb2
+dwm.titleselbgcolor: #262626
 
 ! Terminal Colors
 *.foreground: #dab997
