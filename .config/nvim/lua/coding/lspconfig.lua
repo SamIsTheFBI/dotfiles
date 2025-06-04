@@ -85,8 +85,7 @@ nvim_lsp.tailwindcss.setup {
     "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass",
     "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact",
     "vue", "svelte", "typescript.tsx", "javascript.jsx" },
-  root_dir = nvim_lsp.util.root_pattern('tailwind.config.js', 'tailwind.config.ts', 'postcss.config.js',
-    'postcss.config.ts', 'package.json', 'node_modules', '.git'),
+  root_dir = nvim_lsp.util.root_pattern('package.json'),
   cmd = { "tailwindcss-language-server", "--stdio" },
 }
 

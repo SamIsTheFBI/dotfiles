@@ -28,6 +28,7 @@ alias sd="ls -t | sed 's/\ /\\ /g' | xargs sxiv -aq --"
 alias sdr="ls -tr | sed 's/\ /\\ /g' | xargs sxiv -aq --"
 alias mpvd="ls -t | sed 's/\ /\\\ /g' | xargs mpv --no-keepaspect-window --no-resume-playback --"
 alias mpvdr="ls -tr | sed 's/\ /\\\ /g' | xargs mpv --no-keepaspect-window --no-resume-playback --"
+alias md='mpv "$(fd | fzf)"'
 
 export PATH="~/.local/bin:$PATH:~/eww/target/release"
 complete -f -X '!*.zip' decompress
