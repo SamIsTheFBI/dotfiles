@@ -210,3 +210,4 @@ setopt rcs
 . "$HOME/.cargo/env"
 
 export PATH="$PATH:/home/samisthefbi/.foundry/bin"
+export EDITOR=nvim

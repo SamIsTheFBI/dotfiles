@@ -7,7 +7,7 @@ if [ "$(pgrep -x ntfs-3g)" == '' ]; then
 fi
 
 if [ "$(pgrep -x fusermount3)" == '' ]; then
-  sudo mount /dev/sda7 ~/ext/old-linux &
+  sudo mount /dev/sda1 ~/ext/old-linux &
 fi
 
 brightnessctl s 5%

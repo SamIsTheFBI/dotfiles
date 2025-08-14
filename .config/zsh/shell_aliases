@@ -1,4 +1,5 @@
 # Define aliases.
+alias lf=lfrun
 alias tree='tree -a -I .git'
 alias dots='/usr/sbin/git --git-dir="${HOME}"/.dotfiles/ --work-tree="${HOME}"'
 alias vi='/usr/bin/nvim'
