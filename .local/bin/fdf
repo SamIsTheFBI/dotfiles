@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+
+# Cache directory for thumbnails
+CACHE_DIR="$HOME/.cache/fzf-preview"
+mkdir -p "$CACHE_DIR"
+
+# Preview function
+preview_file() {
+    local file="$1"
+    local width="${FZF_PREVIEW_COLUMNS:-80}"
+    local height="${FZF_PREVIEW_LINES:-40}"
+    
+    # Generate cache path based on file identity
+    local cache_key
+    cache_key=$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$file" 2>/dev/null | sha256sum | awk '{print $1}')
+    local cache_path="$CACHE_DIR/$cache_key"
+    
+    # Helper: display image with chafa
+    show_image() {
+        chafa -f sixel "$1" -s "${width}x${height}" 2>/dev/null || \
+        chafa "$1" -s "${width}x${height}" 2>/dev/null
+    }
+    
+    # Helper: use bat or fallback to cat
+    show_text() {
+        if command -v bat &>/dev/null; then
+            bat --color=always --style=numbers,changes --line-range=:500 "$1"
+        else
+            cat "$1"
+        fi
+    }
+    
+    # Helper: show markdown
+    show_markdown() {
+        if command -v glow &>/dev/null; then
+            glow "$1"
+        elif command -v mdcat &>/dev/null; then
+            mdcat "$1"
+        else
+            show_text "$1"
+        fi
+    }
+    
+    # Get lowercase filename for case-insensitive matching
+    local lower_file
+    lower_file=$(echo "$file" | tr '[:upper:]' '[:lower:]')
+    
+    case "$lower_file" in
+        # Archives
+        *.tar.gz|*.tgz) tar -tzf "$file" 2>/dev/null ;;
+        *.tar.bz2|*.tbz2) tar -tjf "$file" 2>/dev/null ;;
+        *.tar.xz|*.txz) tar -tJf "$file" 2>/dev/null ;;
+        *.tar) tar -tf "$file" 2>/dev/null ;;
+        *.zip|*.jar|*.war|*.ear) unzip -l "$file" 2>/dev/null ;;
+        *.rar) unrar l "$file" 2>/dev/null ;;
+        *.7z) 7z l "$file" 2>/dev/null ;;
+        *.gz) gzip -l "$file" 2>/dev/null ;;
+        
+        # Documents
+        *.pdf)
+            if [ ! -f "${cache_path}.jpg" ]; then
+                pdftoppm -jpeg -f 1 -singlefile "$file" "$cache_path" 2>/dev/null
+            fi
+            [ -f "${cache_path}.jpg" ] && show_image "${cache_path}.jpg" || \
+                pdftotext "$file" - 2>/dev/null | head -500
+            ;;
+        *.epub)
+            if [ ! -f "$cache_path" ]; then
+                epub-thumbnailer "$file" "$cache_path" 1024 2>/dev/null
+            fi
+            [ -f "$cache_path" ] && show_image "$cache_path"
+            ;;
+        *.odt|*.ods|*.odp|*.sxw) odt2txt "$file" 2>/dev/null ;;
+        *.doc) catdoc "$file" 2>/dev/null ;;
+        *.docx) docx2txt "$file" 2>/dev/null || pandoc "$file" -t plain 2>/dev/null ;;
+        *.xls|*.xlsx)
+            if command -v ssconvert &>/dev/null; then
+                ssconvert --export-type=Gnumeric_stf:stf_csv "$file" "fd://1" 2>/dev/null | show_text -
+            else
+                echo "Excel file: $file"
+            fi
+            ;;
+        
+        # Markup/Code
+        *.md|*.markdown) show_markdown "$file" ;;
+        *.json) show_text "$file" ;;
+        *.xml|*.html|*.htm) 
+            if command -v w3m &>/dev/null; then
+                w3m -dump "$file"
+            else
+                show_text "$file"
+            fi
+            ;;
+        
+        # Images
+        *.bmp|*.jpg|*.jpeg|*.png|*.webp|*.gif|*.jfif|*.ico|*.tiff|*.tif)
+            show_image "$file"
+            ;;
+        *.svg)
+            if [ ! -f "${cache_path}.jpg" ]; then
+                convert "$file" "${cache_path}.jpg" 2>/dev/null || \
+                inkscape "$file" -o "${cache_path}.jpg" 2>/dev/null
+            fi
+            [ -f "${cache_path}.jpg" ] && show_image "${cache_path}.jpg" || show_text "$file"
+            ;;
+        
+        # Video
+        *.avi|*.mp4|*.mkv|*.mov|*.wmv|*.flv|*.webm|*.m4v|*.mpg|*.mpeg|*.3gp|*.ogv)
+            if [ ! -f "${cache_path}.jpg" ]; then
+                ffmpegthumbnailer -i "$file" -o "${cache_path}.jpg" -s 0 -q 5 2>/dev/null
+            fi
+            [ -f "${cache_path}.jpg" ] && show_image "${cache_path}.jpg"
+            mediainfo "$file" 2>/dev/null || exiftool "$file" 2>/dev/null
+            ;;
+        
+        # Audio
+        *.mp3|*.flac|*.wav|*.m4a|*.ogg|*.opus|*.wma)
+            exiftool "$file" 2>/dev/null || mediainfo "$file" 2>/dev/null
+            ;;
+        
+        # Comics
+        *.cbz|*.cbr|*.cbt)
+            if [ ! -f "$cache_path" ]; then
+                comicthumb "$file" "$cache_path" 1024 2>/dev/null
+            fi
+            [ -f "$cache_path" ] && show_image "$cache_path"
+            ;;
+        
+        # Special formats
+        *.torrent) transmission-show "$file" 2>/dev/null ;;
+        *.iso) iso-info --no-header -l "$file" 2>/dev/null ;;
+        *.[1-8]) man "$file" 2>/dev/null | col -b ;;
+        *.o) nm "$file" 2>/dev/null ;;
+        
+        # Programming
+        *.ino) show_text "$file" ;;
+        
+        # Default: detect by mime type
+        *)
+            if file -ibL "$file" 2>/dev/null | grep -q text; then
+                show_text "$file"
+            else
+                file -Lb "$file" 2>/dev/null
+                echo ""
+                ls -lh "$file"
+            fi
+            ;;
+    esac
+}
+
+# Export function for fzf to use
+export -f preview_file
+export CACHE_DIR
+
+# Run fd with fzf and preview
+fd -t f "$@" | fzf \
+    --preview 'bash -c "preview_file {}"' \
+    --preview-window 'right:60%:wrap' \
+    --bind 'ctrl-/:change-preview-window(down|hidden|)' \
+    --bind 'ctrl-u:preview-half-page-up' \
+    --bind 'ctrl-d:preview-half-page-down' \
+    --height 100%
