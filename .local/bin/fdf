@@ -159,4 +159,5 @@ fd -t f "$@" | fzf \
     --bind 'ctrl-/:change-preview-window(down|hidden|)' \
     --bind 'ctrl-u:preview-half-page-up' \
     --bind 'ctrl-d:preview-half-page-down' \
+    --bind 'enter:execute(xdg-open {})' \
     --height 100%
