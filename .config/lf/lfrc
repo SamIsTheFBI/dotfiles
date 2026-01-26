@@ -50,18 +50,18 @@ cmd extract ${{
 	read ans
 	[ $ans = "y" ] && {
 		case $fx in
-			*.tar.bz2)   tar xjf $fx     ;;
-			*.tar.gz)    tar xzf $fx     ;;
-			*.bz2)       bunzip2 $fx     ;;
-			*.rar)       unrar e $fx     ;;
-			*.gz)        gunzip $fx      ;;
-			*.tar)       tar xf $fx      ;;
-			*.tbz2)      tar xjf $fx     ;;
-			*.tgz)       tar xzf $fx     ;;
-			*.zip)       unzip $fx       ;;
-			*.Z)         uncompress $fx  ;;
-			*.7z)        7z x $fx        ;;
-			*.tar.xz)    tar xf $fx      ;;
+			*.tar.bz2)   tar -xvjf $fx --one-top-level    ;;
+			*.tar.gz)    tar -xvzf $fx --one-top-level    ;;
+			*.bz2)       fname="${fx%.bz2}"; mkdir -p "$fname" && bunzip2 -c "$fx" > "$fname/$(basename "$fname")"     ;;
+			*.rar)       unrar x "$fx" "${fx%.rar}/"     ;;
+			*.gz)        fname="${fx%.gz}"; mkdir -p "$fname" && gunzip -c "$fx" > "$fname/$(basename "$fname")"      ;;
+			*.tar)       tar -xvf $fx --one-top-level     ;;
+			*.tbz2)      tar -xvjf $fx --one-top-level   ;;
+			*.tgz)       tar -xvzf $fx --one-top-level    ;;
+			*.zip)       unzip -q $fx      ;;
+			*.Z)         fname="${fx%.Z}"; mkdir -p "$fname" && uncompress -c "$fx" > "$fname/$(basename "$fname")"  ;;
+			*.7z)        7z x "$fx" -o"${fx%.7z}"         ;;
+			*.tar.xz)    tar -xvf $fx --one-top-level     ;;
 		esac
 	}
 }}
